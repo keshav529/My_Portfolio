@@ -1,0 +1,49 @@
+
+
+ul li {
+    font-weight: 500;
+    font-size: 18px;
+}
+.navbar-brand p{
+    font-weight: 550;
+    font-size: 22px;
+}
+
+  .navbar-nav .nav-link {
+    color: white !important;
+  }
+ ul li:hover{
+     color: blue;
+ }
+.imageedit{
+  height: 30px;
+  width: 64px;
+}
+  .hover-shadow:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+  
+  
+a.text-white:hover {
+  color: #17c2f0 !important;
+}
+
+.btn-outline-info:hover {
+  background-color: #17c2f0;
+  color: white;
+  border-color: #17c2f0;
+}
+.contactimg{
+width: 700px;
+height: 1200px;
+}
+ .project-img-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+  }
+
+  .project-img-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  }

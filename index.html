@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>My Portfolio</title>
+
+    <!-- External CSS files should go inside <head> -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+ <nav class="navbar navbar-expand-lg navbar-dark shadow-lg py-3 sticky-top" style="background-color: #0b1f38;">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="image/resume.png" target="_blank">
+      <img src="image/resume.png" alt="Logo" style="height: 40px;">
+    </a>
+
+    <!-- Toggler for mobile view -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        <li class="nav-item px-2">
+          <a class="nav-link active" id="#home-id" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item px-2">
+          <a class="nav-link" href="#skills-id" href="#">Skills</a>
+        </li>
+        <li class="nav-item px-2">
+          <a class="nav-link" href="#education-id">Education</a>
+        </li>
+         <li class="nav-item px-2">
+          <a class="nav-link" href="#projects-id">Projects</a>
+        </li>
+        <li class="nav-item px-2">
+          <a class="nav-link" href="#contact-id">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid py-5" id="home-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
+  <div class="container">
+    <div class="row align-items-center">
+      
+      <!-- Column 1: Image -->
+      <div class="col-md-6 text-center mb-4 mb-md-0">
+        <img src="image/keshavphotos.jpg" alt="Profile Photo" class="shadow keshavimg img-fluid rounded-circle" style="max-width: 300px;">
+      </div>
+      
+      <!-- Column 2: Name and Role -->
+      <div class="col-md-6 text-center text-md-start">
+        <h2 class="fw-bold mb-2 text-white">Hi, I'm Keshav</h2>
+        <p class="fs-4 text-primary  mb-2">Aspiring Software Developer</p>
+        <p class="text-white">Passionate about building user-friendly and efficient web applications using modern technologies.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- about -->
+ <div class="container-fluid" id="skills-id" style="background-color: #0b1f38;">
+  <div class="container text-white">
+    <div class="row">
+      <div class="col-12 py-5 d-flex justify-content-center">
+        <h2 class="fw-bold text-white" style="font-size: 40px;">Skills</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <h3><strong>USING NOW:</strong></h3>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/html5.png" class="imageedit img-fluid">
+        <p class="text-white fs-6">HTML5</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/javascriptimage.png" class="imageedit img-fluid">
+        <p class="text-white fs-6">JAVASCRIPT</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/javaimage.png" class="imageedit img-fluid">
+        <p class="text-white fs-6">JAVA</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/cssimage.png" class="imageedit img-fluid">
+        <p class="text-white fs-6">CSS</p>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/figmaimage.png" class="img-fluid imageedit" alt="">
+        <p class="text-white">FIGMA</p>
+      </div>
+      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/bootsrap.png" class="img-fluid imageedit" alt="">
+        <p class="text-white">BOOTSTRAP</p>
+      </div>
+      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/githubimage.png" class="img-fluid imageedit" alt="">
+        <p class="text-white">Github</p>
+      </div>
+      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/cprogrammingimage.png" class="img-fluid imageedit" alt="">
+        <p class="text-white">C Programming</p>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-12 d-flex">
+        <h3><strong>LEARNING</strong></h3>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/REACTIMAGE.png" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-6">REACT</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/NODEJSIMAGE.png" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-6">NODE JS</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/MONGODBIMAGE.png" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-6">MONGODB</p>
+      </div>
+      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+        <img src="image/deep-learning.png" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-6">DSA</p>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-12">
+        <h3><strong>OTHER SKILLS</strong></h3>
+      </div>
+    </div>
+
+    <div class="row py-3">
+      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/csimage.jpg" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-5">Communication Skills</p>
+      </div>
+      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/problemsolvingimage.jpg" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-5">Problem Solving Skills</p>
+      </div>
+      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+        <img src="image/presentationskillimage.jpg" class="img-fluid imageedit" alt="">
+        <p class="text-white fs-5">Presentation Skills</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Education Section -->
+<div class="container-fluid py-5" id="education-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col text-center">
+        <h2 class="fw-bold text-white" style="font-size: 40px;">🎓 Education</h2>
+        <p class="text-white-50">My academic background and qualifications</p>
+      </div>
+    </div>
+
+    <!-- Education Cards -->
+    <div class="row g-4">
+      <!-- Class 10 -->
+      <div class="col-md-4">
+        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">📘 Class 10th (CBSE)</h5>
+            <p class="card-text"><strong>🏫 School:</strong> Sati Bhai Sai Dass Public School, Kalanaur</p>
+            <p class="card-text"><strong>📅 Year:</strong> 2020</p>
+            <p class="card-text"><strong>📊 Percentage:</strong> 69.6%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class 12 -->
+      <div class="col-md-4">
+        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">📗 Class 12th (HBSE)</h5>
+            <p class="card-text"><strong>🏫 School:</strong> Government School, Kalanaur</p>
+            <p class="card-text"><strong>📅 Year:</strong> 2022</p>
+            <p class="card-text"><strong>📊 Percentage:</strong> 82.2%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BCA -->
+      <div class="col-md-4">
+        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">💻 BCA (2022–2025)</h5>
+            <p class="card-text"><strong>🏛 College:</strong> Sh. L.N. Hindu College, Rohtak (MDU)</p>
+            <p class="card-text"><strong>📊 Current Percentage:</strong> 72%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- project section -->
+<div class="container-fluid py-5" id="projects-id" style="background-color: #0b1f38;" >
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center">
+         <h2 class="fw-bold text-white" style="font-size: 40px;">Projects</h2>
+      </div>
+    </div>
+
+    <div class="row py-3 mb-2 d-flex justify-content-center">
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/bootstapimage.png" class="img-fluid project-img-hover" alt="">
+        <p class="mt-2"><strong class="text-white">Website Clone</strong></p>
+        <p class="text-white fw-semibold">Built a website clone using HTML, CSS, and Bootstrap for responsive design.</p>
+      </div>
+
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/netfliximageportfolio.png" class="img-fluid project-img-hover" alt="">
+        <p class="mt-2"><strong class="text-white">Netflix Clone</strong></p>
+        <p class="text-white fw-semibold">Designed a responsive Netflix homepage clone using HTML and CSS with a focus on layout, styling, and mobile-friendly design.</p>
+      </div>
+
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/stopwatchimg.png" class="img-fluid project-img-hover" alt="">
+        <p class="mt-2"><strong class="text-white">Stopwatch</strong></p>
+        <p class="text-white fw-semibold">Created a stopwatch using HTML, CSS, and JavaScript with start, stop, and reset features.</p>
+      </div>
+    </div>
+
+    <div class="row py-3 mb-2 d-flex justify-content-center">
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/tictactoeportfolioimg.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
+        <p class="mt-2"><strong class="text-white">Tic-Tac-Toe</strong></p>
+        <p class="text-white fw-semibold">Built a Tic Tac Toe game using HTML, CSS, and JavaScript with interactive gameplay.</p>
+      </div>
+
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/currencyconvertorimage.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
+        <p class="mt-2"><strong class="text-white">Currency Converter</strong></p>
+        <p class="text-white fw-semibold">Built a currency converter using HTML, CSS, JavaScript, and a real-time API.</p>
+      </div>
+
+      <div class="col-lg-4 col-md-6 text-center">
+        <img src="image/calculatorimg.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
+        <p class="mt-2"><strong class="text-white">Calculator</strong></p>
+        <p class="text-white fw-semibold">Built a basic calculator using HTML, CSS, and JavaScript for simple arithmetic operations.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Section -->
+<div class="container-fluid" id="contact-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
+  <div class="container py-5">
+    <div class="row align-items-center">
+
+      <!-- Contact Image -->
+      <div class="col-md-6 col-sm-12 text-center mb-4 mb-md-0">
+        <img src="image/contactphoto.jpg" alt="Laptop and Code" class="img-fluid rounded-4 shadow-lg contactimg" style="max-height: 400px;">
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-md-6 col-sm-12 text-white text-center">
+        <h1 class="fs-1 fw-bold mb-4">My Contact</h1>
+
+        <!-- Email -->
+        <p class="fs-4 mb-3">
+          <i class="bi bi-envelope-fill me-2 text-info"></i>
+          <a href="mailto:keshavanand748@gmail.com" class="text-white text-decoration-none hover-effect">
+            keshavanand748@gmail.com
+          </a>
+        </p>
+
+        <!-- LinkedIn -->
+        <p class="fs-4 mb-4">
+          <i class="bi bi-linkedin me-2 text-info"></i>
+          <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
+            Visit LinkedIn Profile
+          </a>
+        </p>
+
+        <p class="fs-4">
+            Download Resume:
+            <a href="image/keshav_CV.pdf.pdf" download class="text-primary">
+              Click to Download
+            </a>
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="container-fluid" style="background-color: #0b1f38;">
+  <div class="container">
+    <div class="row d-flex flex-column py-4 text-center">
+      <div class="col-12">
+        <h2 class="fw-bold text-white" style="font-size: 30px;">Keshav</h2>
+        <p class="text-white mb-1">📧 keshavanand748@gmail.com</p>
+        <p class="text-white mb-1">📞 +91-9817357072</p>
+
+        <!-- Social Links -->
+        <div class="d-flex justify-content-center gap-3 mt-2">
+          <a href="https://leetcode.com/u/keshavanand/" target="_blank" class="text-white text-decoration-none">
+            <i class="bi bi-code-slash"></i><img src="image/leetcodeimage.png" class="img-fluid" style="height: 25px;" alt="">
+          </a>
+
+          <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" class="text-white text-decoration-none">
+            <i class="bi bi-linkedin"></i> <img src="image/linkedinimage.png" class="img-fluid" style="height: 25px;" alt="">
+          </a>
+
+          <a href="mailto:keshavanand748@gmail.com" class="text-white text-decoration-none">
+            <i class="bi bi-envelope-fill"></i><img src="image/gmailimg.png" class="img-fluid" style="height: 25px;" alt="">
+          </a>
+        </div>
+      </div>
+
+      <p class="text-white">
+        🤝 Open to opportunities — let’s connect and build something amazing together!
+      </p>
+
+      <p class="text-white">
+        © 2025 Keshav • All rights reserved.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+</body> 
+</html>
