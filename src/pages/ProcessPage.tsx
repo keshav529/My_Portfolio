@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
+import { ImageSlot } from '../components/ImageSlot';
 import { PROCESS_STEPS, PROFILE } from '../data/portfolioData';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
@@ -132,12 +133,13 @@ export function ProcessPage() {
                 </div>
               )}
               <div className="process-circle-mask">
-                <img
+                <ImageSlot
                   src={PROFILE.workspacePhoto}
+                  fallback="code-workspace"
                   alt="Workspace setup representing planning and front-end execution"
                   width={PROFILE.workspacePhotoWidth}
                   height={PROFILE.workspacePhotoHeight}
-                  decoding="async"
+                  focal="50% 25%"
                 />
               </div>
             </div>

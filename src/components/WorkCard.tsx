@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ImageSlot } from './ImageSlot';
 import { ProjectItem } from '../data/portfolioData';
 
 interface WorkCardProps {
@@ -8,24 +9,23 @@ interface WorkCardProps {
 
 /**
  * Project Card:
- * - variant="strip": Home horizontal strip (35rem tall, 42% desktop / 85vw mobile,
- *   radius 1rem, 20% dark overlay, white centered title & tags)
- * - variant="grid": Stage 3 Work Page 2-column archive card (16:9 padding-top 56.25%,
- *   radius .875rem, 20% dark overlay, centered white title & tags, hover shadow 1px 1px 3em 1px rgba(0,0,0,.4))
+ * - Both variants enforce a consistent 16:9 crop with per-project focal points
+ *   and unified ImageSlot cream/orange duotone treatment that fades on hover.
  */
 export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
   if (variant === 'strip') {
     return (
       <article className="work-strip-card">
         <Link to={`/work/${project.slug}`} className="work-strip-link">
-          <img
+          <ImageSlot
             src={project.image}
+            fallback="project-grid"
             alt={project.imageAlt}
             width={project.imageWidth}
             height={project.imageHeight}
-            loading="lazy"
-            decoding="async"
-            className="work-strip-image"
+            focal={project.imageFocal}
+            className="work-strip-image-slot"
+            imgClassName="work-strip-image"
           />
           <div className="work-strip-overlay" aria-hidden="true" />
           <div className="work-strip-content">
@@ -41,14 +41,15 @@ export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
     <article className="work-grid-card">
       <Link to={`/work/${project.slug}`} className="work-grid-link">
         <div className="work-grid-ratio">
-          <img
+          <ImageSlot
             src={project.image}
+            fallback="project-grid"
             alt={project.imageAlt}
             width={project.imageWidth}
             height={project.imageHeight}
-            loading="lazy"
-            decoding="async"
-            className="work-grid-image"
+            focal={project.imageFocal}
+            className="work-grid-image-slot"
+            imgClassName="work-grid-image"
           />
           <div className="work-grid-overlay" aria-hidden="true" />
           <div className="work-grid-content">

@@ -3,49 +3,68 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUpRight, Moon, Sun } from 'lucide-react';
 import { NAV_ITEMS, PROFILE } from '../data/portfolioData';
+import type { FallbackIllustrationKind } from './BrandIllustration';
+import { ImageSlot } from './ImageSlot';
 import { useTheme } from '../hooks/useTheme';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 
-const MENU_PREVIEW_IMAGES: Record<
-  string,
-  { src: string; alt: string; width: number; height: number }
-> = {
+interface MenuPreviewSpec {
+  src?: string;
+  fallback: FallbackIllustrationKind;
+  alt: string;
+  width: number;
+  height: number;
+  focal: string;
+}
+
+const MENU_PREVIEW_IMAGES: Record<string, MenuPreviewSpec> = {
   '/': {
     src: PROFILE.profilePhoto,
+    fallback: 'portrait-workspace',
     alt: 'Portrait preview for Home page',
     width: PROFILE.profilePhotoWidth,
     height: PROFILE.profilePhotoHeight,
+    focal: PROFILE.profilePhotoFocal,
   },
   '/about': {
-    src: PROFILE.workspacePhoto,
-    alt: 'Workspace preview for About page',
-    width: PROFILE.workspacePhotoWidth,
-    height: PROFILE.workspacePhotoHeight,
+    src: '/image/journey-college.webp',
+    fallback: 'campus',
+    alt: 'College and timeline journey preview for About page',
+    width: 800,
+    height: 600,
+    focal: '50% 35%',
   },
   '/process': {
-    src: '/image/figmaimage.webp',
-    alt: 'Design tooling preview for Process page',
-    width: 160,
-    height: 160,
+    fallback: 'code-workspace',
+    alt: 'Structured build workflow diagram preview for Process page',
+    width: 800,
+    height: 600,
+    focal: '50% 50%',
   },
   '/work': {
-    src: '/image/currencyconvertorimage.webp',
-    alt: 'Currency Converter preview for Work page',
-    width: 532,
-    height: 646,
-  },
-  '/contact': {
     src: '/image/netfliximageportfolio.webp',
-    alt: 'Web UI preview for Contact page',
+    fallback: 'project-grid',
+    alt: 'Selected responsive web project showcase for Work page',
     width: 1200,
     height: 568,
+    focal: '50% 20%',
+  },
+  '/contact': {
+    src: '/image/journey-desk.webp',
+    fallback: 'desk-laptop',
+    alt: 'Workspace preview for Contact page',
+    width: 800,
+    height: 600,
+    focal: '50% 30%',
   },
   '/resources': {
     src: PROFILE.resumeCover,
-    alt: 'Resume cover preview for Resources page',
+    fallback: 'resume-doc',
+    alt: 'Resume preview for Resources page',
     width: PROFILE.resumeCoverWidth,
     height: PROFILE.resumeCoverHeight,
+    focal: '50% 0%',
   },
 };
 
@@ -186,19 +205,22 @@ export function Navbar() {
               <div className="menu-preview-stage">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={activePreview.src}
+                    key={hoveredPath}
                     className="menu-preview-frame"
                     initial={{ opacity: 0, scale: 0.96, rotateY: 6 }}
                     animate={{ opacity: 1, scale: 1, rotateY: 3 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.35, ease: REFERENCE_EASE }}
                   >
-                    <img
+                    <ImageSlot
                       src={activePreview.src}
+                      fallback={activePreview.fallback}
                       alt={activePreview.alt}
                       width={activePreview.width}
                       height={activePreview.height}
-                      decoding="async"
+                      focal={activePreview.focal}
+                      ratio="4 / 3"
+                      className="menu-preview-slot"
                     />
                   </motion.div>
                 </AnimatePresence>

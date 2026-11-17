@@ -4,6 +4,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowRight, CheckCircle2, FileDown, Star, User } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
+import { ImageSlot } from '../components/ImageSlot';
 import { Hero } from '../components/Hero';
 import { ServiceTabs } from '../components/ServiceTabs';
 import { WorkCard } from '../components/WorkCard';
@@ -184,14 +185,47 @@ export function HomePage() {
 
             <Reveal delay={0.12} className="why-ref-media-col">
               <div className="why-ref-image-frame">
-                <img
-                  src={PROFILE.workspacePhoto}
-                  alt="Laptop coding workspace showcasing clean front-end craft"
-                  width={PROFILE.workspacePhotoWidth}
-                  height={PROFILE.workspacePhotoHeight}
-                  loading="lazy"
-                  decoding="async"
-                />
+                <div
+                  className="why-collage-grid"
+                  role="group"
+                  aria-label="Collage of real responsive web projects built by Keshav Anand"
+                >
+                  <div className="why-collage-shot is-primary">
+                    <ImageSlot
+                      src="/image/netfliximageportfolio.webp"
+                      fallback="project-grid"
+                      alt="Netflix Homepage Clone responsive layout built by Keshav Anand"
+                      width={1200}
+                      height={568}
+                      focal="50% 20%"
+                    />
+                    <span className="why-collage-caption">Netflix Clone · Responsive UI</span>
+                  </div>
+
+                  <div className="why-collage-shot is-secondary">
+                    <ImageSlot
+                      src="/image/bootstapimage.webp"
+                      fallback="project-grid"
+                      alt="Bootstrap Website Clone responsive multi-section layout"
+                      width={1200}
+                      height={565}
+                      focal="50% 15%"
+                    />
+                    <span className="why-collage-caption">Bootstrap Grid Clone</span>
+                  </div>
+
+                  <div className="why-collage-shot is-tertiary">
+                    <ImageSlot
+                      src="/image/currencyconvertorimage.webp"
+                      fallback="state-detail"
+                      alt="Currency Converter interactive REST API application"
+                      width={532}
+                      height={646}
+                      focal="50% 24%"
+                    />
+                    <span className="why-collage-caption">Currency Converter · API</span>
+                  </div>
+                </div>
               </div>
             </Reveal>
           </div>
@@ -242,13 +276,14 @@ export function HomePage() {
                         {isPlaceholder ? (
                           <User size={18} />
                         ) : (
-                          <img
+                          <ImageSlot
                             src={PROFILE.profilePhoto}
+                            fallback="portrait-workspace"
                             alt=""
                             width={48}
                             height={48}
-                            loading="lazy"
-                            decoding="async"
+                            focal={PROFILE.profilePhotoFocal}
+                            disableTreatment
                           />
                         )}
                       </div>
@@ -291,13 +326,14 @@ export function HomePage() {
               </div>
 
               <div className="resume-ref-cover">
-                <img
+                <ImageSlot
                   src={PROFILE.resumeCover}
-                  alt="Document cover preview of Keshav Anand's CV"
+                  fallback="resume-doc"
+                  alt="Preview of page 1 of Keshav Anand's PDF resume"
                   width={PROFILE.resumeCoverWidth}
                   height={PROFILE.resumeCoverHeight}
-                  loading="lazy"
-                  decoding="async"
+                  focal="50% 0%"
+                  ratio="3 / 4"
                 />
               </div>
             </div>

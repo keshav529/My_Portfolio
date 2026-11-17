@@ -11,6 +11,7 @@ import {
 import { ArrowRight, FileDown } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
+import { ImageSlot } from '../components/ImageSlot';
 import {
   ABOUT_TIMELINE,
   PROFILE,
@@ -201,12 +202,14 @@ export function AboutPage() {
 
             <Reveal delay={0.08}>
               <div className="about-ref-portrait-frame">
-                <img
+                <ImageSlot
                   src={PROFILE.profilePhoto}
+                  fallback="portrait-workspace"
                   alt="Portrait of Keshav Anand"
                   width={PROFILE.profilePhotoWidth}
                   height={PROFILE.profilePhotoHeight}
-                  decoding="async"
+                  focal={PROFILE.profilePhotoFocal}
+                  ratio="3 / 4"
                 />
               </div>
             </Reveal>
@@ -273,15 +276,46 @@ export function AboutPage() {
                 <article key={stop.id} className="about-timeline-slide">
                   <div className="about-timeline-card">
                     <div className="about-timeline-media">
-                      <img
-                        src={stop.image}
-                        alt={stop.imageAlt}
-                        width={stop.imageWidth}
-                        height={stop.imageHeight}
-                        loading="eager"
-                        decoding="async"
-                        onLoad={measureTimeline}
-                      />
+                      {stop.compositeImages && stop.compositeImages.length > 0 ? (
+                        <div
+                          className="timeline-composite-grid"
+                          role="img"
+                          aria-label={stop.imageAlt}
+                        >
+                          {stop.compositeImages.map((shot, shotIdx) => (
+                            <div
+                              key={shot.src}
+                              className={`timeline-composite-card is-shot-${shotIdx + 1}`}
+                            >
+                              <ImageSlot
+                                src={shot.src}
+                                fallback="project-grid"
+                                alt={shot.alt}
+                                width={shot.width}
+                                height={shot.height}
+                                focal={shot.focal}
+                                loading="eager"
+                                onLoad={measureTimeline}
+                              />
+                              <span className="timeline-composite-tag" aria-hidden="true">
+                                {shot.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <ImageSlot
+                          src={stop.image}
+                          fallbackSrc={stop.fallbackSrc}
+                          fallback={stop.fallback}
+                          alt={stop.imageAlt}
+                          width={stop.imageWidth}
+                          height={stop.imageHeight}
+                          focal={stop.imageFocal}
+                          loading="eager"
+                          onLoad={measureTimeline}
+                        />
+                      )}
                       <div className="about-timeline-scrim" aria-hidden="true" />
                       <span className="about-timeline-big-year" aria-hidden="true">
                         {stop.marker}

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Code2, ExternalLink, Maximize2, X } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
+import { ImageSlot } from '../components/ImageSlot';
 import { PROJECTS } from '../data/portfolioData';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
@@ -199,12 +200,15 @@ export function ProjectDetailPage() {
                   onClick={() => setLightboxOpen(true)}
                   aria-label={`Open full-size screenshot of ${project.title}`}
                 >
-                  <img
+                  <ImageSlot
                     src={project.image}
+                    fallback="project-grid"
                     alt={project.imageAlt}
                     width={project.imageWidth}
                     height={project.imageHeight}
-                    decoding="async"
+                    focal={project.imageFocal}
+                    loading="eager"
+                    ratio="16 / 9"
                   />
                   <span className="case-gallery-zoom-badge" aria-hidden="true">
                     <Maximize2 size={16} />
@@ -249,21 +253,48 @@ export function ProjectDetailPage() {
               </Reveal>
             </div>
 
-            {/* 2-Column Square Image Slots (clean neutral placeholders where secondary screenshots are optional) */}
+            {/* 2-Column Square Image Slots (1:1 .webp screenshots with SVG wireframe fallback) */}
             <Reveal delay={0.1}>
               <div className="case-square-gallery">
-                <div className="case-square-placeholder">
-                  <span className="case-placeholder-title">Responsive mobile view</span>
-                  <span className="case-placeholder-hint">
-                    Optional square screenshot slot ({project.slug}-mobile.png)
-                  </span>
-                </div>
-                <div className="case-square-placeholder">
-                  <span className="case-placeholder-title">Interactive state detail</span>
-                  <span className="case-placeholder-hint">
-                    Optional square screenshot slot ({project.slug}-detail.png)
-                  </span>
-                </div>
+                <figure className="case-square-slot">
+                  <div className="case-square-media">
+                    <ImageSlot
+                      src={`/image/${project.slug}-mobile.webp`}
+                      fallback="mobile-view"
+                      alt={`${project.title} responsive mobile screen`}
+                      width={600}
+                      height={600}
+                      focal="50% 20%"
+                      ratio="1 / 1"
+                    />
+                  </div>
+                  <figcaption className="case-square-caption">
+                    <span className="case-placeholder-title">Responsive mobile view</span>
+                    <span className="case-placeholder-hint">
+                      public/image/{project.slug}-mobile.webp (600&times;600)
+                    </span>
+                  </figcaption>
+                </figure>
+
+                <figure className="case-square-slot">
+                  <div className="case-square-media">
+                    <ImageSlot
+                      src={`/image/${project.slug}-detail.webp`}
+                      fallback="state-detail"
+                      alt={`${project.title} interactive state detail`}
+                      width={600}
+                      height={600}
+                      focal="50% 35%"
+                      ratio="1 / 1"
+                    />
+                  </div>
+                  <figcaption className="case-square-caption">
+                    <span className="case-placeholder-title">Interactive state detail</span>
+                    <span className="case-placeholder-hint">
+                      public/image/{project.slug}-detail.webp (600&times;600)
+                    </span>
+                  </figcaption>
+                </figure>
               </div>
             </Reveal>
 
@@ -314,13 +345,14 @@ export function ProjectDetailPage() {
                   </div>
 
                   <div className="case-next-thumb">
-                    <img
+                    <ImageSlot
                       src={nextProject.image}
+                      fallback="project-grid"
                       alt={nextProject.imageAlt}
                       width={nextProject.imageWidth}
                       height={nextProject.imageHeight}
-                      loading="lazy"
-                      decoding="async"
+                      focal={nextProject.imageFocal}
+                      ratio="16 / 9"
                     />
                   </div>
                 </Link>
@@ -367,12 +399,17 @@ export function ProjectDetailPage() {
               >
                 <X size={20} aria-hidden="true" />
               </button>
-              <img
+              <ImageSlot
                 src={project.image}
+                fallback="project-grid"
                 alt={project.imageAlt}
                 width={project.imageWidth}
                 height={project.imageHeight}
-                decoding="async"
+                focal="50% 50%"
+                loading="eager"
+                disableTreatment
+                className="case-lightbox-slot"
+                imgClassName="case-lightbox-img"
               />
             </motion.div>
           </motion.div>

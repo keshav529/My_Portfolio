@@ -3,6 +3,8 @@
  * Placeholders are explicitly marked so no fake metrics or quotes are invented.
  */
 
+import type { FallbackIllustrationKind } from '../components/BrandIllustration';
+
 export interface NavItem {
   label: string;
   path: string;
@@ -17,6 +19,8 @@ export interface ServiceItem {
   imageWidth: number;
   imageHeight: number;
   imageAlt: string;
+  imageFocal: string;
+  fallback: FallbackIllustrationKind;
   deliverables: string[];
 }
 
@@ -37,6 +41,7 @@ export interface ProjectItem {
   imageWidth: number;
   imageHeight: number;
   imageAlt: string;
+  imageFocal: string;
   featured?: boolean;
   liveUrl: string;
   githubUrl: string;
@@ -67,16 +72,29 @@ export interface EducationItem {
   notes: string;
 }
 
+export interface TimelineCompositeShot {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  focal: string;
+  label: string;
+}
+
 export interface AboutTimelineStop {
   id: string;
   marker: string;
   title: string;
   subtitle: string;
   description: string;
-  image: string;
+  image?: string;
+  fallbackSrc?: string;
+  fallback: FallbackIllustrationKind;
   imageWidth: number;
   imageHeight: number;
   imageAlt: string;
+  imageFocal: string;
+  compositeImages?: TimelineCompositeShot[];
 }
 
 export interface SkillItem {
@@ -110,10 +128,12 @@ export interface ResourceItem {
   external: boolean;
   download?: boolean;
   ctaLabel: string;
-  image: string;
+  image?: string;
+  fallback: FallbackIllustrationKind;
   imageWidth: number;
   imageHeight: number;
   imageAlt: string;
+  imageFocal: string;
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -143,15 +163,16 @@ export const PROFILE = {
   email: 'keshavanand748@gmail.com',
   phone: '+91-9817357072',
   resumeUrl: '/image/Keshav-Anand-Resume.pdf',
-  resumeCover: '/image/resume.webp',
-  resumeCoverWidth: 420,
-  resumeCoverHeight: 420,
+  resumeCover: '/image/resume-preview.webp',
+  resumeCoverWidth: 600,
+  resumeCoverHeight: 800,
   profilePhoto: '/image/keshavphotos.webp',
   profilePhotoWidth: 720,
   profilePhotoHeight: 960,
-  workspacePhoto: '/image/contactphoto.webp',
+  profilePhotoFocal: '50% 15%',
+  workspacePhoto: '/image/journey-desk.webp',
   workspacePhotoWidth: 720,
-  workspacePhotoHeight: 936,
+  workspacePhotoHeight: 960,
   socials: {
     linkedin: 'https://www.linkedin.com/in/keshav-anand-8ba87a293',
     leetcode: 'https://leetcode.com/u/keshavanand/',
@@ -173,10 +194,12 @@ export const SERVICES: ServiceItem[] = [
     summary: 'Clean, semantic HTML, modern CSS, and maintainable JavaScript.',
     details:
       'I build structured, fast-loading web pages from scratch with readable markup and clean styling, and I am actively expanding into React and Node.js.',
-    image: '/image/contactphoto.webp',
-    imageWidth: 720,
-    imageHeight: 936,
-    imageAlt: 'Laptop displaying clean frontend web development code',
+    image: '/image/calculatorimg.webp',
+    imageWidth: 730,
+    imageHeight: 853,
+    imageAlt: 'Web Calculator built with semantic HTML, CSS Grid, and JavaScript',
+    imageFocal: '50% 35%',
+    fallback: 'code-workspace',
     deliverables: ['Semantic HTML5', 'Modular CSS', 'JavaScript DOM logic'],
   },
   {
@@ -189,6 +212,8 @@ export const SERVICES: ServiceItem[] = [
     imageWidth: 1200,
     imageHeight: 568,
     imageAlt: 'High-contrast UI layout design showcase',
+    imageFocal: '50% 20%',
+    fallback: 'desk-laptop',
     deliverables: ['Wireframing', 'Component spacing', 'Visual hierarchy'],
   },
   {
@@ -201,6 +226,8 @@ export const SERVICES: ServiceItem[] = [
     imageWidth: 1200,
     imageHeight: 565,
     imageAlt: 'Responsive multi-column website layout preview',
+    imageFocal: '50% 15%',
+    fallback: 'project-grid',
     deliverables: ['Mobile-first CSS', 'Bootstrap grids', 'Cross-browser checks'],
   },
   {
@@ -213,6 +240,8 @@ export const SERVICES: ServiceItem[] = [
     imageWidth: 532,
     imageHeight: 646,
     imageAlt: 'Interactive JavaScript currency converter application',
+    imageFocal: '50% 24%',
+    fallback: 'state-detail',
     deliverables: ['Event handling', 'Fetch API & JSON', 'Interactive UI states'],
   },
 ];
@@ -251,6 +280,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 532,
     imageHeight: 646,
     imageAlt: 'Screenshot of Keshav Currency Converter project',
+    imageFocal: '50% 24%',
     featured: true,
     liveUrl: '', // TODO: Add live demo URL once deployed
     githubUrl: 'https://github.com/keshav529?tab=repositories', // TODO: Replace with exact repo URL
@@ -279,6 +309,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 1200,
     imageHeight: 568,
     imageAlt: 'Screenshot of Netflix Homepage Clone project',
+    imageFocal: '50% 20%',
     liveUrl: 'https://netflix-clone-keshav529.vercel.app',
     githubUrl: 'https://github.com/keshav529/Netflix-clone',
     hasLiveDemo: true,
@@ -306,6 +337,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 1200,
     imageHeight: 565,
     imageAlt: 'Screenshot of Bootstrap Website Clone project',
+    imageFocal: '50% 15%',
     liveUrl: 'https://bootstrap-projects-mu.vercel.app',
     githubUrl: 'https://github.com/keshav529/Bootstrap-Projects',
     hasLiveDemo: true,
@@ -333,6 +365,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 650,
     imageHeight: 789,
     imageAlt: 'Screenshot of Tic-Tac-Toe interactive game',
+    imageFocal: '50% 42%',
     liveUrl: 'https://tic-tac-toe-project-wheat.vercel.app',
     githubUrl: 'https://github.com/keshav529/Tic-Tac-Toe-project',
     hasLiveDemo: true,
@@ -360,6 +393,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 1015,
     imageHeight: 439,
     imageAlt: 'Screenshot of Digital Stopwatch project',
+    imageFocal: '50% 45%',
     liveUrl: '', // TODO: Add live demo URL once deployed
     githubUrl: 'https://github.com/keshav529?tab=repositories', // TODO: Replace with exact repo URL
     hasLiveDemo: false,
@@ -387,6 +421,7 @@ export const PROJECTS: ProjectItem[] = [
     imageWidth: 730,
     imageHeight: 853,
     imageAlt: 'Screenshot of Web Calculator project',
+    imageFocal: '50% 35%',
     liveUrl: '', // TODO: Add live demo URL once deployed
     githubUrl: 'https://github.com/keshav529?tab=repositories', // TODO: Replace with exact repo URL
     hasLiveDemo: false,
@@ -516,7 +551,7 @@ export const EDUCATION_TIMELINE: EducationItem[] = [
 ];
 
 /**
- * 6 real journey stops for the horizontal timeline on /about (600vw track inside 1000vh).
+ * 6 purpose-built journey stops for the horizontal timeline on /about.
  */
 export const ABOUT_TIMELINE: AboutTimelineStop[] = [
   {
@@ -526,10 +561,11 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '69.6% • Sati Bhai Sai Dass Public School, Kalanaur',
     description:
       'Completed secondary schooling with my first curiosity in computers, mathematics, and structured problem solving.',
-    image: '/image/keshavphotos.webp',
-    imageWidth: 720,
-    imageHeight: 960,
-    imageAlt: 'Portrait of Keshav Anand',
+    fallback: 'desk-notebooks',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Minimal editorial desk illustration with stacked notebooks and an orange pencil representing Class 10 studies',
+    imageFocal: '50% 50%',
   },
   {
     id: 'stop-class-12',
@@ -538,10 +574,11 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '82.2% • Government School, Kalanaur',
     description:
       'Graduated senior secondary school with 82.2%, strengthening my analytical mindset ahead of studying software development.',
-    image: '/image/contactphoto.webp',
-    imageWidth: 720,
-    imageHeight: 936,
-    imageAlt: 'Development laptop and study workspace',
+    fallback: 'desk-laptop',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Flat geometric study desk illustration with a laptop, desk lamp, and stacked books for Class 12 completion',
+    imageFocal: '50% 50%',
   },
   {
     id: 'stop-bca',
@@ -550,46 +587,79 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '72% • Sh. L.N. Hindu College, Rohtak (MDU)',
     description:
       'Entered the Bachelor of Computer Applications program, learning core programming in C and Java alongside web fundamentals.',
-    image: '/image/figmaimage.webp',
-    imageWidth: 160,
-    imageHeight: 160,
-    imageAlt: 'UI design and foundational software engineering tools',
+    image: '/image/journey-college.webp',
+    fallback: 'campus',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Sh. L.N. Hindu College campus view representing the 2022 to 2025 BCA journey',
+    imageFocal: '50% 35%',
   },
   {
     id: 'stop-projects',
     marker: 'Builds',
-    title: 'Web Projects',
+    title: 'First Builds',
     subtitle: 'HTML5, CSS3, Bootstrap & JavaScript',
     description:
       'Turned theory into real browser projects: Netflix Homepage Clone, Bootstrap Website Clone, Currency Converter, Tic-Tac-Toe, Stopwatch, and Calculator.',
-    image: '/image/netfliximageportfolio.webp',
-    imageWidth: 1200,
-    imageHeight: 568,
-    imageAlt: 'Screenshot of responsive Netflix homepage clone',
+    fallback: 'project-grid',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Composite showcase of Keshav Anand’s real builds: Netflix Clone, Currency Converter, and Digital Stopwatch',
+    imageFocal: '50% 50%',
+    compositeImages: [
+      {
+        src: '/image/netfliximageportfolio.webp',
+        alt: 'Netflix Homepage Clone responsive UI screenshot',
+        width: 1200,
+        height: 568,
+        focal: '50% 20%',
+        label: 'Netflix Clone',
+      },
+      {
+        src: '/image/currencyconvertorimage.webp',
+        alt: 'Currency Converter web app screenshot',
+        width: 532,
+        height: 646,
+        focal: '50% 24%',
+        label: 'Currency Converter',
+      },
+      {
+        src: '/image/stopwatchimg.webp',
+        alt: 'Digital Stopwatch JavaScript app screenshot',
+        width: 1015,
+        height: 439,
+        focal: '50% 45%',
+        label: 'Stopwatch',
+      },
+    ],
   },
   {
     id: 'stop-stack',
     marker: 'Learning',
-    title: 'MERN & DSA',
-    subtitle: 'React, Node.js, MongoDB & LeetCode',
+    title: 'Learning Stack',
+    subtitle: 'React, Node.js, MongoDB & DSA',
     description:
       'Actively practicing Data Structures & Algorithms in Java/C on LeetCode while building component UIs in React and backend APIs with Node.js and MongoDB.',
-    image: '/image/currencyconvertorimage.webp',
-    imageWidth: 532,
-    imageHeight: 646,
-    imageAlt: 'Screenshot of interactive JavaScript currency converter app',
+    fallback: 'stack-roadmap',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Step-by-step full-stack learning roadmap showing React, Node.js, MongoDB, and DSA',
+    imageFocal: '50% 50%',
   },
   {
     id: 'stop-next',
     marker: '2025',
-    title: 'Next Chapter',
-    subtitle: 'Open to Internships & Junior Web Roles',
+    title: 'Open to Internships',
+    subtitle: 'Junior Web & Software Engineering Roles',
     description:
       'Ready to join a collaborative product team where I can ship reliable front-end code, learn from code reviews, and grow into a full-stack engineer.',
-    image: '/image/bootstapimage.webp',
-    imageWidth: 1200,
-    imageHeight: 565,
-    imageAlt: 'Responsive multi-column web layout preview',
+    image: '/image/journey-desk.webp',
+    fallbackSrc: '/image/keshavphotos.webp',
+    fallback: 'portrait-workspace',
+    imageWidth: 720,
+    imageHeight: 960,
+    imageAlt: 'Portrait of Keshav Anand ready for software development internships and junior engineering roles',
+    imageFocal: '50% 24%',
   },
 ];
 
@@ -686,10 +756,12 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     external: false,
     download: true,
     ctaLabel: 'Download PDF',
-    image: '/image/resume.webp',
-    imageWidth: 420,
-    imageHeight: 420,
-    imageAlt: 'Preview of Keshav Anand CV document',
+    image: '/image/resume-preview.webp',
+    fallback: 'resume-doc',
+    imageWidth: 600,
+    imageHeight: 800,
+    imageAlt: 'Preview of page 1 of Keshav Anand’s resume PDF',
+    imageFocal: '50% 0%',
   },
   {
     id: 'github-profile',
@@ -700,10 +772,11 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://github.com/keshav529',
     external: true,
     ctaLabel: 'Open GitHub',
-    image: '/image/githubimage.webp',
-    imageWidth: 100,
-    imageHeight: 100,
-    imageAlt: 'GitHub icon',
+    fallback: 'code-workspace',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Code repository workspace illustration for GitHub profile',
+    imageFocal: '50% 50%',
   },
   {
     id: 'leetcode-profile',
@@ -714,10 +787,11 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://leetcode.com/u/keshavanand/',
     external: true,
     ctaLabel: 'Open LeetCode',
-    image: '/image/leetcodeimage.webp',
-    imageWidth: 160,
-    imageHeight: 160,
-    imageAlt: 'LeetCode icon',
+    fallback: 'stack-roadmap',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Structured problem-solving roadmap diagram',
+    imageFocal: '50% 50%',
   },
   {
     id: 'linkedin-profile',
@@ -728,10 +802,12 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://www.linkedin.com/in/keshav-anand-8ba87a293',
     external: true,
     ctaLabel: 'Connect on LinkedIn',
-    image: '/image/linkedinimage.webp',
-    imageWidth: 96,
-    imageHeight: 96,
-    imageAlt: 'LinkedIn icon',
+    image: '/image/keshavphotos.webp',
+    fallback: 'portrait-workspace',
+    imageWidth: 720,
+    imageHeight: 960,
+    imageAlt: 'Portrait of Keshav Anand for LinkedIn profile card',
+    imageFocal: '50% 15%',
   },
   {
     id: 'mdn',
@@ -742,10 +818,11 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://developer.mozilla.org/',
     external: true,
     ctaLabel: 'Visit MDN',
-    image: '/image/html5.webp',
-    imageWidth: 160,
-    imageHeight: 160,
-    imageAlt: 'HTML5 documentation reference badge',
+    fallback: 'desk-laptop',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Web documentation and browser layout reference illustration',
+    imageFocal: '50% 50%',
   },
   {
     id: 'react-docs',
@@ -756,9 +833,10 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://react.dev/',
     external: true,
     ctaLabel: 'Visit React Docs',
-    image: '/image/REACTIMAGE.webp',
-    imageWidth: 160,
-    imageHeight: 160,
-    imageAlt: 'React logo badge',
+    fallback: 'project-grid',
+    imageWidth: 800,
+    imageHeight: 500,
+    imageAlt: 'Component architecture wireframe illustration',
+    imageFocal: '50% 50%',
   },
 ];

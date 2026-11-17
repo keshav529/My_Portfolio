@@ -1,6 +1,7 @@
 import { KeyboardEvent, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Check } from 'lucide-react';
+import { ImageSlot } from './ImageSlot';
 import { SERVICE_HIGHLIGHTS, ServiceItem } from '../data/portfolioData';
 
 interface ServiceTabsProps {
@@ -111,13 +112,14 @@ export function ServiceTabs({ services }: ServiceTabsProps) {
           >
             {services.map((service) => (
               <div key={service.id} className="services-image-slide">
-                <img
+                <ImageSlot
                   src={service.image}
+                  fallback={service.fallback}
                   alt={service.imageAlt}
                   width={service.imageWidth}
                   height={service.imageHeight}
-                  loading="lazy"
-                  decoding="async"
+                  focal={service.imageFocal}
+                  className="services-image-slot"
                 />
               </div>
             ))}

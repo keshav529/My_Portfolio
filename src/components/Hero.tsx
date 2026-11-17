@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, FileDown } from 'lucide-react';
+import { ImageSlot } from './ImageSlot';
 import { PROFILE } from '../data/portfolioData';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
@@ -18,7 +19,7 @@ const HEADLINE_LINES = [
  * - Left: max-width 40rem, margin-left 5vw; tagline + masked line-by-line headline + dual buttons
  * - Right: 40vw tall portrait pinned to right edge, cream wipe overlay reveal, scroll-linked scale & parallax
  * - Bottom: thin 1px scroll-line indicator (hidden <= 991px)
- * - <= 991px or prefers-reduced-motion: normal stacked layout, square image, height auto, no parallax/pinning
+ * - <= 991px or prefers-reduced-motion: normal stacked layout, consistent portrait ratio, height auto, no parallax/pinning
  */
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -114,16 +115,18 @@ export function Hero() {
           {/* Right Pinned Tall Portrait with Cream Wipe Overlay + Scroll Parallax */}
           <div className="hero-media-col">
             <div className="hero-image-frame">
-              <motion.img
+              <ImageSlot
                 src={PROFILE.profilePhoto}
+                fallback="portrait-workspace"
                 alt="Portrait of Keshav Anand, aspiring software developer"
                 width={PROFILE.profilePhotoWidth}
                 height={PROFILE.profilePhotoHeight}
+                focal={PROFILE.profilePhotoFocal}
                 loading="eager"
                 fetchPriority="high"
-                decoding="async"
-                className="hero-portrait-img"
-                style={
+                className="hero-portrait-slot"
+                imgClassName="hero-portrait-img"
+                motionStyle={
                   disableParallax
                     ? undefined
                     : { scale: mediaScale, y: mediaY }

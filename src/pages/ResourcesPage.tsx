@@ -1,6 +1,7 @@
 import { ArrowUpRight, FileDown } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
+import { ImageSlot } from '../components/ImageSlot';
 import { RESOURCE_ITEMS } from '../data/portfolioData';
 
 /**
@@ -39,13 +40,13 @@ export function ResourcesPage() {
                   className="resource-ref-card"
                 >
                   <div className="resource-ref-thumb">
-                    <img
+                    <ImageSlot
                       src={item.image}
+                      fallback={item.fallback}
                       alt={item.imageAlt}
                       width={item.imageWidth}
                       height={item.imageHeight}
-                      loading="lazy"
-                      decoding="async"
+                      focal={item.imageFocal}
                     />
                   </div>
 
