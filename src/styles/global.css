@@ -13,6 +13,10 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+html.is-lenis-active {
+  scroll-behavior: auto;
+}
+
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -2734,41 +2738,118 @@ p {
   }
 }
 
-/* Horizontal Scroll Timeline (1000vh outer / 100vh sticky / 600vw track) */
+/* Horizontal Scroll Timeline (measured sticky 100svh stage + equal 100%-stage slides) */
 .about-timeline-section {
   position: relative;
-  height: 1000vh;
   background-color: var(--color-dark);
   color: var(--color-white);
 }
 
-.about-timeline-section.is-reduced-motion {
-  height: auto;
+.about-timeline-section.is-static {
+  height: auto !important;
   padding-block: var(--space-large);
 }
 
 .about-timeline-sticky {
   position: sticky;
-  top: var(--nav-height);
-  height: calc(100vh - var(--nav-height));
-  height: calc(100svh - var(--nav-height));
+  top: 0;
+  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: clamp(1.25rem, 2.5svh, 2rem);
   overflow: hidden;
-  padding-block: 2rem;
+  padding-top: calc(var(--nav-height) + 1rem);
+  padding-bottom: 1.5rem;
 }
 
-.about-timeline-section.is-reduced-motion .about-timeline-sticky {
+.about-timeline-section.is-static .about-timeline-sticky {
   position: static;
   height: auto;
   overflow: visible;
   padding-block: 0;
+  gap: 2rem;
+}
+
+.about-timeline-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
 }
 
 .about-timeline-header h2 {
   color: var(--color-white);
-  margin-bottom: 1.5rem;
+  margin: 0;
+}
+
+/* Progress Indicator inside Sticky Stage */
+.about-timeline-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.about-timeline-step-count {
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--grey-300);
+}
+
+.about-timeline-progress-track {
+  width: clamp(5rem, 12vw, 9rem);
+  height: 2px;
+  background-color: var(--grey-700);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.about-timeline-progress-fill {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-orange);
+  transform-origin: left center;
+}
+
+.about-timeline-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.about-timeline-dot-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.about-timeline-dot-core {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: var(--grey-600);
+  transition:
+    transform var(--duration-fast) var(--ease-editorial),
+    background-color var(--duration-fast) var(--ease-editorial);
+}
+
+.about-timeline-dot-btn.is-active .about-timeline-dot-core {
+  background-color: var(--color-orange);
+  transform: scale(1.45);
+}
+
+.about-timeline-dot-btn:hover .about-timeline-dot-core {
+  background-color: var(--color-white);
 }
 
 .about-timeline-viewport {
@@ -2778,28 +2859,30 @@ p {
 
 .about-timeline-track {
   display: flex;
-  width: 600vw;
+  width: calc(var(--timeline-stops, 6) * 100%);
   will-change: transform;
 }
 
 .about-timeline-slide {
-  flex: 0 0 100vw;
-  width: 100vw;
-  padding-inline: 5vw;
+  flex: 0 0 calc(100% / var(--timeline-stops, 6));
+  width: calc(100% / var(--timeline-stops, 6));
+  padding-inline: var(--padding-global);
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .about-timeline-card {
-  width: min(58rem, 90vw);
+  width: min(56rem, 100%);
+  margin-inline: auto;
   display: grid;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2svh, 1.5rem);
 }
 
 .about-timeline-media {
   position: relative;
-  width: 45vw;
-  height: 55vh;
+  width: min(44rem, 100%);
+  height: clamp(13.5rem, 42svh, 27rem);
   border-radius: var(--radius-md);
   overflow: hidden;
   background-color: var(--grey-800);
@@ -2819,11 +2902,11 @@ p {
 
 .about-timeline-big-year {
   position: absolute;
-  left: 1.5rem;
-  bottom: 1rem;
+  left: clamp(1rem, 2.5vw, 1.5rem);
+  bottom: clamp(0.75rem, 2vw, 1rem);
   z-index: 2;
   font-family: var(--font-display);
-  font-size: 7rem;
+  font-size: clamp(3.25rem, 6.5vw, 7rem);
   font-weight: 300;
   line-height: 0.9;
   letter-spacing: -0.06em;
@@ -2833,7 +2916,7 @@ p {
 .about-timeline-copy-row {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
-  gap: 2rem;
+  gap: clamp(1rem, 2.5vw, 2rem);
   align-items: start;
 }
 
@@ -2850,29 +2933,46 @@ p {
 
 .about-timeline-desc {
   color: var(--grey-300);
-  font-size: 1.08rem;
+  font-size: clamp(0.975rem, 1.3vw, 1.08rem);
   font-weight: 300;
 }
 
-.about-timeline-section.is-reduced-motion .about-timeline-track {
+.about-timeline-section.is-static .about-timeline-track {
   width: 100%;
   flex-direction: column;
   gap: 3rem;
+  transform: none !important;
+  will-change: auto;
 }
 
-.about-timeline-section.is-reduced-motion .about-timeline-slide {
+.about-timeline-section.is-static .about-timeline-slide {
   width: 100%;
   flex: none;
 }
 
-.about-timeline-section.is-reduced-motion .about-timeline-media {
+.about-timeline-section.is-static .about-timeline-media {
   width: 100%;
-  height: 22rem;
+  height: 18rem;
 }
 
 @media (max-width: 767px) {
+  .about-timeline-progress-track {
+    display: none;
+  }
+
+  .about-timeline-copy-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .about-timeline-media {
+    height: clamp(12.5rem, 34svh, 19rem);
+  }
+}
+
+@media (max-width: 479px) {
   .about-timeline-section {
-    height: auto;
+    height: auto !important;
     padding-block: var(--space-large);
   }
 
@@ -2881,6 +2981,7 @@ p {
     height: auto;
     overflow: visible;
     padding-block: 0;
+    gap: 2rem;
   }
 
   .about-timeline-track {
@@ -2888,6 +2989,7 @@ p {
     flex-direction: column;
     gap: 3rem;
     transform: none !important;
+    will-change: auto;
   }
 
   .about-timeline-slide {
@@ -2897,16 +2999,11 @@ p {
 
   .about-timeline-media {
     width: 100%;
-    height: 18rem;
+    height: 16rem;
   }
 
   .about-timeline-big-year {
-    font-size: 3.75rem;
-  }
-
-  .about-timeline-copy-row {
-    grid-template-columns: 1fr;
-    gap: 0.85rem;
+    font-size: 3.25rem;
   }
 }
 
