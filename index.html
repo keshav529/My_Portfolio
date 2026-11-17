@@ -1,355 +1,380 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>My Portfolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keshav | Aspiring Software Developer Portfolio</title>
 
-    <!-- External CSS files should go inside <head> -->
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <!-- Set initial theme before first paint to prevent light/dark flash -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('portfolio-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved === 'light' || saved === 'dark' ? saved : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- Font Pairing: Outfit (Display) + Plus Jakarta Sans (Body) + JetBrains Mono (Code Details) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3.3 Grid/Utilities + Font Awesome Icons + Custom Portfolio Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
- <nav class="navbar navbar-expand-lg navbar-dark shadow-lg py-3 sticky-top" style="background-color: #0b1f38;">
-  <div class="container">
-    <!-- Logo -->
-    <a class="navbar-brand" href="image/resume.png" target="_blank">
-      <img src="image/resume.png" alt="Logo" style="height: 40px;">
-    </a>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- Toggler for mobile view -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <!-- Stage 1 Header: Clean 3-Zone Top Bar (Brand — Nav Links — Theme Toggle) -->
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="brand-wordmark" href="#home-id">Keshav</a>
 
-    <!-- Navbar links -->
-    <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item px-2">
-          <a class="nav-link active" id="#home-id" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item px-2">
-          <a class="nav-link" href="#skills-id" href="#">Skills</a>
-        </li>
-        <li class="nav-item px-2">
-          <a class="nav-link" href="#education-id">Education</a>
-        </li>
-         <li class="nav-item px-2">
-          <a class="nav-link" href="#projects-id">Projects</a>
-        </li>
-        <li class="nav-item px-2">
-          <a class="nav-link" href="#contact-id">Contact</a>
-        </li>
+      <ul class="nav-links-list">
+        <li><a class="nav-link-item is-active" href="#home-id">Home</a></li>
+        <li><a class="nav-link-item" href="#skills-id">Skills</a></li>
+        <li><a class="nav-link-item" href="#education-id">Education</a></li>
+        <li><a class="nav-link-item" href="#projects-id">Projects</a></li>
+        <li><a class="nav-link-item" href="#contact-id">Contact</a></li>
       </ul>
-    </div>
-  </div>
-</nav>
 
-<div class="container-fluid py-5" id="home-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
-  <div class="container">
-    <div class="row align-items-center">
-      
-      <!-- Column 1: Image -->
-      <div class="col-md-6 text-center mb-4 mb-md-0">
-        <img src="image/keshavphotos.jpg" alt="Profile Photo" class="shadow keshavimg img-fluid rounded-circle" style="max-width: 300px;">
-      </div>
-      
-      <!-- Column 2: Name and Role -->
-      <div class="col-md-6 text-center text-md-start">
-        <h2 class="fw-bold mb-2 text-white">Hi, I'm Keshav</h2>
-        <p class="fs-4 text-primary  mb-2">Aspiring Software Developer</p>
-        <p class="text-white">Passionate about building user-friendly and efficient web applications using modern technologies.</p>
-      </div>
-    </div>
-  </div>
-</div>
+      <button
+        type="button"
+        id="theme-toggle"
+        class="theme-toggle-btn"
+        aria-pressed="true"
+        aria-label="Switch to light theme"
+      >
+        <i id="theme-toggle-icon" class="fa-solid fa-sun" aria-hidden="true"></i>
+        <span id="theme-toggle-label">Light</span>
+      </button>
+    </nav>
+  </header>
 
-<!-- about -->
- <div class="container-fluid" id="skills-id" style="background-color: #0b1f38;">
-  <div class="container text-white">
-    <div class="row">
-      <div class="col-12 py-5 d-flex justify-content-center">
-        <h2 class="fw-bold text-white" style="font-size: 40px;">Skills</h2>
-      </div>
-    </div>
+  <main id="main-content">
+    <!-- Stage 1 Upgraded Hero Section -->
+    <section class="hero-section" id="home-id" aria-labelledby="hero-heading">
+      <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
 
-    <div class="row">
-      <div class="col-12">
-        <h3><strong>USING NOW:</strong></h3>
-      </div>
-    </div>
+      <div class="hero-container">
+        <div class="row align-items-center g-5">
+          <!-- Column 1: Typography, Rotating Role & Primary Actions -->
+          <div class="col-lg-7 text-center text-lg-start">
+            <p class="hero-kicker">
+              BCA Student (2022–2025) &middot; Rohtak, India
+            </p>
 
-    <div class="row py-3">
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/html5.png" class="imageedit img-fluid">
-        <p class="text-white fs-6">HTML5</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/javascriptimage.png" class="imageedit img-fluid">
-        <p class="text-white fs-6">JAVASCRIPT</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/javaimage.png" class="imageedit img-fluid">
-        <p class="text-white fs-6">JAVA</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/cssimage.png" class="imageedit img-fluid">
-        <p class="text-white fs-6">CSS</p>
-      </div>
-    </div>
+            <h1 id="hero-heading" class="hero-title">
+              Hi, I'm Keshav
+            </h1>
 
-    <div class="row py-3">
-      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/figmaimage.png" class="img-fluid imageedit" alt="">
-        <p class="text-white">FIGMA</p>
-      </div>
-      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/bootsrap.png" class="img-fluid imageedit" alt="">
-        <p class="text-white">BOOTSTRAP</p>
-      </div>
-      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/githubimage.png" class="img-fluid imageedit" alt="">
-        <p class="text-white">Github</p>
-      </div>
-      <div class="col-sm-6 col-md-3 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/cprogrammingimage.png" class="img-fluid imageedit" alt="">
-        <p class="text-white">C Programming</p>
-      </div>
-    </div>
+            <div class="hero-role-row justify-content-center justify-content-lg-start">
+              <span class="hero-role-prefix">I'm a</span>
+              <span id="hero-rotating-role" aria-live="polite">Aspiring Software Developer</span><span class="typing-cursor" aria-hidden="true"></span>
+            </div>
 
-    <div class="row py-3">
-      <div class="col-12 d-flex">
-        <h3><strong>LEARNING</strong></h3>
-      </div>
-    </div>
+            <p class="hero-summary mx-auto mx-lg-0">
+              Passionate about building user-friendly and efficient web applications using modern technologies. Currently focused on clean frontend engineering while learning React, Node.js, MongoDB, and Data Structures &amp; Algorithms.
+            </p>
 
-    <div class="row py-3">
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/REACTIMAGE.png" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-6">REACT</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/NODEJSIMAGE.png" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-6">NODE JS</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/MONGODBIMAGE.png" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-6">MONGODB</p>
-      </div>
-      <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-        <img src="image/deep-learning.png" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-6">DSA</p>
-      </div>
-    </div>
+            <div class="hero-actions justify-content-center justify-content-lg-start">
+              <a href="#projects-id" class="btn-hero-primary">
+                <span>View Projects</span>
+                <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
+              </a>
+              <a href="image/keshav_CV.pdf.pdf" download class="btn-hero-secondary">
+                <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+                <span>Download Resume</span>
+              </a>
+            </div>
 
-    <div class="row py-3">
-      <div class="col-12">
-        <h3><strong>OTHER SKILLS</strong></h3>
-      </div>
-    </div>
+            <p class="hero-stack-line">
+              HTML5 &middot; CSS3 &middot; JavaScript &middot; Java &middot; Bootstrap &middot; Figma &middot; Git/GitHub
+            </p>
+          </div>
 
-    <div class="row py-3">
-      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/csimage.jpg" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-5">Communication Skills</p>
-      </div>
-      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/problemsolvingimage.jpg" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-5">Problem Solving Skills</p>
-      </div>
-      <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-        <img src="image/presentationskillimage.jpg" class="img-fluid imageedit" alt="">
-        <p class="text-white fs-5">Presentation Skills</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Education Section -->
-<div class="container-fluid py-5" id="education-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
-  <div class="container">
-    <div class="row mb-5">
-      <div class="col text-center">
-        <h2 class="fw-bold text-white" style="font-size: 40px;">🎓 Education</h2>
-        <p class="text-white-50">My academic background and qualifications</p>
-      </div>
-    </div>
-
-    <!-- Education Cards -->
-    <div class="row g-4">
-      <!-- Class 10 -->
-      <div class="col-md-4">
-        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">📘 Class 10th (CBSE)</h5>
-            <p class="card-text"><strong>🏫 School:</strong> Sati Bhai Sai Dass Public School, Kalanaur</p>
-            <p class="card-text"><strong>📅 Year:</strong> 2020</p>
-            <p class="card-text"><strong>📊 Percentage:</strong> 69.6%</p>
+          <!-- Column 2: Profile Photo in Glassmorphic Frame -->
+          <div class="col-lg-5">
+            <div class="hero-visual-card">
+              <div class="hero-photo-frame">
+                <img
+                  src="image/keshavphotos.jpg"
+                  alt="Portrait of Keshav, aspiring software developer"
+                >
+              </div>
+              <div class="hero-photo-caption">
+                <span>Keshav Anand</span>
+                <span class="font-mono">BCA 2022–2025</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Class 12 -->
-      <div class="col-md-4">
-        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">📗 Class 12th (HBSE)</h5>
-            <p class="card-text"><strong>🏫 School:</strong> Government School, Kalanaur</p>
-            <p class="card-text"><strong>📅 Year:</strong> 2022</p>
-            <p class="card-text"><strong>📊 Percentage:</strong> 82.2%</p>
+    <!-- Existing Skills Section (Will be upgraded in Stage 3) -->
+    <section class="portfolio-section portfolio-section-alt" id="skills-id" aria-labelledby="skills-heading">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col-12 text-center">
+            <h2 id="skills-heading" class="section-heading">Skills</h2>
+            <p class="section-subheading">Core technologies and tools I work with</p>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-12">
+            <h3 class="h5 fw-bold">Using Now</h3>
+          </div>
+        </div>
+
+        <div class="row g-3 py-2 text-center">
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/html5.png" alt="HTML5 logo" class="imageedit img-fluid">
+            <p class="mb-0">HTML5</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/javascriptimage.png" alt="JavaScript logo" class="imageedit img-fluid">
+            <p class="mb-0">JavaScript</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/javaimage.png" alt="Java logo" class="imageedit img-fluid">
+            <p class="mb-0">Java</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/cssimage.png" alt="CSS3 logo" class="imageedit img-fluid">
+            <p class="mb-0">CSS</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/figmaimage.png" alt="Figma logo" class="imageedit img-fluid">
+            <p class="mb-0">Figma</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/bootsrap.png" alt="Bootstrap logo" class="imageedit img-fluid">
+            <p class="mb-0">Bootstrap</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/githubimage.png" alt="GitHub logo" class="imageedit img-fluid">
+            <p class="mb-0">GitHub</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/cprogrammingimage.png" alt="C Programming logo" class="imageedit img-fluid">
+            <p class="mb-0">C Programming</p>
+          </div>
+        </div>
+
+        <div class="row mt-4 mb-2">
+          <div class="col-12">
+            <h3 class="h5 fw-bold">Learning</h3>
+          </div>
+        </div>
+
+        <div class="row g-3 py-2 text-center">
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/REACTIMAGE.png" alt="React logo" class="imageedit img-fluid">
+            <p class="mb-0">React</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/NODEJSIMAGE.png" alt="Node.js logo" class="imageedit img-fluid">
+            <p class="mb-0">Node.js</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/MONGODBIMAGE.png" alt="MongoDB logo" class="imageedit img-fluid">
+            <p class="mb-0">MongoDB</p>
+          </div>
+          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
+            <img src="image/deep-learning.png" alt="Data Structures and Algorithms icon" class="imageedit img-fluid">
+            <p class="mb-0">DSA</p>
+          </div>
+        </div>
+
+        <div class="row mt-4 mb-2">
+          <div class="col-12">
+            <h3 class="h5 fw-bold">Other Skills</h3>
+          </div>
+        </div>
+
+        <div class="row g-3 py-2 text-center">
+          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+            <img src="image/csimage.jpg" alt="Communication Skills" class="imageedit img-fluid">
+            <p class="mb-0">Communication Skills</p>
+          </div>
+          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+            <img src="image/problemsolvingimage.jpg" alt="Problem Solving Skills" class="imageedit img-fluid">
+            <p class="mb-0">Problem Solving Skills</p>
+          </div>
+          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
+            <img src="image/presentationskillimage.jpg" alt="Presentation Skills" class="imageedit img-fluid">
+            <p class="mb-0">Presentation Skills</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- BCA -->
-      <div class="col-md-4">
-        <div class="card text-white h-100 shadow-lg border-0" style="background-color: #2c2f48; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          <div class="card-body">
-            <h5 class="card-title fw-bold">💻 BCA (2022–2025)</h5>
-            <p class="card-text"><strong>🏛 College:</strong> Sh. L.N. Hindu College, Rohtak (MDU)</p>
-            <p class="card-text"><strong>📊 Current Percentage:</strong> 72%</p>
+    <!-- Existing Education Section (Will be upgraded in Stage 4) -->
+    <section class="portfolio-section" id="education-id" aria-labelledby="education-heading">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col text-center">
+            <h2 id="education-heading" class="section-heading">Education</h2>
+            <p class="section-subheading">My academic background and qualifications</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card surface-card h-100">
+              <div class="card-body p-4">
+                <h3 class="h5 card-title fw-bold mb-3">Class 10th (CBSE)</h3>
+                <p class="card-text mb-2"><strong>School:</strong> Sati Bhai Sai Dass Public School, Kalanaur</p>
+                <p class="card-text mb-2"><strong>Year:</strong> 2020</p>
+                <p class="card-text mb-0"><strong>Percentage:</strong> 69.6%</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card surface-card h-100">
+              <div class="card-body p-4">
+                <h3 class="h5 card-title fw-bold mb-3">Class 12th (HBSE)</h3>
+                <p class="card-text mb-2"><strong>School:</strong> Government School, Kalanaur</p>
+                <p class="card-text mb-2"><strong>Year:</strong> 2022</p>
+                <p class="card-text mb-0"><strong>Percentage:</strong> 82.2%</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card surface-card h-100">
+              <div class="card-body p-4">
+                <h3 class="h5 card-title fw-bold mb-3">BCA (2022–2025)</h3>
+                <p class="card-text mb-2"><strong>College:</strong> Sh. L.N. Hindu College, Rohtak (MDU)</p>
+                <p class="card-text mb-0"><strong>Current Percentage:</strong> 72%</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<!-- project section -->
-<div class="container-fluid py-5" id="projects-id" style="background-color: #0b1f38;" >
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center">
-         <h2 class="fw-bold text-white" style="font-size: 40px;">Projects</h2>
-      </div>
-    </div>
+    <!-- Existing Projects Section (Will be upgraded in Stage 3) -->
+    <section class="portfolio-section portfolio-section-alt" id="projects-id" aria-labelledby="projects-heading">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col-12 text-center">
+            <h2 id="projects-heading" class="section-heading">Projects</h2>
+            <p class="section-subheading">Web applications and interactive UI builds</p>
+          </div>
+        </div>
 
-    <div class="row py-3 mb-2 d-flex justify-content-center">
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/bootstapimage.png" class="img-fluid project-img-hover" alt="">
-        <p class="mt-2"><strong class="text-white">Website Clone</strong></p>
-        <p class="text-white fw-semibold">Built a website clone using HTML, CSS, and Bootstrap for responsive design.</p>
-      </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/bootstapimage.png" alt="Website Clone project screenshot" class="img-fluid project-img-hover">
+            <p class="mt-3 mb-1 fw-bold">Website Clone</p>
+            <p class="section-subheading small">Built a website clone using HTML, CSS, and Bootstrap for responsive design.</p>
+          </div>
 
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/netfliximageportfolio.png" class="img-fluid project-img-hover" alt="">
-        <p class="mt-2"><strong class="text-white">Netflix Clone</strong></p>
-        <p class="text-white fw-semibold">Designed a responsive Netflix homepage clone using HTML and CSS with a focus on layout, styling, and mobile-friendly design.</p>
-      </div>
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/netfliximageportfolio.png" alt="Netflix Clone project screenshot" class="img-fluid project-img-hover">
+            <p class="mt-3 mb-1 fw-bold">Netflix Clone</p>
+            <p class="section-subheading small">Designed a responsive Netflix homepage clone using HTML and CSS with a focus on layout, styling, and mobile-friendly design.</p>
+          </div>
 
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/stopwatchimg.png" class="img-fluid project-img-hover" alt="">
-        <p class="mt-2"><strong class="text-white">Stopwatch</strong></p>
-        <p class="text-white fw-semibold">Created a stopwatch using HTML, CSS, and JavaScript with start, stop, and reset features.</p>
-      </div>
-    </div>
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/stopwatchimg.png" alt="Stopwatch app screenshot" class="img-fluid project-img-hover">
+            <p class="mt-3 mb-1 fw-bold">Stopwatch</p>
+            <p class="section-subheading small">Created a stopwatch using HTML, CSS, and JavaScript with start, stop, and reset features.</p>
+          </div>
 
-    <div class="row py-3 mb-2 d-flex justify-content-center">
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/tictactoeportfolioimg.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
-        <p class="mt-2"><strong class="text-white">Tic-Tac-Toe</strong></p>
-        <p class="text-white fw-semibold">Built a Tic Tac Toe game using HTML, CSS, and JavaScript with interactive gameplay.</p>
-      </div>
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/tictactoeportfolioimg.png" alt="Tic-Tac-Toe game screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
+            <p class="mt-3 mb-1 fw-bold">Tic-Tac-Toe</p>
+            <p class="section-subheading small">Built a Tic Tac Toe game using HTML, CSS, and JavaScript with interactive gameplay.</p>
+          </div>
 
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/currencyconvertorimage.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
-        <p class="mt-2"><strong class="text-white">Currency Converter</strong></p>
-        <p class="text-white fw-semibold">Built a currency converter using HTML, CSS, JavaScript, and a real-time API.</p>
-      </div>
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/currencyconvertorimage.png" alt="Currency Converter app screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
+            <p class="mt-3 mb-1 fw-bold">Currency Converter</p>
+            <p class="section-subheading small">Built a currency converter using HTML, CSS, JavaScript, and a real-time API.</p>
+          </div>
 
-      <div class="col-lg-4 col-md-6 text-center">
-        <img src="image/calculatorimg.png" class="img-fluid project-img-hover" style="height: 300px; width: 300px;" alt="">
-        <p class="mt-2"><strong class="text-white">Calculator</strong></p>
-        <p class="text-white fw-semibold">Built a basic calculator using HTML, CSS, and JavaScript for simple arithmetic operations.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Contact Section -->
-<div class="container-fluid" id="contact-id" style="background: linear-gradient(135deg, #08011e, #1a0535);">
-  <div class="container py-5">
-    <div class="row align-items-center">
-
-      <!-- Contact Image -->
-      <div class="col-md-6 col-sm-12 text-center mb-4 mb-md-0">
-        <img src="image/contactphoto.jpg" alt="Laptop and Code" class="img-fluid rounded-4 shadow-lg contactimg" style="max-height: 400px;">
-      </div>
-
-      <!-- Contact Info -->
-      <div class="col-md-6 col-sm-12 text-white text-center">
-        <h1 class="fs-1 fw-bold mb-4">My Contact</h1>
-
-        <!-- Email -->
-        <p class="fs-4 mb-3">
-          <i class="bi bi-envelope-fill me-2 text-info"></i>
-          <a href="mailto:keshavanand748@gmail.com" class="text-white text-decoration-none hover-effect">
-            keshavanand748@gmail.com
-          </a>
-        </p>
-
-        <!-- LinkedIn -->
-        <p class="fs-4 mb-4">
-          <i class="bi bi-linkedin me-2 text-info"></i>
-          <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
-            Visit LinkedIn Profile
-          </a>
-        </p>
-
-        <p class="fs-4">
-            Download Resume:
-            <a href="image/keshav_CV.pdf.pdf" download class="text-primary">
-              Click to Download
-            </a>
-        </p>
-      </div>
-      
-    </div>
-  </div>
-</div>
-
-<!-- Footer -->
-<div class="container-fluid" style="background-color: #0b1f38;">
-  <div class="container">
-    <div class="row d-flex flex-column py-4 text-center">
-      <div class="col-12">
-        <h2 class="fw-bold text-white" style="font-size: 30px;">Keshav</h2>
-        <p class="text-white mb-1">📧 keshavanand748@gmail.com</p>
-        <p class="text-white mb-1">📞 +91-9817357072</p>
-
-        <!-- Social Links -->
-        <div class="d-flex justify-content-center gap-3 mt-2">
-          <a href="https://leetcode.com/u/keshavanand/" target="_blank" class="text-white text-decoration-none">
-            <i class="bi bi-code-slash"></i><img src="image/leetcodeimage.png" class="img-fluid" style="height: 25px;" alt="">
-          </a>
-
-          <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" class="text-white text-decoration-none">
-            <i class="bi bi-linkedin"></i> <img src="image/linkedinimage.png" class="img-fluid" style="height: 25px;" alt="">
-          </a>
-
-          <a href="mailto:keshavanand748@gmail.com" class="text-white text-decoration-none">
-            <i class="bi bi-envelope-fill"></i><img src="image/gmailimg.png" class="img-fluid" style="height: 25px;" alt="">
-          </a>
+          <div class="col-lg-4 col-md-6 text-center">
+            <img src="image/calculatorimg.png" alt="Calculator app screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
+            <p class="mt-3 mb-1 fw-bold">Calculator</p>
+            <p class="section-subheading small">Built a basic calculator using HTML, CSS, and JavaScript for simple arithmetic operations.</p>
+          </div>
         </div>
       </div>
+    </section>
 
-      <p class="text-white">
-        🤝 Open to opportunities — let’s connect and build something amazing together!
-      </p>
+    <!-- Existing Contact Section (Will be upgraded in Stage 4) -->
+    <section class="portfolio-section" id="contact-id" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-md-6 text-center">
+            <img src="image/contactphoto.jpg" alt="Laptop displaying code" class="img-fluid rounded-4 shadow-sm contactimg">
+          </div>
 
-      <p class="text-white">
-        © 2025 Keshav • All rights reserved.
-      </p>
+          <div class="col-md-6 text-center text-md-start">
+            <h2 id="contact-heading" class="section-heading mb-4">My Contact</h2>
 
+            <p class="fs-5 mb-3">
+              <a href="mailto:keshavanand748@gmail.com" class="theme-link">
+                keshavanand748@gmail.com
+              </a>
+            </p>
+
+            <p class="mb-4">
+              <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" rel="noopener noreferrer" class="btn-linkedin-themed">
+                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                <span>Visit LinkedIn Profile</span>
+              </a>
+            </p>
+
+            <p class="fs-5 mb-0">
+              Download Resume:
+              <a href="image/keshav_CV.pdf.pdf" download class="theme-link">
+                Click to Download
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer text-center">
+    <div class="container">
+      <h2 class="fw-bold">Keshav</h2>
+      <p class="mb-1">keshavanand748@gmail.com &middot; +91-9817357072</p>
+
+      <div class="d-flex justify-content-center gap-3 my-3">
+        <a href="https://leetcode.com/u/keshavanand/" target="_blank" rel="noopener noreferrer" aria-label="Keshav on LeetCode">
+          <img src="image/leetcodeimage.png" alt="LeetCode" style="height: 26px;">
+        </a>
+        <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" rel="noopener noreferrer" aria-label="Keshav on LinkedIn">
+          <img src="image/linkedinimage.png" alt="LinkedIn" style="height: 26px;">
+        </a>
+        <a href="mailto:keshavanand748@gmail.com" aria-label="Email Keshav">
+          <img src="image/gmailimg.png" alt="Email" style="height: 26px;">
+        </a>
+      </div>
+
+      <p class="mb-1">Open to opportunities — let’s connect and build something amazing together!</p>
+      <p class="mb-0 small">&copy; 2025 Keshav &middot; All rights reserved.</p>
     </div>
-  </div>
-</div>
+  </footer>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
-</body> 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="/main.js"></script>
+</body>
 </html>
