@@ -128,6 +128,7 @@
   :root {
     --text-hero: 4rem;
     --text-banner: 4rem;
+    --text-process-hero: 5.5rem;
     --space-medium: 4rem;
     --space-large: 5.5rem;
     --space-xlarge: 6.5rem;
@@ -146,6 +147,7 @@
     --text-hero: 3.25rem;
     --text-banner: 3rem;
     --text-menu-link: 3.5rem;
+    --text-process-hero: 3.75rem;
     --space-small: 2rem;
     --space-medium: 3rem;
     --space-large: 4rem;
@@ -159,6 +161,7 @@
   :root {
     --text-hero: 2.75rem;
     --text-menu-link: 3.25rem;
+    --text-process-hero: 3rem;
   }
 }
 

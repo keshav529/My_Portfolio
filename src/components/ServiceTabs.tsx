@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { KeyboardEvent, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, Check } from 'lucide-react';
 import { SERVICE_HIGHLIGHTS, ServiceItem } from '../data/portfolioData';
@@ -12,15 +12,37 @@ const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 /**
  * Reference "How I can help you" Services Band:
  * - #e5e5e5 background with 1px #a3a3a3 top border
- * - 4 tab buttons with sliding orange-tinted selector pill
+ * - 4 plain-text tab buttons with sliding selector pill & Left/Right arrow-key navigation
  * - 40rem black area with opposite horizontal sliding tracks (images slide left, text panels slide right)
  * - 2-column bullet list below (6rem gap, 1.5rem #525252 text, orange icon, 1px #a3a3a3 dividers)
  */
 export function ServiceTabs({ services }: ServiceTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   if (services.length === 0) return null;
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const count = services.length;
+    let nextIndex: number | null = null;
+
+    if (event.key === 'ArrowRight') {
+      nextIndex = (index + 1) % count;
+    } else if (event.key === 'ArrowLeft') {
+      nextIndex = (index - 1 + count) % count;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = count - 1;
+    }
+
+    if (nextIndex !== null) {
+      event.preventDefault();
+      setActiveIndex(nextIndex);
+      tabRefs.current[nextIndex]?.focus();
+    }
+  };
 
   // Text panels arranged in reverse order so shifting to (services.length - 1 - activeIndex)
   // moves the text track in the opposite horizontal direction to the image track.
@@ -54,15 +76,19 @@ export function ServiceTabs({ services }: ServiceTabsProps) {
             return (
               <button
                 key={service.id}
+                ref={(el) => {
+                  tabRefs.current[idx] = el;
+                }}
                 type="button"
                 role="tab"
                 id={`tab-${service.id}`}
+                tabIndex={isActive ? 0 : -1}
                 aria-selected={isActive}
                 aria-controls={`panel-${service.id}`}
                 className={`services-tab-btn ${isActive ? 'is-active' : ''}`}
                 onClick={() => setActiveIndex(idx)}
+                onKeyDown={(e) => handleTabKeyDown(e, idx)}
               >
-                <span className="services-tab-num">{service.number}</span>
                 <span className="services-tab-name">{service.title}</span>
               </button>
             );
@@ -117,9 +143,7 @@ export function ServiceTabs({ services }: ServiceTabsProps) {
                   aria-hidden={!isSelected}
                   className="services-text-slide"
                 >
-                  <p className="services-panel-eyebrow">
-                    {service.number} &middot; {service.title}
-                  </p>
+                  <p className="services-panel-kicker">{service.title}</p>
                   <h3 className="services-panel-title">{service.summary}</h3>
                   <p className="services-panel-copy">{service.details}</p>
 

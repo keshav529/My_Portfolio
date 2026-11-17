@@ -1,16 +1,57 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Code2, ExternalLink } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Code2, ExternalLink, Maximize2, X } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
 import { PROJECTS } from '../data/portfolioData';
 
+const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
+
 /**
- * Dynamic Project Detail Page (/work/:slug) — Stage 3 + Stage 5 GitHub Links
+ * Stage 3 Project Detail Page (/work/:slug):
+ * - Header grid 1.5fr / 1fr: left = title + description + links; right = orange-bordered tags + 2x2 meta list
+ * - 4-column meta row (Role, Tools, Year, Type) with 1px black top & bottom borders
+ * - Content blocks in 1fr / 1.5fr grids (Overview, What it does, What I learned, Challenges)
+ * - Image gallery: full-width 16:9 screenshot (click to open Lightbox) + 2-column square slots
+ * - Live demo / GitHub secondary links + Next project link
  */
 export function ProjectDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const currentIndex = PROJECTS.findIndex((item) => item.slug === slug);
   const project = currentIndex >= 0 ? PROJECTS[currentIndex] : undefined;
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const openerBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setLightboxOpen(false);
+  }, [slug]);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const focusTimer = window.requestAnimationFrame(() => {
+      closeBtnRef.current?.focus();
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLightboxOpen(false);
+        openerBtnRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusTimer);
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxOpen]);
 
   if (!project) {
     return (
@@ -18,7 +59,6 @@ export function ProjectDetailPage() {
         <section className="stage-section">
           <div className="container">
             <div className="stage-shell-card">
-              <p className="eyebrow-tagline">PROJECT NOT FOUND</p>
               <h1>We couldn&apos;t find that project</h1>
               <p>
                 The case study link may have changed. Return to the work archive to browse all projects.
@@ -39,8 +79,8 @@ export function ProjectDetailPage() {
   return (
     <PageTransition>
       <article className="project-detail-page">
-        {/* Top Breadcrumb + Title Header */}
-        <section className="page-header-section" aria-labelledby="project-detail-title">
+        {/* Top Header Grid: 1.5fr / 1fr */}
+        <section className="case-header-section" aria-labelledby="project-detail-title">
           <div className="container">
             <Reveal>
               <Link to="/work" className="back-link-editorial">
@@ -48,33 +88,197 @@ export function ProjectDetailPage() {
                 <span>All projects</span>
               </Link>
 
-              <p className="eyebrow-tagline" style={{ marginTop: '1.75rem' }}>
-                {project.workNumber} &middot; {project.category}
-              </p>
+              <div className="case-header-grid">
+                {/* Left 1.5fr: Title + Short Description + Links */}
+                <div className="case-header-main">
+                  <h1 id="project-detail-title" className="case-detail-title">
+                    {project.title}
+                  </h1>
+                  <p className="case-detail-lead">{project.shortDescription}</p>
 
-              <h1 id="project-detail-title" className="page-hero-title">
-                {project.title}
-              </h1>
+                  <div className="case-header-links">
+                    {project.hasLiveDemo ? (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-secondary-editorial"
+                      >
+                        <span>Live demo</span>
+                        <ExternalLink size={15} aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <span className="case-pending-note">
+                        Live demo (pending deployment)
+                      </span>
+                    )}
 
-              <p className="page-hero-lead">{project.shortDescription}</p>
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-secondary-editorial"
+                    >
+                      <Code2 size={15} aria-hidden="true" />
+                      <span>
+                        {project.hasExactRepo ? 'GitHub' : 'GitHub profile (repo pending)'}
+                      </span>
+                    </a>
+                  </div>
+                </div>
 
-              <div className="stage-cta-row" style={{ marginTop: '2rem' }}>
-                {project.hasLiveDemo ? (
+                {/* Right 1fr: Orange-bordered tag chips + 2x2 meta list */}
+                <div className="case-header-aside">
+                  <div className="case-tag-chips" aria-label="Technologies used">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="case-tag-chip">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <dl className="case-quick-meta">
+                    <div className="case-quick-meta-cell">
+                      <dt>Category</dt>
+                      <dd>{project.category}</dd>
+                    </div>
+                    <div className="case-quick-meta-cell">
+                      <dt>Role</dt>
+                      <dd>{project.role}</dd>
+                    </div>
+                    <div className="case-quick-meta-cell">
+                      <dt>Year</dt>
+                      <dd>{project.year}</dd>
+                    </div>
+                    <div className="case-quick-meta-cell">
+                      <dt>Type</dt>
+                      <dd>{project.projectType}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* 4-Column Meta Row (1px solid black top & bottom borders) */}
+        <section className="case-meta-strip-section" aria-label="Project metadata">
+          <div className="container">
+            <Reveal delay={0.05}>
+              <dl className="case-meta-four-grid">
+                <div className="case-meta-col">
+                  <dt>Role</dt>
+                  <dd>{project.role}</dd>
+                </div>
+                <div className="case-meta-col">
+                  <dt>Tools</dt>
+                  <dd>{project.tags.join(', ')}</dd>
+                </div>
+                <div className="case-meta-col">
+                  <dt>Year</dt>
+                  <dd>{project.year}</dd>
+                </div>
+                <div className="case-meta-col">
+                  <dt>Type</dt>
+                  <dd>{project.projectType}</dd>
+                </div>
+              </dl>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Image Gallery: Full-Width 16:9 Screenshot + 2-Column Square Slots */}
+        <section className="case-gallery-section" aria-label="Project gallery">
+          <div className="container">
+            <Reveal delay={0.08}>
+              <div className="case-gallery-primary-wrap">
+                <button
+                  ref={openerBtnRef}
+                  type="button"
+                  className="case-gallery-trigger"
+                  onClick={() => setLightboxOpen(true)}
+                  aria-label={`Open full-size screenshot of ${project.title}`}
+                >
+                  <img
+                    src={project.image}
+                    alt={project.imageAlt}
+                    decoding="async"
+                  />
+                  <span className="case-gallery-zoom-badge" aria-hidden="true">
+                    <Maximize2 size={16} />
+                    <span>Expand</span>
+                  </span>
+                </button>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Content Blocks in 1fr / 1.5fr Grids */}
+        <section className="case-blocks-section" aria-label="Case study narrative">
+          <div className="container">
+            <div className="case-blocks-stack">
+              <Reveal>
+                <div className="case-block-row">
+                  <h2 className="case-block-heading">Overview</h2>
+                  <p className="case-block-copy">{project.overview}</p>
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.04}>
+                <div className="case-block-row">
+                  <h2 className="case-block-heading">What it does</h2>
+                  <p className="case-block-copy">{project.whatItDoes}</p>
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.08}>
+                <div className="case-block-row">
+                  <h2 className="case-block-heading">What I learned</h2>
+                  <p className="case-block-copy">{project.whatILearned}</p>
+                </div>
+              </Reveal>
+
+              <Reveal delay={0.12}>
+                <div className="case-block-row">
+                  <h2 className="case-block-heading">Challenges</h2>
+                  <p className="case-block-copy">{project.challenges}</p>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* 2-Column Square Image Slots (clean neutral placeholders where secondary screenshots are optional) */}
+            <Reveal delay={0.1}>
+              <div className="case-square-gallery">
+                <div className="case-square-placeholder">
+                  <span className="case-placeholder-title">Responsive mobile view</span>
+                  <span className="case-placeholder-hint">
+                    Optional square screenshot slot ({project.slug}-mobile.png)
+                  </span>
+                </div>
+                <div className="case-square-placeholder">
+                  <span className="case-placeholder-title">Interactive state detail</span>
+                  <span className="case-placeholder-hint">
+                    Optional square screenshot slot ({project.slug}-detail.png)
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Bottom Action Links */}
+            <Reveal delay={0.12}>
+              <div className="case-bottom-actions">
+                {project.hasLiveDemo && (
                   <a
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-primary-editorial"
+                    className="btn-secondary-editorial"
                   >
-                    <span>Live Demo</span>
+                    <span>Live demo</span>
                     <ExternalLink size={15} aria-hidden="true" />
                   </a>
-                ) : (
-                  <span className="btn-secondary-editorial" aria-disabled="true">
-                    Live Demo (Not Yet Deployed)
-                  </span>
                 )}
-
                 <a
                   href={project.githubUrl}
                   target="_blank"
@@ -82,106 +286,32 @@ export function ProjectDetailPage() {
                   className="btn-secondary-editorial"
                 >
                   <Code2 size={15} aria-hidden="true" />
-                  <span>
-                    {project.hasExactRepo ? 'GitHub Repository' : 'GitHub Profile (Repo Pending)'}
-                  </span>
+                  <span>{project.hasExactRepo ? 'GitHub' : 'GitHub profile'}</span>
                 </a>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* Cover Screenshot */}
-        <section className="project-cover-section">
-          <div className="container">
-            <Reveal delay={0.05}>
-              <div className="project-cover-frame">
-                <img
-                  src={project.image}
-                  alt={project.imageAlt}
-                  decoding="async"
-                />
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Structured Case Study Content */}
-        <section className="home-section" aria-label="Project details">
-          <div className="container">
-            <div className="project-detail-grid">
-              {/* Left Sidebar Metadata */}
-              <Reveal>
-                <aside className="project-meta-box">
-                  <div className="project-meta-block">
-                    <p className="eyebrow-tagline">Category</p>
-                    <p className="project-meta-value">{project.category}</p>
-                  </div>
-
-                  <div className="project-meta-block">
-                    <p className="eyebrow-tagline">Scope</p>
-                    <p className="project-meta-value">Personal Practice Build</p>
-                  </div>
-
-                  <div className="project-meta-block">
-                    <p className="eyebrow-tagline">Tech Stack</p>
-                    <ul className="project-tech-list">
-                      {project.tags.map((tag) => (
-                        <li key={tag}>{tag}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {(!project.hasLiveDemo || !project.hasExactRepo) && (
-                    <p className="project-placeholder-hint">
-                      This project does not have a dedicated public repo/live URL on <code>github.com/keshav529</code> yet. Add it in <code>src/data/portfolioData.ts</code> once pushed.
-                    </p>
-                  )}
-                </aside>
-              </Reveal>
-
-              {/* Right Case Study Narrative */}
-              <Reveal delay={0.08}>
-                <div className="project-narrative">
-                  <div className="project-narrative-block">
-                    <h2>Project Overview</h2>
-                    <p>{project.overview}</p>
-                  </div>
-
-                  <div className="project-narrative-block">
-                    <h2>What I Learned</h2>
-                    <p>{project.whatILearned}</p>
-                  </div>
-
-                  <div className="project-narrative-block">
-                    <h2>Challenges &amp; Solutions</h2>
-                    <p>{project.challenges}</p>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-
-        {/* Next Project Navigation */}
+        {/* Next Project Link */}
         {nextProject && (
-          <section className="home-section home-section-tinted" aria-labelledby="next-project-heading">
+          <section className="case-next-section" aria-labelledby="next-project-heading">
             <div className="container">
               <Reveal>
-                <Link to={`/work/${nextProject.slug}`} className="next-project-card">
-                  <div className="next-project-copy">
-                    <p id="next-project-heading" className="eyebrow-tagline">
-                      Next Project &middot; {nextProject.workNumber}
-                    </p>
-                    <h2 className="next-project-title">{nextProject.title}</h2>
-                    <p className="next-project-desc">{nextProject.shortDescription}</p>
-                    <span className="see-more-link" style={{ marginTop: '1rem' }}>
+                <Link to={`/work/${nextProject.slug}`} className="case-next-card">
+                  <div>
+                    <span id="next-project-heading" className="case-next-kicker">
+                      Next project
+                    </span>
+                    <h2 className="case-next-title">{nextProject.title}</h2>
+                    <p className="case-next-desc">{nextProject.shortDescription}</p>
+                    <span className="btn-secondary-editorial" style={{ marginTop: '1rem' }}>
                       <span>View project</span>
                       <ArrowRight size={16} aria-hidden="true" />
                     </span>
                   </div>
 
-                  <div className="next-project-thumb">
+                  <div className="case-next-thumb">
                     <img
                       src={nextProject.image}
                       alt={nextProject.imageAlt}
@@ -195,6 +325,49 @@ export function ProjectDetailPage() {
           </section>
         )}
       </article>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            className="case-lightbox-backdrop"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${project.title} full screenshot preview`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: REFERENCE_EASE }}
+            onClick={() => {
+              setLightboxOpen(false);
+              openerBtnRef.current?.focus();
+            }}
+          >
+            <motion.div
+              className="case-lightbox-content"
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.3, ease: REFERENCE_EASE }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                ref={closeBtnRef}
+                type="button"
+                className="case-lightbox-close"
+                aria-label="Close screenshot preview"
+                onClick={() => {
+                  setLightboxOpen(false);
+                  openerBtnRef.current?.focus();
+                }}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+              <img src={project.image} alt={project.imageAlt} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageTransition>
   );
 }

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, CheckCircle2, FileDown, Star, User } from 'lucide-react';
@@ -18,28 +18,66 @@ import {
 } from '../data/portfolioData';
 
 /**
- * Reference-Matched Home Page (Stage 2)
+ * Reference-Matched Home Page (Stage 2 + Stage 2 Fixes)
  * Order:
  * 1. Hero (300vh sticky 1.25fr / 1fr + line-by-line mask + cream wipe)
  * 2. Intro Statement (large weight-300 editorial paragraph)
  * 3. Services ("How I can help you" — #e5e5e5 band + opposite tracks + 2-col bullet list)
- * 4. Work (35rem horizontal scroll-linked strip of 6 real projects + "See more work")
- * 5. Why Work With Me (2-column checklist + 50% width image block)
- * 6. Reviews (7.5rem two-line banner heading + 3-col placeholder cards w/ stars & avatars)
+ * 4. Work (35rem horizontal scroll-linked strip measured dynamically from real track width)
+ * 5. Why Work With Me (checklist + 50% width image block)
+ * 6. Milestones & Notes (7.5rem two-line banner heading + 3-col cards w/ stars & avatars)
  * 7. Resume Banner (download CTA + document cover)
  * 8. FAQ (6.5rem rows + cream-2 wipe + #292929 answer panel)
  */
 export function HomePage() {
   const workStripRef = useRef<HTMLElement>(null);
+  const workViewportRef = useRef<HTMLDivElement>(null);
+  const workTrackRef = useRef<HTMLDivElement>(null);
+  const [maxWorkTranslate, setMaxWorkTranslate] = useState(0);
+
   const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const measureTrack = () => {
+      const viewport = workViewportRef.current;
+      const track = workTrackRef.current;
+      if (!viewport || !track) return;
+
+      // Mobile / tablet uses native horizontal scroll-snap with zero JS translation
+      if (window.innerWidth <= 991) {
+        setMaxWorkTranslate(0);
+        return;
+      }
+
+      const computedViewport = window.getComputedStyle(viewport);
+      const paddingLeft = parseFloat(computedViewport.paddingLeft) || 0;
+      const rightGutter = paddingLeft; // Symmetric 5vw right breathing space when last card lands
+      const totalShift = Math.max(
+        0,
+        track.scrollWidth - (viewport.clientWidth - paddingLeft) + rightGutter
+      );
+      setMaxWorkTranslate(totalShift);
+    };
+
+    measureTrack();
+
+    const observer = new ResizeObserver(measureTrack);
+    if (workViewportRef.current) observer.observe(workViewportRef.current);
+    if (workTrackRef.current) observer.observe(workTrackRef.current);
+    window.addEventListener('resize', measureTrack);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measureTrack);
+    };
+  }, []);
 
   const { scrollYProgress: workProgress } = useScroll({
     target: workStripRef,
     offset: ['start start', 'end end'],
   });
 
-  // Scroll 6 cards cleanly across the horizontal viewport on desktop
-  const workTrackX = useTransform(workProgress, [0, 1], ['0%', '-62%']);
+  const workTrackX = useTransform(workProgress, [0, 1], [0, -maxWorkTranslate]);
 
   return (
     <PageTransition>
@@ -51,7 +89,6 @@ export function HomePage() {
         <div className="container">
           <Reveal>
             <div className="intro-statement-shell">
-              <p className="eyebrow-tagline">About my focus</p>
               <h2 id="intro-statement" className="intro-statement-headline">
                 I partner with student teams, mentors, and growing products to craft clean, responsive interfaces that turn ideas into fast browser experiences.
               </h2>
@@ -68,7 +105,6 @@ export function HomePage() {
         <div className="container">
           <Reveal>
             <div className="services-band-header">
-              <p className="eyebrow-tagline">Capabilities</p>
               <h2 id="services-heading" className="services-band-title">
                 How I can help you
               </h2>
@@ -79,7 +115,7 @@ export function HomePage() {
         <ServiceTabs services={SERVICES} />
       </section>
 
-      {/* 4. WORK (35rem Horizontal Scroll-Linked Strip on Desktop, 85vw Swipeable Row on Mobile) */}
+      {/* 4. WORK (35rem Horizontal Scroll Strip on Desktop, 85vw Swipeable Row <= 991px) */}
       <section
         ref={workStripRef}
         className={`work-strip-section ${prefersReducedMotion ? 'is-reduced-motion' : ''}`}
@@ -89,24 +125,22 @@ export function HomePage() {
           <div className="container work-strip-header-wrap">
             <Reveal>
               <div className="work-strip-header">
-                <div>
-                  <p className="eyebrow-tagline">Work &middot; Case Studies</p>
-                  <h2 id="work-preview-heading" className="work-strip-heading">
-                    Selected builds
-                  </h2>
-                </div>
-                <p className="work-strip-count">
-                  01 &mdash; 0{PROJECTS.length}
-                </p>
+                <h2 id="work-preview-heading" className="work-strip-heading">
+                  Selected builds
+                </h2>
               </div>
             </Reveal>
           </div>
 
-          {/* Horizontal Track (Desktop scroll-driven x, mobile horizontal scroll-snap) */}
-          <div className="work-strip-viewport">
+          <div ref={workViewportRef} className="work-strip-viewport">
             <motion.div
+              ref={workTrackRef}
               className="work-strip-track"
-              style={prefersReducedMotion ? undefined : { x: workTrackX }}
+              style={
+                prefersReducedMotion || maxWorkTranslate === 0
+                  ? undefined
+                  : { x: workTrackX }
+              }
             >
               {PROJECTS.map((project) => (
                 <WorkCard key={project.slug} project={project} variant="strip" />
@@ -123,12 +157,11 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 5. WHY WORK WITH ME (2-Column Checklist + 50% Width Image Block, gap 5rem) */}
+      {/* 5. WHY WORK WITH ME (Checklist + 50% Width Image Block, gap 5rem) */}
       <section className="why-ref-section" aria-labelledby="why-heading">
         <div className="container">
           <Reveal>
             <div className="why-ref-header">
-              <p className="eyebrow-tagline">Standards</p>
               <h2 id="why-heading">Why work with me</h2>
             </div>
           </Reveal>
@@ -162,13 +195,12 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 6. REVIEWS / PLACEHOLDERS (Big Two-Line 7.5rem Banner + 3-Col Grid) */}
+      {/* 6. REVIEWS / PLACEHOLDERS (7.5rem Two-Line Banner + 3-Col Grid) */}
       <section className="reviews-ref-section" aria-labelledby="notes-heading">
         <div className="container">
           <Reveal>
-            <p className="eyebrow-tagline">Growth &amp; Peer Placeholders</p>
             <h2 id="notes-heading" className="reviews-banner-heading">
-              <span className="reviews-line-black">Nice words</span>
+              <span className="reviews-line-black">Builder notes</span>
               <span className="reviews-line-orange">&amp; milestones</span>
             </h2>
           </Reveal>
@@ -183,7 +215,10 @@ export function HomePage() {
                       isPlaceholder ? 'is-placeholder' : ''
                     }`}
                   >
-                    <div className="review-stars-row" aria-label={isPlaceholder ? 'Placeholder rating slot' : 'Active milestone'}>
+                    <div
+                      className="review-stars-row"
+                      aria-label={isPlaceholder ? 'Placeholder rating slot' : 'Active milestone'}
+                    >
                       {Array.from({ length: 5 }).map((_, starIdx) => (
                         <Star
                           key={starIdx}
@@ -223,7 +258,6 @@ export function HomePage() {
           <Reveal>
             <div className="resume-ref-card">
               <div className="resume-ref-content">
-                <p className="eyebrow-tagline">Curriculum Vitae</p>
                 <h2 id="resume-banner-heading" className="resume-ref-title">
                   Download my resume
                 </h2>
@@ -263,7 +297,6 @@ export function HomePage() {
         <div className="container">
           <Reveal>
             <div className="faq-ref-header">
-              <p className="eyebrow-tagline">FAQ</p>
               <h2 id="faq-heading">Common questions</h2>
             </div>
           </Reveal>

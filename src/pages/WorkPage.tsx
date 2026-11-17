@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ExternalLink, Code2 } from 'lucide-react';
+import { ArrowUpRight, Code2, ExternalLink } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
 import { WorkCard } from '../components/WorkCard';
@@ -11,152 +10,96 @@ import {
   ProjectItem,
 } from '../data/portfolioData';
 
-type FilterCategory = 'All' | ProjectItem['category'];
+type FilterTab = 'All' | 'JavaScript' | 'HTML/CSS' | 'API';
 
-const FILTER_CATEGORIES: FilterCategory[] = ['All', 'JavaScript', 'CSS/HTML', 'API'];
+const FILTER_TABS: FilterTab[] = ['All', 'JavaScript', 'HTML/CSS', 'API'];
+
+const CATEGORY_MAP: Record<Exclude<FilterTab, 'All'>, ProjectItem['category']> = {
+  JavaScript: 'JavaScript',
+  'HTML/CSS': 'CSS/HTML',
+  API: 'API',
+};
+
+const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 
 /**
- * Work Page (/work) — Stage 3 + Stage 5 GitHub Integration
+ * Stage 3 Work Page (/work):
+ * - Heading, short lead, and category filter tabs (All / JavaScript / HTML/CSS / API)
+ * - 2-column grid (gap 1.75rem; 1 col <= 767px) with 16:9 dark-overlay centered-title cards
+ * - Deployed GitHub Builds section below
  */
 export function WorkPage() {
-  const [activeFilter, setActiveFilter] = useState<FilterCategory>('All');
-
-  const featuredProject =
-    PROJECTS.find((project) => project.featured) ?? PROJECTS[0];
+  const [activeFilter, setActiveFilter] = useState<FilterTab>('All');
 
   const filteredProjects =
     activeFilter === 'All'
       ? PROJECTS
-      : PROJECTS.filter((project) => project.category === activeFilter);
+      : PROJECTS.filter((project) => project.category === CATEGORY_MAP[activeFilter]);
 
   return (
     <PageTransition>
       {/* Page Header */}
-      <section className="page-header-section" aria-labelledby="work-page-title">
+      <section className="work-archive-header" aria-labelledby="work-page-title">
         <div className="container">
           <Reveal>
-            <p className="eyebrow-tagline">WORK &bull; CASE STUDIES</p>
-            <h1 id="work-page-title" className="page-hero-title">
-              Selected projects &amp; browser builds
-            </h1>
-            <p className="page-hero-lead">
-              A collection of responsive websites, UI clones, and interactive JavaScript applications built while sharpening my front-end fundamentals.
-            </p>
+            <div className="work-archive-top">
+              <div>
+                <h1 id="work-page-title" className="work-archive-title">
+                  Selected work
+                </h1>
+                <p className="work-archive-lead">
+                  Responsive websites, UI clones, and interactive JavaScript applications built from scratch.
+                </p>
+              </div>
+
+              <div
+                className="work-filter-tabs"
+                role="group"
+                aria-label="Filter projects by category"
+              >
+                {FILTER_TABS.map((tab) => {
+                  const isActive = activeFilter === tab;
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      aria-pressed={isActive}
+                      className={`work-filter-tab ${isActive ? 'is-active' : ''}`}
+                      onClick={() => setActiveFilter(tab)}
+                    >
+                      {isActive && (
+                        <motion.span
+                          layoutId="work-filter-active-bg"
+                          className="work-filter-pill-bg"
+                          transition={{ duration: 0.4, ease: REFERENCE_EASE }}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span className="work-filter-label">{tab}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Featured Project Spotlight */}
-      {featuredProject && (
-        <section className="work-featured-section" aria-labelledby="featured-work-title">
-          <div className="container">
-            <Reveal>
-              <article className="featured-project-card">
-                <div className="featured-project-media">
-                  <img
-                    src={featuredProject.image}
-                    alt={featuredProject.imageAlt}
-                    decoding="async"
-                  />
-                </div>
-
-                <div className="featured-project-content">
-                  <p className="eyebrow-tagline">
-                    Featured Case Study &middot; {featuredProject.workNumber} &middot; {featuredProject.category}
-                  </p>
-                  <h2 id="featured-work-title" className="featured-project-title">
-                    {featuredProject.title}
-                  </h2>
-                  <p className="featured-project-desc">
-                    {featuredProject.overview}
-                  </p>
-                  <p className="featured-project-stack">
-                    {featuredProject.tags.join(' · ')}
-                  </p>
-
-                  <div className="stage-cta-row">
-                    <Link
-                      to={`/work/${featuredProject.slug}`}
-                      className="btn-primary-editorial"
-                    >
-                      <span>Read case study</span>
-                      <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-
-                    {featuredProject.hasLiveDemo && (
-                      <a
-                        href={featuredProject.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-secondary-editorial"
-                      >
-                        <span>Live demo</span>
-                        <ExternalLink size={15} aria-hidden="true" />
-                      </a>
-                    )}
-
-                    <a
-                      href={featuredProject.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary-editorial"
-                    >
-                      <Code2 size={15} aria-hidden="true" />
-                      <span>
-                        {featuredProject.hasExactRepo ? 'GitHub' : 'GitHub Profile'}
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </article>
-            </Reveal>
-          </div>
-        </section>
-      )}
-
-      {/* Filterable All Projects Grid */}
-      <section className="home-section" aria-labelledby="all-projects-heading">
+      {/* 2-Column Archive Grid (16:9 dark-overlay cards, gap 1.75rem) */}
+      <section className="work-archive-section" aria-label="Projects grid">
         <div className="container">
-          <div className="work-filter-bar">
-            <div>
-              <h2 id="all-projects-heading" className="editorial-section-title" style={{ marginTop: 0 }}>
-                All projects
-              </h2>
-              <p className="work-filter-count">
-                Showing {filteredProjects.length} of {PROJECTS.length} builds
-              </p>
-            </div>
-
-            <div className="filter-pill-group" role="group" aria-label="Filter projects by category">
-              {FILTER_CATEGORIES.map((category) => {
-                const isActive = activeFilter === category;
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    aria-pressed={isActive}
-                    className={`filter-btn ${isActive ? 'is-active' : ''}`}
-                    onClick={() => setActiveFilter(category)}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <motion.div layout className="work-preview-grid">
+          <motion.div layout className="work-archive-grid">
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project) => (
                 <motion.div
                   key={project.slug}
                   layout
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.45, ease: REFERENCE_EASE }}
                 >
-                  <WorkCard project={project} />
+                  <WorkCard project={project} variant="grid" />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -169,17 +112,14 @@ export function WorkPage() {
         <div className="container">
           <Reveal>
             <div className="section-header-row">
-              <div>
-                <p className="eyebrow-tagline">GitHub &bull; keshav529</p>
-                <h2 id="more-github-heading" className="editorial-section-title">
-                  More deployed GitHub builds
-                </h2>
-              </div>
+              <h2 id="more-github-heading" className="editorial-section-title" style={{ marginTop: 0 }}>
+                More deployed GitHub builds
+              </h2>
               <a
                 href="https://github.com/keshav529?tab=repositories"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="see-more-link"
+                className="btn-secondary-editorial"
               >
                 <span>View all on GitHub</span>
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -200,7 +140,7 @@ export function WorkPage() {
                       rel="noopener noreferrer"
                       className="btn-primary-editorial"
                     >
-                      <span>Live Demo</span>
+                      <span>Live demo</span>
                       <ExternalLink size={14} aria-hidden="true" />
                     </a>
                     <a
@@ -210,7 +150,7 @@ export function WorkPage() {
                       className="btn-secondary-editorial"
                     >
                       <Code2 size={14} aria-hidden="true" />
-                      <span>Repo</span>
+                      <span>GitHub</span>
                     </a>
                   </div>
                 </article>

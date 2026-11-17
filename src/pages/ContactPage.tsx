@@ -18,19 +18,24 @@ interface FormValues {
   email: string;
   subject: string;
   message: string;
+  consent: boolean;
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
   message?: string;
+  consent?: string;
 }
 
 /**
- * Contact Page (/contact) — Stage 5
- * Includes:
- * 1. Direct email, phone, Copy Email button + toast feedback, and social links
- * 2. Validated Formspree contact form with accessible errors & status feedback
+ * Stage 3 Contact Page (/contact):
+ * - 2-column rounded dark panel (border-radius 1.25rem, padding 2.5em, #292929)
+ * - Left column: h1 heading + email/phone pinned at the bottom
+ * - Right column: Formspree form with transparent inputs, 1px #a3a3a3 border, .875rem radius,
+ *   min-height 3rem, text #d6d6d6, placeholder #737373, white focus border, 11.25rem textarea,
+ *   orange consent checkbox, accessible status feedback
+ * - Below panel: 2-column contact info section (Email + 1-click Copy, Phone, LinkedIn, LeetCode, GitHub)
  */
 export function ContactPage() {
   const [values, setValues] = useState<FormValues>({
@@ -38,6 +43,7 @@ export function ContactPage() {
     email: '',
     subject: '',
     message: '',
+    consent: false,
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'demo' | 'error'>('idle');
@@ -71,6 +77,9 @@ export function ContactPage() {
     if (values.message.trim().length < 10) {
       nextErrors.message = 'Please write a short message (at least 10 characters).';
     }
+    if (!values.consent) {
+      nextErrors.consent = 'Please confirm you agree to share your details for a reply.';
+    }
     return nextErrors;
   };
 
@@ -83,7 +92,6 @@ export function ContactPage() {
       return;
     }
 
-    // If Formspree ID hasn't been configured yet, run a clear preview/validation state
     if (FORMSPREE_ENDPOINT.includes('YOUR_FORMSPREE_ID')) {
       setStatus('demo');
       setStatusMessage(
@@ -117,7 +125,7 @@ export function ContactPage() {
 
       setStatus('success');
       setStatusMessage('Thank you! Your message has been sent. I will get back to you soon.');
-      setValues({ name: '', email: '', subject: '', message: '' });
+      setValues({ name: '', email: '', subject: '', message: '', consent: false });
       showToast('Message sent successfully');
     } catch {
       setStatus('error');
@@ -129,40 +137,186 @@ export function ContactPage() {
 
   return (
     <PageTransition>
-      <section className="page-header-section" aria-labelledby="contact-page-title">
+      {/* Top 2-Column Rounded Dark Panel (#292929) */}
+      <section className="contact-dark-section" aria-labelledby="contact-page-title">
         <div className="container">
           <Reveal>
-            <p className="eyebrow-tagline">GET IN TOUCH</p>
-            <h1 id="contact-page-title" className="page-hero-title">
-              Let&apos;s build something together
-            </h1>
-            <p className="page-hero-lead">
-              Open to web development internships, trainee roles, and project collaborations. Send a message below or reach out directly.
-            </p>
+            <div className="contact-dark-panel">
+              {/* Left Column: h1 + Email & Phone pinned to bottom */}
+              <div className="contact-dark-left">
+                <div>
+                  <h1 id="contact-page-title" className="contact-dark-heading">
+                    Let&apos;s build something together
+                  </h1>
+                  <p className="contact-dark-lead">
+                    Open to web development internships, trainee roles, and project collaborations.
+                  </p>
+                </div>
+
+                <div className="contact-dark-pinned">
+                  <div className="contact-dark-detail">
+                    <span className="contact-dark-label">Email</span>
+                    <a href={`mailto:${PROFILE.email}`} className="contact-dark-link">
+                      {PROFILE.email}
+                    </a>
+                  </div>
+
+                  <div className="contact-dark-detail">
+                    <span className="contact-dark-label">Phone</span>
+                    <a
+                      href={`tel:${PROFILE.phone.replace(/[^+\d]/g, '')}`}
+                      className="contact-dark-link"
+                    >
+                      {PROFILE.phone}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Transparent Formspree Form inside Dark Panel */}
+              <form className="contact-dark-form" onSubmit={handleSubmit} noValidate>
+                <div className="contact-dark-row">
+                  <div className="contact-dark-field">
+                    <label htmlFor="contact-name">Your name *</label>
+                    <input
+                      id="contact-name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      placeholder="e.g. Ananya Sharma"
+                      value={values.name}
+                      onChange={(e) => {
+                        setValues({ ...values, name: e.target.value });
+                        if (errors.name) setErrors({ ...errors, name: undefined });
+                      }}
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? 'error-name' : undefined}
+                    />
+                    {errors.name && (
+                      <p id="error-name" className="contact-dark-error" role="alert">
+                        {errors.name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="contact-dark-field">
+                    <label htmlFor="contact-email">Email address *</label>
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      value={values.email}
+                      onChange={(e) => {
+                        setValues({ ...values, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: undefined });
+                      }}
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? 'error-email' : undefined}
+                    />
+                    {errors.email && (
+                      <p id="error-email" className="contact-dark-error" role="alert">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="contact-dark-field">
+                  <label htmlFor="contact-subject">Subject</label>
+                  <input
+                    id="contact-subject"
+                    name="subject"
+                    type="text"
+                    placeholder="Internship opportunity / Project collaboration"
+                    value={values.subject}
+                    onChange={(e) => setValues({ ...values, subject: e.target.value })}
+                  />
+                </div>
+
+                <div className="contact-dark-field">
+                  <label htmlFor="contact-message">Message *</label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="Tell me about the role, project, or question..."
+                    value={values.message}
+                    onChange={(e) => {
+                      setValues({ ...values, message: e.target.value });
+                      if (errors.message) setErrors({ ...errors, message: undefined });
+                    }}
+                    aria-invalid={Boolean(errors.message)}
+                    aria-describedby={errors.message ? 'error-message' : undefined}
+                  />
+                  {errors.message && (
+                    <p id="error-message" className="contact-dark-error" role="alert">
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="contact-consent-block">
+                  <label className="contact-consent-label">
+                    <input
+                      type="checkbox"
+                      checked={values.consent}
+                      onChange={(e) => {
+                        setValues({ ...values, consent: e.target.checked });
+                        if (errors.consent) setErrors({ ...errors, consent: undefined });
+                      }}
+                      aria-invalid={Boolean(errors.consent)}
+                      aria-describedby={errors.consent ? 'error-consent' : undefined}
+                    />
+                    <span>I agree to share these details so Keshav can reply to my message.</span>
+                  </label>
+                  {errors.consent && (
+                    <p id="error-consent" className="contact-dark-error" role="alert">
+                      {errors.consent}
+                    </p>
+                  )}
+                </div>
+
+                {statusMessage && (
+                  <div
+                    className={`form-status-banner ${
+                      status === 'error' ? 'is-error' : 'is-success'
+                    }`}
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {statusMessage}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="contact-dark-submit"
+                  disabled={status === 'submitting'}
+                >
+                  <Send size={16} aria-hidden="true" />
+                  <span>{status === 'submitting' ? 'Sending...' : 'Send message'}</span>
+                </button>
+              </form>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="home-section home-section-tinted" aria-label="Contact details and form">
+      {/* Below Panel: 2-Column Direct Contact & Social Profiles */}
+      <section className="contact-below-section" aria-label="Direct contact channels">
         <div className="container">
-          <div className="contact-page-grid">
-            {/* Left Column: Direct Details, Copy Email & Socials */}
+          <div className="contact-below-grid">
             <Reveal>
-              <div className="contact-info-panel">
-                <div>
-                  <p className="eyebrow-tagline">Direct Contact</p>
-                  <h2 className="contact-panel-heading">Reach me directly</h2>
-                  <p className="contact-panel-copy">
-                    Prefer email or phone? Use any of the links below, or copy my email with one click.
-                  </p>
-                </div>
+              <div className="contact-below-col">
+                <h2 className="contact-below-heading">Direct channels</h2>
 
                 <div className="contact-direct-list">
                   <div className="contact-direct-card">
                     <div className="contact-direct-row">
                       <Mail size={18} className="contact-icon" aria-hidden="true" />
                       <div>
-                        <p className="eyebrow-tagline">Email</p>
+                        <span className="contact-channel-label">Email</span>
                         <a href={`mailto:${PROFILE.email}`} className="contact-direct-link">
                           {PROFILE.email}
                         </a>
@@ -183,7 +337,7 @@ export function ContactPage() {
                     <div className="contact-direct-row">
                       <Phone size={18} className="contact-icon" aria-hidden="true" />
                       <div>
-                        <p className="eyebrow-tagline">Phone</p>
+                        <span className="contact-channel-label">Phone</span>
                         <a
                           href={`tel:${PROFILE.phone.replace(/[^+\d]/g, '')}`}
                           className="contact-direct-link"
@@ -194,165 +348,53 @@ export function ContactPage() {
                     </div>
                   </div>
                 </div>
-
-                <div>
-                  <p className="eyebrow-tagline" style={{ marginBottom: '0.85rem' }}>
-                    Profiles &amp; Resume
-                  </p>
-                  <div className="contact-social-row">
-                    <a
-                      href={PROFILE.socials.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary-editorial"
-                    >
-                      <span>LinkedIn</span>
-                      <ArrowUpRight size={15} aria-hidden="true" />
-                    </a>
-                    <a
-                      href={PROFILE.socials.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary-editorial"
-                    >
-                      <span>GitHub</span>
-                      <ArrowUpRight size={15} aria-hidden="true" />
-                    </a>
-                    <a
-                      href={PROFILE.socials.leetcode}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn-secondary-editorial"
-                    >
-                      <span>LeetCode</span>
-                      <ArrowUpRight size={15} aria-hidden="true" />
-                    </a>
-                    <a
-                      href={PROFILE.resumeUrl}
-                      download
-                      className="btn-primary-editorial"
-                    >
-                      <FileDown size={15} aria-hidden="true" />
-                      <span>Resume PDF</span>
-                    </a>
-                  </div>
-                </div>
               </div>
             </Reveal>
 
-            {/* Right Column: Validated Formspree Form */}
             <Reveal delay={0.08}>
-              <div className="contact-form-card">
-                <h2 className="contact-panel-heading">Send a message</h2>
-                <form className="contact-form" onSubmit={handleSubmit} noValidate>
-                  <div className="form-field-row">
-                    <div className="form-field">
-                      <label htmlFor="contact-name">Your Name *</label>
-                      <input
-                        id="contact-name"
-                        name="name"
-                        type="text"
-                        autoComplete="name"
-                        placeholder="e.g. Ananya Sharma"
-                        value={values.name}
-                        onChange={(e) => {
-                          setValues({ ...values, name: e.target.value });
-                          if (errors.name) setErrors({ ...errors, name: undefined });
-                        }}
-                        aria-invalid={Boolean(errors.name)}
-                        aria-describedby={errors.name ? 'error-name' : undefined}
-                      />
-                      {errors.name && (
-                        <p id="error-name" className="form-error-text" role="alert">
-                          {errors.name}
-                        </p>
-                      )}
-                    </div>
+              <div className="contact-below-col">
+                <h2 className="contact-below-heading">Profiles &amp; CV</h2>
+                <p className="contact-below-copy">
+                  Explore my code repositories, LeetCode practice, and academic background, or download my PDF resume directly.
+                </p>
 
-                    <div className="form-field">
-                      <label htmlFor="contact-email">Email Address *</label>
-                      <input
-                        id="contact-email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        placeholder="you@example.com"
-                        value={values.email}
-                        onChange={(e) => {
-                          setValues({ ...values, email: e.target.value });
-                          if (errors.email) setErrors({ ...errors, email: undefined });
-                        }}
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? 'error-email' : undefined}
-                      />
-                      {errors.email && (
-                        <p id="error-email" className="form-error-text" role="alert">
-                          {errors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="form-field">
-                    <label htmlFor="contact-subject">Subject (Optional)</label>
-                    <input
-                      id="contact-subject"
-                      name="subject"
-                      type="text"
-                      placeholder="Internship opportunity / Project collaboration"
-                      value={values.subject}
-                      onChange={(e) =>
-                        setValues({ ...values, subject: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div className="form-field">
-                    <label htmlFor="contact-message">Message *</label>
-                    <textarea
-                      id="contact-message"
-                      name="message"
-                      rows={5}
-                      placeholder="Tell me a little about the role, project, or question..."
-                      value={values.message}
-                      onChange={(e) => {
-                        setValues({ ...values, message: e.target.value });
-                        if (errors.message) setErrors({ ...errors, message: undefined });
-                      }}
-                      aria-invalid={Boolean(errors.message)}
-                      aria-describedby={errors.message ? 'error-message' : undefined}
-                    />
-                    {errors.message && (
-                      <p id="error-message" className="form-error-text" role="alert">
-                        {errors.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {statusMessage && (
-                    <div
-                      className={`form-status-banner ${
-                        status === 'error' ? 'is-error' : 'is-success'
-                      }`}
-                      role="status"
-                      aria-live="polite"
-                    >
-                      {statusMessage}
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="btn-primary-editorial"
-                    disabled={status === 'submitting'}
-                    style={{ width: 'fit-content' }}
+                <div className="contact-social-row">
+                  <a
+                    href={PROFILE.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary-editorial"
                   >
-                    <Send size={15} aria-hidden="true" />
-                    <span>
-                      {status === 'submitting' ? 'Sending...' : 'Send message'}
-                    </span>
-                  </button>
-                </form>
+                    <span>LinkedIn</span>
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                  <a
+                    href={PROFILE.socials.leetcode}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary-editorial"
+                  >
+                    <span>LeetCode</span>
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                  <a
+                    href={PROFILE.socials.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary-editorial"
+                  >
+                    <span>GitHub</span>
+                    <ArrowUpRight size={15} aria-hidden="true" />
+                  </a>
+                  <a
+                    href={PROFILE.resumeUrl}
+                    download
+                    className="btn-primary-editorial"
+                  >
+                    <FileDown size={15} aria-hidden="true" />
+                    <span>Resume PDF</span>
+                  </a>
+                </div>
               </div>
             </Reveal>
           </div>
