@@ -1,119 +1,189 @@
 /* ==========================================================================
-   DESIGN TOKENS — Edit colors, fonts, spacing, and radii in this single file
-   Restrained editorial palette: crisp off-white canvas + deep ink + cobalt accent
+   DESIGN TOKENS — Exact values extracted from reference stylesheet
+   Palette: Cream-1 (#e7e2dc), Cream-2 (#dfd8d1), Orange (#ff5330), Charcoal (#121212)
+   Typography: Outfit (weights 300, 400, 500, 700)
    ========================================================================== */
 
 :root {
   color-scheme: light;
 
-  /* --- Colors (60% Canvas / 30% Surfaces / 10% Accent) --- */
-  --color-bg: #fafafa;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f3f4f6;
-  --color-ink: #111827;
-  --color-ink-muted: #4b5563;
-  --color-ink-subtle: #6b7280;
+  /* --- Reference Core Colours --- */
+  --color-cream-1: #e7e2dc;
+  --color-cream-2: #dfd8d1;
+  --color-black: #000000;
+  --color-white: #ffffff;
 
-  --color-border: rgba(17, 24, 39, 0.1);
-  --color-border-strong: rgba(17, 24, 39, 0.22);
+  --color-orange: #ff5330;
+  --color-orange-hover: #e44120;
+  --color-orange-soft: rgba(255, 83, 48, 0.15);
+  --color-orange-border: rgba(255, 83, 48, 0.47);
 
-  /* Sticky navbar translucent glass */
-  --color-nav-bg: rgba(250, 250, 250, 0.86);
-  --color-nav-bg-scrolled: rgba(255, 255, 255, 0.96);
+  --color-dark: #121212;
+  --color-panel-dark: #2b2b2b;
+  --color-menu-preview: #b9b9b9;
+  --color-grey-text: #5e5e5e;
 
-  /* Single Accent Color (Electric Cobalt) */
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-soft: rgba(37, 99, 235, 0.08);
-  --color-accent-ink: #ffffff;
+  /* --- Reference Grey Scale --- */
+  --grey-25: #fcfcfc;
+  --grey-50: #fafafa;
+  --grey-100: #f5f5f5;
+  --grey-200: #e5e5e5;
+  --grey-300: #d6d6d6;
+  --grey-400: #a3a3a3;
+  --grey-500: #737373;
+  --grey-600: #525252;
+  --grey-700: #424242;
+  --grey-800: #292929;
+  --grey-900: #141414;
 
-  /* Semantic Status Colors */
+  /* --- Semantic Aliases (preserve Cream & Orange look across all components) --- */
+  --color-bg: var(--color-cream-1);
+  --color-surface: var(--grey-25);
+  --color-surface-alt: var(--color-cream-2);
+  --color-ink: var(--color-black);
+  --color-ink-muted: var(--grey-600);
+  --color-ink-subtle: var(--color-grey-text);
+
+  --color-border: var(--grey-400);
+  --color-border-strong: var(--grey-700);
+
+  --color-nav-bg: rgba(231, 226, 220, 0.12);
+  --color-nav-bg-scrolled: rgba(231, 226, 220, 0.72);
+
+  --color-accent: var(--color-orange);
+  --color-accent-hover: var(--color-orange-hover);
+  --color-accent-soft: var(--color-orange-soft);
+  --color-accent-ink: var(--color-white);
+
   --color-error: #b91c1c;
-  --color-success-bg: rgba(22, 163, 74, 0.1);
-  --color-success-ink: #166534;
-  --color-success-border: rgba(22, 163, 74, 0.25);
-  --color-error-bg: rgba(220, 38, 38, 0.08);
-  --color-error-ink: #991b1b;
-  --color-error-border: rgba(220, 38, 38, 0.22);
+  --color-success-bg: rgba(22, 163, 74, 0.12);
+  --color-success-ink: #14532d;
+  --color-success-border: rgba(22, 163, 74, 0.35);
+  --color-error-bg: rgba(255, 83, 48, 0.12);
+  --color-error-ink: #9a1b07;
+  --color-error-border: rgba(255, 83, 48, 0.45);
 
-  /* Dark editorial band (used for Footer / Mobile Menu / CTA blocks) */
-  --color-dark-surface: #0b0f19;
-  --color-dark-surface-elevated: #131a2a;
-  --color-dark-ink: #f9fafb;
-  --color-dark-ink-muted: #9ca3af;
-  --color-dark-border: rgba(249, 250, 251, 0.12);
+  --color-dark-surface: var(--color-dark);
+  --color-dark-surface-elevated: var(--grey-800);
+  --color-dark-ink: var(--color-white);
+  --color-dark-ink-muted: var(--grey-400);
+  --color-dark-border: var(--grey-800);
 
-  /* --- Typography --- */
+  /* --- Typography (Outfit exclusively) --- */
   --font-display: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* Fluid Type Scale */
-  --text-hero: clamp(2.6rem, 6vw, 4.75rem);
-  --text-h1: clamp(2.1rem, 4.5vw, 3.5rem);
-  --text-h2: clamp(1.65rem, 3vw, 2.4rem);
-  --text-h3: clamp(1.2rem, 2vw, 1.5rem);
-  --text-lead: clamp(1.0625rem, 1.4vw, 1.25rem);
+  /* Exact Heading & Special Sizes */
+  --text-h1: 4.65rem;
+  --text-h2: 2.875rem;
+  --text-h3: 2.25rem;
+  --text-h4: 2rem;
+  --text-h5: 1.5rem;
+  --text-h6: 1.225rem;
+
+  --text-hero: 5.5rem;
+  --text-banner: 7.5rem;
+  --text-menu-link: 4.75rem;
+  --text-process-hero: 9rem;
+
+  --text-lead: 1.25rem;
   --text-body: 1rem;
   --text-sm: 0.875rem;
-  --text-xs: 0.75rem;
+  --text-xs: 0.825rem;
 
   /* --- Layout & Spacing --- */
-  --container-max: 1240px;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
-  --section-space: clamp(4.5rem, 9vw, 7.5rem);
-  --nav-height: 76px;
+  --container-max: 80rem;
+  --padding-global: 5%;
+  --gutter: 5vw;
+  --nav-height: 4.375rem;
+
+  --space-small: 3rem;
+  --space-medium: 5rem;
+  --space-large: 7rem;
+  --space-xlarge: 9rem;
+  --space-xxlarge: 11rem;
+  --space-huge: 13rem;
+  --section-space: var(--space-large);
 
   /* --- Radii & Shadows --- */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-btn: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
   --radius-pill: 9999px;
 
-  --shadow-soft: 0 12px 32px -12px rgba(17, 24, 39, 0.08);
-  --shadow-card: 0 20px 44px -18px rgba(17, 24, 39, 0.14);
+  --shadow-soft: 0 6px 12px rgba(0, 0, 0, 0.15);
+  --shadow-card: 1px 1px 3em 1px rgba(0, 0, 0, 0.4);
 
-  /* --- Motion --- */
-  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 180ms;
-  --duration-base: 320ms;
+  /* --- Motion & Easing --- */
+  --ease-editorial: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --duration-fast: 0.2s;
+  --duration-base: 0.5s;
 }
 
+/* Mobile Typography & Section Spacing Adjustments (<= 991px and <= 767px) */
+@media (max-width: 991px) {
+  :root {
+    --text-hero: 4rem;
+    --text-banner: 4rem;
+    --space-medium: 4rem;
+    --space-large: 5.5rem;
+    --space-xlarge: 6.5rem;
+    --space-xxlarge: 8rem;
+    --space-huge: 9rem;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --text-h1: 3rem;
+    --text-h2: 2.25rem;
+    --text-h3: 2rem;
+    --text-h4: 1.75rem;
+    --text-h5: 1.325rem;
+    --text-hero: 3.25rem;
+    --text-banner: 3rem;
+    --text-menu-link: 3.5rem;
+    --space-small: 2rem;
+    --space-medium: 3rem;
+    --space-large: 4rem;
+    --space-xlarge: 5rem;
+    --space-xxlarge: 6rem;
+    --space-huge: 7rem;
+  }
+}
+
+@media (max-width: 479px) {
+  :root {
+    --text-hero: 2.75rem;
+    --text-menu-link: 3.25rem;
+  }
+}
+
+/* Optional Dark Theme keeping Charcoal (#121212/#141414) + Cream Ink + Accent Orange (#ff5330) */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --color-bg: #070b14;
-  --color-surface: #0f172a;
-  --color-surface-alt: #131c31;
-  --color-ink: #f1f5f9;
-  --color-ink-muted: #cbd5e1;
-  --color-ink-subtle: #94a3b8;
+  --color-bg: var(--color-dark);
+  --color-surface: var(--grey-900);
+  --color-surface-alt: var(--grey-800);
+  --color-ink: var(--color-cream-1);
+  --color-ink-muted: var(--grey-300);
+  --color-ink-subtle: var(--grey-400);
 
-  --color-border: rgba(148, 163, 184, 0.16);
-  --color-border-strong: rgba(148, 163, 184, 0.3);
+  --color-border: var(--grey-700);
+  --color-border-strong: var(--grey-500);
 
-  --color-nav-bg: rgba(7, 11, 20, 0.84);
-  --color-nav-bg-scrolled: rgba(15, 23, 42, 0.95);
-
-  --color-accent: #38bdf8;
-  --color-accent-hover: #7dd3fc;
-  --color-accent-soft: rgba(56, 189, 248, 0.14);
-  --color-accent-ink: #04101f;
+  --color-nav-bg: rgba(18, 18, 18, 0.35);
+  --color-nav-bg-scrolled: rgba(18, 18, 18, 0.85);
 
   --color-error: #fca5a5;
-  --color-success-bg: rgba(34, 197, 94, 0.14);
+  --color-success-bg: rgba(34, 197, 94, 0.16);
   --color-success-ink: #86efac;
-  --color-success-border: rgba(34, 197, 94, 0.28);
-  --color-error-bg: rgba(248, 113, 113, 0.14);
-  --color-error-ink: #fca5a5;
-  --color-error-border: rgba(248, 113, 113, 0.28);
-
-  --color-dark-surface: #04070d;
-  --color-dark-surface-elevated: #0b1120;
-  --color-dark-ink: #f8fafc;
-  --color-dark-ink-muted: #94a3b8;
-  --color-dark-border: rgba(148, 163, 184, 0.16);
-
-  --shadow-soft: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
-  --shadow-card: 0 20px 44px -18px rgba(0, 0, 0, 0.7);
+  --color-success-border: rgba(34, 197, 94, 0.35);
+  --color-error-bg: rgba(255, 83, 48, 0.16);
+  --color-error-ink: #ff8a73;
+  --color-error-border: rgba(255, 83, 48, 0.45);
 }

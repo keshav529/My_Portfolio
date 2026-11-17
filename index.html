@@ -11,7 +11,7 @@
       content="Portfolio of Keshav Anand, a BCA student and aspiring software developer building fast, responsive web applications with HTML, CSS, JavaScript, and React."
     />
     <meta name="author" content="Keshav Anand" />
-    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="#e7e2dc" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script>
       (function () {
@@ -20,18 +20,12 @@
           var stored = localStorage.getItem('portfolio-theme');
           if (stored === 'light' || stored === 'dark') {
             theme = stored;
-          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            theme = 'dark';
           }
-        } catch (e) {
-          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            theme = 'dark';
-          }
-        }
+        } catch (e) {}
         document.documentElement.setAttribute('data-theme', theme);
         var meta = document.querySelector('meta[name="theme-color"]');
         if (meta) {
-          meta.setAttribute('content', theme === 'dark' ? '#070b14' : '#fafafa');
+          meta.setAttribute('content', theme === 'dark' ? '#121212' : '#e7e2dc');
         }
       })();
     </script>
@@ -76,11 +70,11 @@
       }
     </script>
 
-    <!-- Editorial Typography: Outfit (Display) + Plus Jakarta Sans (Body) + JetBrains Mono (Accents) -->
+    <!-- Typography: Outfit (Weights 300, 400, 500, 700) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
   </head>

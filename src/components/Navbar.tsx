@@ -1,64 +1,70 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight, Menu, Moon, Sun, X } from 'lucide-react';
+import { ArrowUpRight, Moon, Sun } from 'lucide-react';
 import { NAV_ITEMS, PROFILE } from '../data/portfolioData';
 import { useTheme } from '../hooks/useTheme';
 
+const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
+
+const MENU_PREVIEW_IMAGES: Record<string, { src: string; alt: string }> = {
+  '/': {
+    src: PROFILE.profilePhoto,
+    alt: 'Portrait preview for Home page',
+  },
+  '/about': {
+    src: '/image/contactphoto.jpg',
+    alt: 'Workspace preview for About page',
+  },
+  '/process': {
+    src: '/image/figmaimage.png',
+    alt: 'Design tooling preview for Process page',
+  },
+  '/work': {
+    src: '/image/currencyconvertorimage.png',
+    alt: 'Currency Converter preview for Work page',
+  },
+  '/contact': {
+    src: '/image/netfliximageportfolio.png',
+    alt: 'Web UI preview for Contact page',
+  },
+  '/resources': {
+    src: PROFILE.resumeCover,
+    alt: 'Resume cover preview for Resources page',
+  },
+};
+
 /**
- * Sticky 3-Zone Editorial Navigation Bar
- * - Left: Brand wordmark
- * - Middle: 6 navigation links with animated underline on hover/active
- * - Right: Light/Dark theme toggle + Highlighted CONTACT button + <820px mobile menu trigger
+ * Fixed Editorial Navbar + 50/50 Split Full-Screen Menu matching the reference:
+ * - Fixed top bar (height 4.375rem, max 80px, padding 0 5vw, blur(.5rem), cream glass)
+ * - Left: Logo wordmark + 1.75px x 2rem orange vertical divider
+ * - Right: Filled orange CONTACT CTA + 3rem circular menu button (#d6d6d6, two 1.5px #292929 lines)
+ * - Page links live inside the 50/50 split full-screen menu overlay (wipe animation)
  */
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string>('/');
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
 
   const menuToggleRef = useRef<HTMLButtonElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const menuOverlayRef = useRef<HTMLDivElement>(null);
   const wasOpenRef = useRef(false);
 
-  const closeMobileMenu = useCallback(() => {
-    setMobileMenuOpen(false);
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
   }, []);
 
-  // Add subtle background & shadow once the user scrolls past the top
+  // Sync hovered preview with current route when opening menu
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 16);
-    };
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Close mobile menu automatically when route changes
-  useEffect(() => {
-    setMobileMenuOpen(false);
+    setMenuOpen(false);
+    setHoveredPath(location.pathname in MENU_PREVIEW_IMAGES ? location.pathname : '/');
   }, [location.pathname]);
 
-  // Close mobile menu if viewport widens to desktop (>= 820px)
+  // Body scroll lock, Escape-to-close, focus placement, and Tab trap inside full-screen menu
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      return;
-    }
-    const desktopQuery = window.matchMedia('(min-width: 820px)');
-    const handleViewportChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        setMobileMenuOpen(false);
-      }
-    };
-    desktopQuery.addEventListener('change', handleViewportChange);
-    return () => desktopQuery.removeEventListener('change', handleViewportChange);
-  }, []);
-
-  // Lock body scroll, manage focus, trap Tab key, and support Escape when full-screen menu is open
-  useEffect(() => {
-    if (!mobileMenuOpen) {
+    if (!menuOpen) {
       if (wasOpenRef.current) {
         wasOpenRef.current = false;
         menuToggleRef.current?.focus();
@@ -71,18 +77,18 @@ export function Navbar() {
     document.body.style.overflow = 'hidden';
 
     const focusTimer = window.requestAnimationFrame(() => {
-      closeButtonRef.current?.focus();
+      firstLinkRef.current?.focus();
     });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        setMobileMenuOpen(false);
+        setMenuOpen(false);
         return;
       }
 
-      if (event.key === 'Tab' && mobileMenuRef.current) {
-        const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
+      if (event.key === 'Tab' && menuOverlayRef.current) {
+        const focusable = menuOverlayRef.current.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
         );
         if (focusable.length === 0) return;
@@ -106,163 +112,133 @@ export function Navbar() {
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mobileMenuOpen]);
+  }, [menuOpen]);
 
-  const themeToggleLabel =
-    theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+  const activePreview = MENU_PREVIEW_IMAGES[hoveredPath] ?? MENU_PREVIEW_IMAGES['/'];
 
   return (
     <>
-      <header className={`site-navbar ${isScrolled ? 'is-scrolled' : ''}`}>
-        <div className="container navbar-inner">
-          {/* Zone 1: Brand Wordmark */}
-          <Link to="/" className="navbar-brand-link" aria-label={`${PROFILE.name} — Home`}>
-            <span>{PROFILE.name}</span>
-            <span className="navbar-brand-dot" aria-hidden="true" />
+      <header className="site-navbar">
+        <div className="navbar-inner">
+          {/* Left: Logo + 1.75px x 2rem Orange Vertical Line */}
+          <Link
+            to="/"
+            className="navbar-brand-link"
+            aria-label={`${PROFILE.name} — Home`}
+            onClick={closeMenu}
+          >
+            <span className="navbar-brand-text">{PROFILE.name}</span>
+            <span className="navbar-brand-divider" aria-hidden="true" />
           </Link>
 
-          {/* Zone 2: Center Navigation Links (Desktop >= 820px) */}
-          <nav aria-label="Primary navigation">
-            <ul className="navbar-links-desktop">
-              {NAV_ITEMS.map((item) => (
-                <li key={item.path}>
-                  <NavLink
-                    to={item.path}
-                    end={item.path === '/'}
-                    className={({ isActive }) =>
-                      `navbar-link ${isActive ? 'is-active' : ''}`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Zone 3: Theme Toggle + Highlighted CONTACT CTA + Mobile Menu Button (< 820px) */}
+          {/* Right: Filled Orange CONTACT Button + 3rem Circular Menu Trigger */}
           <div className="navbar-actions">
-            <button
-              type="button"
-              className="theme-toggle-btn"
-              onClick={toggleTheme}
-              aria-label={themeToggleLabel}
-              aria-pressed={theme === 'dark'}
-              title={themeToggleLabel}
-            >
-              {theme === 'dark' ? (
-                <Sun size={18} aria-hidden="true" />
-              ) : (
-                <Moon size={18} aria-hidden="true" />
-              )}
-            </button>
-
-            <Link to="/contact" className="navbar-contact-cta">
+            <Link to="/contact" className="navbar-contact-cta" onClick={closeMenu}>
               Contact
             </Link>
 
             <button
               ref={menuToggleRef}
               type="button"
-              className="navbar-menu-toggle"
-              onClick={() => setMobileMenuOpen((prev) => !prev)}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-fullscreen-menu"
-              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              className={`navbar-menu-toggle ${menuOpen ? 'is-open' : ''}`}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-expanded={menuOpen}
+              aria-controls="fullscreen-nav-menu"
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             >
-              <Menu size={20} aria-hidden="true" />
+              <span className="menu-toggle-line is-top" aria-hidden="true" />
+              <span className="menu-toggle-line is-bottom" aria-hidden="true" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Full-Screen Animated Mobile Navigation Menu (< 820px) */}
+      {/* 50/50 Split Full-Screen Animated Menu Overlay */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {menuOpen && (
           <motion.div
-            ref={mobileMenuRef}
-            id="mobile-fullscreen-menu"
-            className="mobile-menu-overlay"
+            ref={menuOverlayRef}
+            id="fullscreen-nav-menu"
+            className="fullscreen-menu-overlay"
             role="dialog"
             aria-modal="true"
-            aria-label="Mobile navigation"
-            initial={{ opacity: 0, y: -18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -18 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            aria-label="Site navigation"
+            initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+            exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+            transition={{ duration: 0.55, ease: REFERENCE_EASE }}
           >
-            <div className="mobile-menu-header">
-              <Link
-                to="/"
-                className="mobile-menu-brand"
-                onClick={closeMobileMenu}
-              >
-                {PROFILE.name}
-              </Link>
-              <div className="mobile-menu-controls">
+            {/* Left 50% Panel (#b9b9b9): Perspective Image Preview + Optional Theme Switch (Hidden <= 991px) */}
+            <div className="menu-left-panel">
+              <div className="menu-preview-stage">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activePreview.src}
+                    className="menu-preview-frame"
+                    initial={{ opacity: 0, scale: 0.96, rotateY: 6 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 3 }}
+                    exit={{ opacity: 0, scale: 0.97 }}
+                    transition={{ duration: 0.35, ease: REFERENCE_EASE }}
+                  >
+                    <img src={activePreview.src} alt={activePreview.alt} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <div className="menu-left-meta">
+                <span>{PROFILE.tagline}</span>
                 <button
                   type="button"
-                  className="mobile-menu-theme-btn"
+                  className="menu-theme-btn"
                   onClick={toggleTheme}
-                  aria-label={themeToggleLabel}
                   aria-pressed={theme === 'dark'}
-                  title={themeToggleLabel}
+                  aria-label={theme === 'dark' ? 'Switch to cream light mode' : 'Switch to dark mode'}
                 >
                   {theme === 'dark' ? (
-                    <Sun size={18} aria-hidden="true" />
+                    <Sun size={15} aria-hidden="true" />
                   ) : (
-                    <Moon size={18} aria-hidden="true" />
+                    <Moon size={15} aria-hidden="true" />
                   )}
-                </button>
-                <button
-                  ref={closeButtonRef}
-                  type="button"
-                  className="mobile-menu-close"
-                  onClick={closeMobileMenu}
-                  aria-label="Close navigation menu"
-                >
-                  <X size={20} aria-hidden="true" />
+                  <span>{theme === 'dark' ? 'Cream Mode' : 'Dark Mode'}</span>
                 </button>
               </div>
             </div>
 
-            <nav aria-label="Mobile links">
-              <ul className="mobile-menu-nav">
+            {/* Right 50% Panel (#121212, 100% <= 991px): 6 Equal Rows */}
+            <nav className="menu-right-panel" aria-label="Full-screen menu navigation">
+              <ul className="menu-rows-list">
                 {NAV_ITEMS.map((item, idx) => (
                   <motion.li
                     key={item.path}
-                    initial={{ opacity: 0, x: -16 }}
+                    className="menu-row-item"
+                    initial={{ opacity: 0, x: 24 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{
-                      delay: 0.05 + idx * 0.04,
-                      duration: 0.28,
-                      ease: [0.16, 1, 0.3, 1],
+                      delay: 0.1 + idx * 0.045,
+                      duration: 0.45,
+                      ease: REFERENCE_EASE,
                     }}
                   >
                     <NavLink
+                      ref={idx === 0 ? firstLinkRef : undefined}
                       to={item.path}
                       end={item.path === '/'}
-                      onClick={closeMobileMenu}
+                      onClick={closeMenu}
+                      onMouseEnter={() => setHoveredPath(item.path)}
+                      onFocus={() => setHoveredPath(item.path)}
                       className={({ isActive }) =>
-                        `mobile-menu-link ${isActive ? 'is-active' : ''}`
+                        `menu-row-link ${isActive ? 'is-active' : ''}`
                       }
                     >
-                      <span className="mobile-menu-index">0{idx + 1}</span>
-                      <span>{item.label}</span>
+                      <span className="menu-row-label">{item.label}</span>
+                      <span className="menu-row-icon" aria-hidden="true">
+                        <ArrowUpRight size={32} strokeWidth={1.5} />
+                      </span>
                     </NavLink>
                   </motion.li>
                 ))}
               </ul>
             </nav>
-
-            <div className="mobile-menu-footer">
-              <a href={`mailto:${PROFILE.email}`} onClick={closeMobileMenu}>
-                {PROFILE.email} <ArrowUpRight size={14} style={{ display: 'inline' }} aria-hidden="true" />
-              </a>
-              <a href={`tel:${PROFILE.phone.replace(/[^+\d]/g, '')}`} onClick={closeMobileMenu}>
-                {PROFILE.phone}
-              </a>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { ScrollToTop } from './components/ScrollToTop';
+import { IntroLoader } from './components/IntroLoader';
+import { SmoothScroll } from './components/SmoothScroll';
 import { RouteMeta } from './components/RouteMeta';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
@@ -32,7 +33,7 @@ function AnimatedRoutes() {
             <StageRouteShell
               eyebrow="404 • PAGE NOT FOUND"
               title="This page does not exist"
-              description="The link you followed may be broken or moved. Use the navigation above or return home."
+              description="The link you followed may be broken or moved. Use the menu above or return home."
               stageLabel="Navigation"
             />
           }
@@ -44,15 +45,19 @@ function AnimatedRoutes() {
 
 /**
  * Root Application Shell
- * MotionConfig reducedMotion="user" ensures all Framer Motion animations
- * respect the visitor's OS-level prefers-reduced-motion setting.
+ * - IntroLoader (#2b2b2b counter + wipe reveal)
+ * - SmoothScroll (Lenis inertial scrolling, disabled for prefers-reduced-motion)
+ * - Fixed Navbar + 50/50 split Fullscreen Menu
+ * - Dual-panel PageTransition between routes
+ * - Reference Footer (#121212)
  */
 export function App() {
   return (
     <MotionConfig reducedMotion="user">
       <BrowserRouter>
-        <ScrollToTop />
+        <SmoothScroll />
         <RouteMeta />
+        <IntroLoader />
         <div className="app-shell">
           <a href="#main-content" className="skip-link">
             Skip to main content

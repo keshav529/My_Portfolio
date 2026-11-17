@@ -5,8 +5,8 @@ export type ThemeMode = 'light' | 'dark';
 export const THEME_STORAGE_KEY = 'portfolio-theme';
 
 const THEME_META_COLORS: Record<ThemeMode, string> = {
-  light: '#fafafa',
-  dark: '#070b14',
+  light: '#e7e2dc',
+  dark: '#121212',
 };
 
 function getStoredTheme(): ThemeMode | null {
@@ -16,16 +16,9 @@ function getStoredTheme(): ThemeMode | null {
       return saved;
     }
   } catch {
-    // Ignore storage access errors (e.g., restricted/private browsing contexts)
+    // Ignore storage access errors
   }
   return null;
-}
-
-function getSystemTheme(): ThemeMode {
-  if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  return 'light';
 }
 
 function resolveInitialTheme(): ThemeMode {
@@ -35,7 +28,8 @@ function resolveInitialTheme(): ThemeMode {
       return attr;
     }
   }
-  return getStoredTheme() ?? getSystemTheme();
+  // Always default to the reference Cream-1 (#e7e2dc) look unless user saved 'dark'
+  return getStoredTheme() ?? 'light';
 }
 
 function applyThemeToDocument(theme: ThemeMode): void {
@@ -48,35 +42,15 @@ function applyThemeToDocument(theme: ThemeMode): void {
 }
 
 /**
- * Manages light/dark theme state:
- * - Defaults to the user's OS `prefers-color-scheme` preference
- * - Persists explicit user choices in localStorage
- * - Tracks OS theme changes automatically if the user hasn't overridden it
+ * Optional light/dark theme state that preserves the Cream (#e7e2dc) + Orange (#ff5330)
+ * reference palette by default while allowing an optional dark charcoal switch.
  */
 export function useTheme() {
   const [theme, setTheme] = useState<ThemeMode>(resolveInitialTheme);
 
-  // Sync DOM attribute and meta theme-color whenever state changes
   useEffect(() => {
     applyThemeToDocument(theme);
   }, [theme]);
-
-  // Follow system preference changes unless the user has explicitly saved a choice
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = (event: MediaQueryListEvent) => {
-      if (getStoredTheme() === null) {
-        setTheme(event.matches ? 'dark' : 'light');
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleSystemChange);
-    return () => mediaQuery.removeEventListener('change', handleSystemChange);
-  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme((currentTheme) => {
