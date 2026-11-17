@@ -125,6 +125,14 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Resources', path: '/resources' },
 ];
 
+/**
+ * Single source of truth for the canonical production URL.
+ * Override via VITE_SITE_URL in Vercel or .env without touching page code.
+ */
+export const SITE_URL = (
+  import.meta.env.VITE_SITE_URL?.trim() || 'https://my-portfolio-keshav529.vercel.app'
+).replace(/\/+$/, '');
+
 export const PROFILE = {
   name: 'Keshav',
   fullName: 'Keshav Anand',
@@ -134,7 +142,7 @@ export const PROFILE = {
   college: 'Sh. L.N. Hindu College, Rohtak (MDU)',
   email: 'keshavanand748@gmail.com',
   phone: '+91-9817357072',
-  resumeUrl: '/image/keshav_CV.pdf.pdf',
+  resumeUrl: '/image/Keshav-Anand-Resume.pdf',
   resumeCover: '/image/resume.webp',
   resumeCoverWidth: 420,
   resumeCoverHeight: 420,
@@ -674,7 +682,7 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     title: 'Keshav Anand — Resume (PDF)',
     description:
       'Complete summary of my BCA coursework (2022–2025), technical skills in HTML, CSS, JS, Java, C, Bootstrap, Figma, and GitHub, plus contact details.',
-    url: '/image/keshav_CV.pdf.pdf',
+    url: '/image/Keshav-Anand-Resume.pdf',
     external: false,
     download: true,
     ctaLabel: 'Download PDF',

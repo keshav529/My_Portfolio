@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# Update with your final custom domain or Vercel production URL once deployed
+# Production sitemap URL (automatically synced if VITE_SITE_URL is overridden at build time)
 Sitemap: https://my-portfolio-keshav529.vercel.app/sitemap.xml

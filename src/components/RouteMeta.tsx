@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { PROJECTS } from '../data/portfolioData';
+import { PROJECTS, SITE_URL } from '../data/portfolioData';
 
 interface MetaEntry {
   title: string;
@@ -80,15 +80,19 @@ export function RouteMeta() {
       };
     }
 
-    const canonicalUrl = `${window.location.origin}${pathname}`;
+    const normalizedPath = pathname === '/' ? '/' : pathname.replace(/\/+$/, '');
+    const canonicalUrl = `${SITE_URL}${normalizedPath}`;
+    const ogImageUrl = `${SITE_URL}/og-share.jpg`;
 
     document.title = entry.title;
     upsertMetaTag('name', 'description', entry.description);
     upsertMetaTag('property', 'og:title', entry.title);
     upsertMetaTag('property', 'og:description', entry.description);
     upsertMetaTag('property', 'og:url', canonicalUrl);
+    upsertMetaTag('property', 'og:image', ogImageUrl);
     upsertMetaTag('name', 'twitter:title', entry.title);
     upsertMetaTag('name', 'twitter:description', entry.description);
+    upsertMetaTag('name', 'twitter:image', ogImageUrl);
 
     let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonicalLink) {
