@@ -198,6 +198,7 @@ export function HomePage() {
                       width={1200}
                       height={568}
                       focal="50% 20%"
+                      disableTreatment
                     />
                     <span className="why-collage-caption">Netflix Clone · Responsive UI</span>
                   </div>
@@ -210,6 +211,7 @@ export function HomePage() {
                       width={1200}
                       height={565}
                       focal="50% 15%"
+                      disableTreatment
                     />
                     <span className="why-collage-caption">Bootstrap Grid Clone</span>
                   </div>
@@ -222,6 +224,7 @@ export function HomePage() {
                       width={532}
                       height={646}
                       focal="50% 24%"
+                      disableTreatment
                     />
                     <span className="why-collage-caption">Currency Converter · API</span>
                   </div>

@@ -18,6 +18,7 @@ export interface ImageSlotProps {
   ratio?: string;
   disableTreatment?: boolean;
   onLoad?: () => void;
+  onError?: () => void;
 }
 
 /**
@@ -45,6 +46,7 @@ export function ImageSlot({
   ratio,
   disableTreatment = false,
   onLoad,
+  onError,
 }: ImageSlotProps) {
   const [activeSrc, setActiveSrc] = useState<string | undefined>(src || fallbackSrc);
   const [status, setStatus] = useState<'loading' | 'loaded' | 'svg'>(() =>
@@ -78,6 +80,7 @@ export function ImageSlot({
     }
     setStatus('svg');
     onLoad?.();
+    onError?.();
   };
 
   const slotStyle: CSSProperties | undefined = ratio ? { aspectRatio: ratio } : undefined;

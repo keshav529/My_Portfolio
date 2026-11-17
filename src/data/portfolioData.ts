@@ -659,7 +659,7 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     imageWidth: 720,
     imageHeight: 960,
     imageAlt: 'Portrait of Keshav Anand ready for software development internships and junior engineering roles',
-    imageFocal: '50% 24%',
+    imageFocal: '50% 32%',
   },
 ];
 

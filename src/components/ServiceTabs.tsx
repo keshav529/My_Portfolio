@@ -120,6 +120,7 @@ export function ServiceTabs({ services }: ServiceTabsProps) {
                   height={service.imageHeight}
                   focal={service.imageFocal}
                   className="services-image-slot"
+                  disableTreatment
                 />
               </div>
             ))}

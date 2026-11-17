@@ -26,6 +26,7 @@ export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
             focal={project.imageFocal}
             className="work-strip-image-slot"
             imgClassName="work-strip-image"
+            disableTreatment
           />
           <div className="work-strip-overlay" aria-hidden="true" />
           <div className="work-strip-content">
@@ -50,6 +51,7 @@ export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
             focal={project.imageFocal}
             className="work-grid-image-slot"
             imgClassName="work-grid-image"
+            disableTreatment
           />
           <div className="work-grid-overlay" aria-hidden="true" />
           <div className="work-grid-content">

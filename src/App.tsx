@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { Navbar } from './components/Navbar';
@@ -7,6 +7,7 @@ import { IntroLoader } from './components/IntroLoader';
 import { SmoothScroll } from './components/SmoothScroll';
 import { RouteMeta } from './components/RouteMeta';
 import { HomePage } from './pages/HomePage';
+import { PROJECTS } from './data/portfolioData';
 
 const AboutPage = lazy(() =>
   import('./pages/AboutPage').then((m) => ({ default: m.AboutPage }))
@@ -68,6 +69,32 @@ function AnimatedRoutes() {
  * - Reference Footer (#121212)
  */
 export function App() {
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      const optionalAssets = [
+        '/image/resume-preview.webp',
+        '/image/journey-college.webp',
+        '/image/journey-desk.webp',
+        ...PROJECTS.flatMap((p) => [`/image/${p.slug}-mobile.webp`, `/image/${p.slug}-detail.webp`]),
+      ];
+      console.groupCollapsed(
+        '%c[Dev Notice] Optional portfolio image assets status',
+        'color: #ff5330; font-weight: bold;'
+      );
+      optionalAssets.forEach((path) => {
+        const img = new Image();
+        img.src = path;
+        img.onerror = () => {
+          console.log(
+            `%c[Missing optional asset] ${path} (falling back to SVG/portrait)`,
+            'color: #737373;'
+          );
+        };
+      });
+      console.groupEnd();
+    }
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
       <BrowserRouter>

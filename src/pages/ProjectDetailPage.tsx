@@ -23,11 +23,15 @@ export function ProjectDetailPage() {
   const project = currentIndex >= 0 ? PROJECTS[currentIndex] : undefined;
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [mobileExists, setMobileExists] = useState(true);
+  const [detailExists, setDetailExists] = useState(true);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const openerBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setLightboxOpen(false);
+    setMobileExists(true);
+    setDetailExists(true);
   }, [slug]);
 
   useEffect(() => {
@@ -209,6 +213,7 @@ export function ProjectDetailPage() {
                     focal={project.imageFocal}
                     loading="eager"
                     ratio="16 / 9"
+                    disableTreatment
                   />
                   <span className="case-gallery-zoom-badge" aria-hidden="true">
                     <Maximize2 size={16} />
@@ -253,50 +258,60 @@ export function ProjectDetailPage() {
               </Reveal>
             </div>
 
-            {/* 2-Column Square Image Slots (1:1 .webp screenshots with SVG wireframe fallback) */}
-            <Reveal delay={0.1}>
-              <div className="case-square-gallery">
-                <figure className="case-square-slot">
-                  <div className="case-square-media">
-                    <ImageSlot
-                      src={`/image/${project.slug}-mobile.webp`}
-                      fallback="mobile-view"
-                      alt={`${project.title} responsive mobile screen`}
-                      width={600}
-                      height={600}
-                      focal="50% 20%"
-                      ratio="1 / 1"
-                    />
-                  </div>
-                  <figcaption className="case-square-caption">
-                    <span className="case-placeholder-title">Responsive mobile view</span>
-                    <span className="case-placeholder-hint">
-                      public/image/{project.slug}-mobile.webp (600&times;600)
-                    </span>
-                  </figcaption>
-                </figure>
+            {/* 2-Column Square Image Slots (only rendered when files exist on disk) */}
+            {(mobileExists || detailExists) && (
+              <Reveal delay={0.1}>
+                <div className="case-square-gallery">
+                  {mobileExists && (
+                    <figure className="case-square-slot">
+                      <div className="case-square-media">
+                        <ImageSlot
+                          src={`/image/${project.slug}-mobile.webp`}
+                          fallback="mobile-view"
+                          alt={`${project.title} responsive mobile screen`}
+                          width={600}
+                          height={600}
+                          focal="50% 20%"
+                          ratio="1 / 1"
+                          disableTreatment
+                          onError={() => setMobileExists(false)}
+                        />
+                      </div>
+                      <figcaption className="case-square-caption">
+                        <span className="case-placeholder-title">Responsive mobile view</span>
+                        <span className="case-placeholder-hint">
+                          public/image/{project.slug}-mobile.webp (600&times;600)
+                        </span>
+                      </figcaption>
+                    </figure>
+                  )}
 
-                <figure className="case-square-slot">
-                  <div className="case-square-media">
-                    <ImageSlot
-                      src={`/image/${project.slug}-detail.webp`}
-                      fallback="state-detail"
-                      alt={`${project.title} interactive state detail`}
-                      width={600}
-                      height={600}
-                      focal="50% 35%"
-                      ratio="1 / 1"
-                    />
-                  </div>
-                  <figcaption className="case-square-caption">
-                    <span className="case-placeholder-title">Interactive state detail</span>
-                    <span className="case-placeholder-hint">
-                      public/image/{project.slug}-detail.webp (600&times;600)
-                    </span>
-                  </figcaption>
-                </figure>
-              </div>
-            </Reveal>
+                  {detailExists && (
+                    <figure className="case-square-slot">
+                      <div className="case-square-media">
+                        <ImageSlot
+                          src={`/image/${project.slug}-detail.webp`}
+                          fallback="state-detail"
+                          alt={`${project.title} interactive state detail`}
+                          width={600}
+                          height={600}
+                          focal="50% 35%"
+                          ratio="1 / 1"
+                          disableTreatment
+                          onError={() => setDetailExists(false)}
+                        />
+                      </div>
+                      <figcaption className="case-square-caption">
+                        <span className="case-placeholder-title">Interactive state detail</span>
+                        <span className="case-placeholder-hint">
+                          public/image/{project.slug}-detail.webp (600&times;600)
+                        </span>
+                      </figcaption>
+                    </figure>
+                  )}
+                </div>
+              </Reveal>
+            )}
 
             {/* Bottom Action Links */}
             <Reveal delay={0.12}>
@@ -353,6 +368,7 @@ export function ProjectDetailPage() {
                       height={nextProject.imageHeight}
                       focal={nextProject.imageFocal}
                       ratio="16 / 9"
+                      disableTreatment
                     />
                   </div>
                 </Link>
