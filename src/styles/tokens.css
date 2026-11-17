@@ -1,0 +1,65 @@
+/* ==========================================================================
+   DESIGN TOKENS — Edit colors, fonts, spacing, and radii in this single file
+   Restrained editorial palette: crisp off-white canvas + deep ink + cobalt accent
+   ========================================================================== */
+
+:root {
+  /* --- Colors (60% Canvas / 30% Surfaces / 10% Accent) --- */
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f3f4f6;
+  --color-ink: #111827;
+  --color-ink-muted: #4b5563;
+  --color-ink-subtle: #6b7280;
+
+  --color-border: rgba(17, 24, 39, 0.1);
+  --color-border-strong: rgba(17, 24, 39, 0.22);
+
+  /* Single Accent Color (Electric Cobalt) */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-soft: rgba(37, 99, 235, 0.08);
+  --color-accent-ink: #ffffff;
+
+  /* Dark editorial band (used for Footer / high-contrast CTA blocks) */
+  --color-dark-surface: #0b0f19;
+  --color-dark-surface-elevated: #131a2a;
+  --color-dark-ink: #f9fafb;
+  --color-dark-ink-muted: #9ca3af;
+  --color-dark-border: rgba(249, 250, 251, 0.12);
+
+  /* --- Typography --- */
+  --font-display: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Fluid Type Scale */
+  --text-hero: clamp(2.6rem, 6vw, 4.75rem);
+  --text-h1: clamp(2.1rem, 4.5vw, 3.5rem);
+  --text-h2: clamp(1.65rem, 3vw, 2.4rem);
+  --text-h3: clamp(1.2rem, 2vw, 1.5rem);
+  --text-lead: clamp(1.0625rem, 1.4vw, 1.25rem);
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+
+  /* --- Layout & Spacing --- */
+  --container-max: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section-space: clamp(4.5rem, 9vw, 7.5rem);
+  --nav-height: 76px;
+
+  /* --- Radii & Shadows --- */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  --shadow-soft: 0 12px 32px -12px rgba(17, 24, 39, 0.08);
+  --shadow-card: 0 20px 44px -18px rgba(17, 24, 39, 0.14);
+
+  /* --- Motion --- */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+}

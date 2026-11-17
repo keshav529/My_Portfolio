@@ -1,380 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keshav | Aspiring Software Developer Portfolio</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Set initial theme before first paint to prevent light/dark flash -->
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem('portfolio-theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = saved === 'light' || saved === 'dark' ? saved : (prefersDark ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'dark');
+    <!-- Primary SEO Metadata -->
+    <title>Keshav Anand — Web Developer &amp; UI Designer</title>
+    <meta
+      name="description"
+      content="Portfolio of Keshav Anand, a BCA student and aspiring software developer building fast, responsive web applications with HTML, CSS, JavaScript, and React."
+    />
+    <meta name="author" content="Keshav Anand" />
+    <meta name="theme-color" content="#0B0F19" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / Social Share Card -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Keshav Anand Portfolio" />
+    <meta property="og:title" content="Keshav Anand — Web Developer &amp; UI Designer" />
+    <meta
+      property="og:description"
+      content="Explore web development projects, Figma UI designs, education, and resume of Keshav Anand (BCA 2022–2025)."
+    />
+    <meta property="og:image" content="/image/keshavphotos.jpg" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Keshav Anand — Web Developer &amp; UI Designer" />
+    <meta
+      name="twitter:description"
+      content="Explore web development projects, Figma UI designs, education, and resume of Keshav Anand (BCA 2022–2025)."
+    />
+    <meta name="twitter:image" content="/image/keshavphotos.jpg" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Keshav Anand",
+        "jobTitle": "Aspiring Software Developer",
+        "email": "mailto:keshavanand748@gmail.com",
+        "telephone": "+91-9817357072",
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "Sh. L.N. Hindu College, Rohtak (MDU)"
+        },
+        "sameAs": [
+          "https://github.com/keshav529",
+          "https://www.linkedin.com/in/keshav-anand-8ba87a293",
+          "https://leetcode.com/u/keshavanand/"
+        ]
       }
-    })();
-  </script>
+    </script>
 
-  <!-- Font Pairing: Outfit (Display) + Plus Jakarta Sans (Body) + JetBrains Mono (Code Details) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap 5.3.3 Grid/Utilities + Font Awesome Icons + Custom Portfolio Styles -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-
-  <!-- Stage 1 Header: Clean 3-Zone Top Bar (Brand — Nav Links — Theme Toggle) -->
-  <header class="site-header">
-    <nav class="site-nav" aria-label="Primary navigation">
-      <a class="brand-wordmark" href="#home-id">Keshav</a>
-
-      <ul class="nav-links-list">
-        <li><a class="nav-link-item is-active" href="#home-id">Home</a></li>
-        <li><a class="nav-link-item" href="#skills-id">Skills</a></li>
-        <li><a class="nav-link-item" href="#education-id">Education</a></li>
-        <li><a class="nav-link-item" href="#projects-id">Projects</a></li>
-        <li><a class="nav-link-item" href="#contact-id">Contact</a></li>
-      </ul>
-
-      <button
-        type="button"
-        id="theme-toggle"
-        class="theme-toggle-btn"
-        aria-pressed="true"
-        aria-label="Switch to light theme"
-      >
-        <i id="theme-toggle-icon" class="fa-solid fa-sun" aria-hidden="true"></i>
-        <span id="theme-toggle-label">Light</span>
-      </button>
-    </nav>
-  </header>
-
-  <main id="main-content">
-    <!-- Stage 1 Upgraded Hero Section -->
-    <section class="hero-section" id="home-id" aria-labelledby="hero-heading">
-      <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
-
-      <div class="hero-container">
-        <div class="row align-items-center g-5">
-          <!-- Column 1: Typography, Rotating Role & Primary Actions -->
-          <div class="col-lg-7 text-center text-lg-start">
-            <p class="hero-kicker">
-              BCA Student (2022–2025) &middot; Rohtak, India
-            </p>
-
-            <h1 id="hero-heading" class="hero-title">
-              Hi, I'm Keshav
-            </h1>
-
-            <div class="hero-role-row justify-content-center justify-content-lg-start">
-              <span class="hero-role-prefix">I'm a</span>
-              <span id="hero-rotating-role" aria-live="polite">Aspiring Software Developer</span><span class="typing-cursor" aria-hidden="true"></span>
-            </div>
-
-            <p class="hero-summary mx-auto mx-lg-0">
-              Passionate about building user-friendly and efficient web applications using modern technologies. Currently focused on clean frontend engineering while learning React, Node.js, MongoDB, and Data Structures &amp; Algorithms.
-            </p>
-
-            <div class="hero-actions justify-content-center justify-content-lg-start">
-              <a href="#projects-id" class="btn-hero-primary">
-                <span>View Projects</span>
-                <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
-              </a>
-              <a href="image/keshav_CV.pdf.pdf" download class="btn-hero-secondary">
-                <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
-                <span>Download Resume</span>
-              </a>
-            </div>
-
-            <p class="hero-stack-line">
-              HTML5 &middot; CSS3 &middot; JavaScript &middot; Java &middot; Bootstrap &middot; Figma &middot; Git/GitHub
-            </p>
-          </div>
-
-          <!-- Column 2: Profile Photo in Glassmorphic Frame -->
-          <div class="col-lg-5">
-            <div class="hero-visual-card">
-              <div class="hero-photo-frame">
-                <img
-                  src="image/keshavphotos.jpg"
-                  alt="Portrait of Keshav, aspiring software developer"
-                >
-              </div>
-              <div class="hero-photo-caption">
-                <span>Keshav Anand</span>
-                <span class="font-mono">BCA 2022–2025</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Existing Skills Section (Will be upgraded in Stage 3) -->
-    <section class="portfolio-section portfolio-section-alt" id="skills-id" aria-labelledby="skills-heading">
-      <div class="container">
-        <div class="row mb-4">
-          <div class="col-12 text-center">
-            <h2 id="skills-heading" class="section-heading">Skills</h2>
-            <p class="section-subheading">Core technologies and tools I work with</p>
-          </div>
-        </div>
-
-        <div class="row mb-2">
-          <div class="col-12">
-            <h3 class="h5 fw-bold">Using Now</h3>
-          </div>
-        </div>
-
-        <div class="row g-3 py-2 text-center">
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/html5.png" alt="HTML5 logo" class="imageedit img-fluid">
-            <p class="mb-0">HTML5</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/javascriptimage.png" alt="JavaScript logo" class="imageedit img-fluid">
-            <p class="mb-0">JavaScript</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/javaimage.png" alt="Java logo" class="imageedit img-fluid">
-            <p class="mb-0">Java</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/cssimage.png" alt="CSS3 logo" class="imageedit img-fluid">
-            <p class="mb-0">CSS</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/figmaimage.png" alt="Figma logo" class="imageedit img-fluid">
-            <p class="mb-0">Figma</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/bootsrap.png" alt="Bootstrap logo" class="imageedit img-fluid">
-            <p class="mb-0">Bootstrap</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/githubimage.png" alt="GitHub logo" class="imageedit img-fluid">
-            <p class="mb-0">GitHub</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/cprogrammingimage.png" alt="C Programming logo" class="imageedit img-fluid">
-            <p class="mb-0">C Programming</p>
-          </div>
-        </div>
-
-        <div class="row mt-4 mb-2">
-          <div class="col-12">
-            <h3 class="h5 fw-bold">Learning</h3>
-          </div>
-        </div>
-
-        <div class="row g-3 py-2 text-center">
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/REACTIMAGE.png" alt="React logo" class="imageedit img-fluid">
-            <p class="mb-0">React</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/NODEJSIMAGE.png" alt="Node.js logo" class="imageedit img-fluid">
-            <p class="mb-0">Node.js</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/MONGODBIMAGE.png" alt="MongoDB logo" class="imageedit img-fluid">
-            <p class="mb-0">MongoDB</p>
-          </div>
-          <div class="col-lg-3 col-sm-6 d-flex justify-content-center flex-column align-items-center">
-            <img src="image/deep-learning.png" alt="Data Structures and Algorithms icon" class="imageedit img-fluid">
-            <p class="mb-0">DSA</p>
-          </div>
-        </div>
-
-        <div class="row mt-4 mb-2">
-          <div class="col-12">
-            <h3 class="h5 fw-bold">Other Skills</h3>
-          </div>
-        </div>
-
-        <div class="row g-3 py-2 text-center">
-          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-            <img src="image/csimage.jpg" alt="Communication Skills" class="imageedit img-fluid">
-            <p class="mb-0">Communication Skills</p>
-          </div>
-          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-            <img src="image/problemsolvingimage.jpg" alt="Problem Solving Skills" class="imageedit img-fluid">
-            <p class="mb-0">Problem Solving Skills</p>
-          </div>
-          <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-            <img src="image/presentationskillimage.jpg" alt="Presentation Skills" class="imageedit img-fluid">
-            <p class="mb-0">Presentation Skills</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Existing Education Section (Will be upgraded in Stage 4) -->
-    <section class="portfolio-section" id="education-id" aria-labelledby="education-heading">
-      <div class="container">
-        <div class="row mb-4">
-          <div class="col text-center">
-            <h2 id="education-heading" class="section-heading">Education</h2>
-            <p class="section-subheading">My academic background and qualifications</p>
-          </div>
-        </div>
-
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="card surface-card h-100">
-              <div class="card-body p-4">
-                <h3 class="h5 card-title fw-bold mb-3">Class 10th (CBSE)</h3>
-                <p class="card-text mb-2"><strong>School:</strong> Sati Bhai Sai Dass Public School, Kalanaur</p>
-                <p class="card-text mb-2"><strong>Year:</strong> 2020</p>
-                <p class="card-text mb-0"><strong>Percentage:</strong> 69.6%</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card surface-card h-100">
-              <div class="card-body p-4">
-                <h3 class="h5 card-title fw-bold mb-3">Class 12th (HBSE)</h3>
-                <p class="card-text mb-2"><strong>School:</strong> Government School, Kalanaur</p>
-                <p class="card-text mb-2"><strong>Year:</strong> 2022</p>
-                <p class="card-text mb-0"><strong>Percentage:</strong> 82.2%</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="card surface-card h-100">
-              <div class="card-body p-4">
-                <h3 class="h5 card-title fw-bold mb-3">BCA (2022–2025)</h3>
-                <p class="card-text mb-2"><strong>College:</strong> Sh. L.N. Hindu College, Rohtak (MDU)</p>
-                <p class="card-text mb-0"><strong>Current Percentage:</strong> 72%</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Existing Projects Section (Will be upgraded in Stage 3) -->
-    <section class="portfolio-section portfolio-section-alt" id="projects-id" aria-labelledby="projects-heading">
-      <div class="container">
-        <div class="row mb-4">
-          <div class="col-12 text-center">
-            <h2 id="projects-heading" class="section-heading">Projects</h2>
-            <p class="section-subheading">Web applications and interactive UI builds</p>
-          </div>
-        </div>
-
-        <div class="row g-4 justify-content-center">
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/bootstapimage.png" alt="Website Clone project screenshot" class="img-fluid project-img-hover">
-            <p class="mt-3 mb-1 fw-bold">Website Clone</p>
-            <p class="section-subheading small">Built a website clone using HTML, CSS, and Bootstrap for responsive design.</p>
-          </div>
-
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/netfliximageportfolio.png" alt="Netflix Clone project screenshot" class="img-fluid project-img-hover">
-            <p class="mt-3 mb-1 fw-bold">Netflix Clone</p>
-            <p class="section-subheading small">Designed a responsive Netflix homepage clone using HTML and CSS with a focus on layout, styling, and mobile-friendly design.</p>
-          </div>
-
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/stopwatchimg.png" alt="Stopwatch app screenshot" class="img-fluid project-img-hover">
-            <p class="mt-3 mb-1 fw-bold">Stopwatch</p>
-            <p class="section-subheading small">Created a stopwatch using HTML, CSS, and JavaScript with start, stop, and reset features.</p>
-          </div>
-
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/tictactoeportfolioimg.png" alt="Tic-Tac-Toe game screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
-            <p class="mt-3 mb-1 fw-bold">Tic-Tac-Toe</p>
-            <p class="section-subheading small">Built a Tic Tac Toe game using HTML, CSS, and JavaScript with interactive gameplay.</p>
-          </div>
-
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/currencyconvertorimage.png" alt="Currency Converter app screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
-            <p class="mt-3 mb-1 fw-bold">Currency Converter</p>
-            <p class="section-subheading small">Built a currency converter using HTML, CSS, JavaScript, and a real-time API.</p>
-          </div>
-
-          <div class="col-lg-4 col-md-6 text-center">
-            <img src="image/calculatorimg.png" alt="Calculator app screenshot" class="img-fluid project-img-hover" style="height: 260px; width: 260px; object-fit: cover;">
-            <p class="mt-3 mb-1 fw-bold">Calculator</p>
-            <p class="section-subheading small">Built a basic calculator using HTML, CSS, and JavaScript for simple arithmetic operations.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Existing Contact Section (Will be upgraded in Stage 4) -->
-    <section class="portfolio-section" id="contact-id" aria-labelledby="contact-heading">
-      <div class="container">
-        <div class="row align-items-center g-5">
-          <div class="col-md-6 text-center">
-            <img src="image/contactphoto.jpg" alt="Laptop displaying code" class="img-fluid rounded-4 shadow-sm contactimg">
-          </div>
-
-          <div class="col-md-6 text-center text-md-start">
-            <h2 id="contact-heading" class="section-heading mb-4">My Contact</h2>
-
-            <p class="fs-5 mb-3">
-              <a href="mailto:keshavanand748@gmail.com" class="theme-link">
-                keshavanand748@gmail.com
-              </a>
-            </p>
-
-            <p class="mb-4">
-              <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" rel="noopener noreferrer" class="btn-linkedin-themed">
-                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
-                <span>Visit LinkedIn Profile</span>
-              </a>
-            </p>
-
-            <p class="fs-5 mb-0">
-              Download Resume:
-              <a href="image/keshav_CV.pdf.pdf" download class="theme-link">
-                Click to Download
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer text-center">
-    <div class="container">
-      <h2 class="fw-bold">Keshav</h2>
-      <p class="mb-1">keshavanand748@gmail.com &middot; +91-9817357072</p>
-
-      <div class="d-flex justify-content-center gap-3 my-3">
-        <a href="https://leetcode.com/u/keshavanand/" target="_blank" rel="noopener noreferrer" aria-label="Keshav on LeetCode">
-          <img src="image/leetcodeimage.png" alt="LeetCode" style="height: 26px;">
-        </a>
-        <a href="https://www.linkedin.com/in/keshav-anand-8ba87a293" target="_blank" rel="noopener noreferrer" aria-label="Keshav on LinkedIn">
-          <img src="image/linkedinimage.png" alt="LinkedIn" style="height: 26px;">
-        </a>
-        <a href="mailto:keshavanand748@gmail.com" aria-label="Email Keshav">
-          <img src="image/gmailimg.png" alt="Email" style="height: 26px;">
-        </a>
-      </div>
-
-      <p class="mb-1">Open to opportunities — let’s connect and build something amazing together!</p>
-      <p class="mb-0 small">&copy; 2025 Keshav &middot; All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="/main.js"></script>
-</body>
+    <!-- Editorial Typography: Outfit (Display) + Plus Jakarta Sans (Body) + JetBrains Mono (Accents) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
