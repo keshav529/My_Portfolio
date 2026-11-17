@@ -36,17 +36,17 @@ export function Hero() {
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  const disableParallax = Boolean(prefersReducedMotion) || isCompactViewport;
+  const disableParallax = Boolean(prefersReducedMotion);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end end'],
   });
 
-  // Scroll-linked subtle scale and vertical parallax over the 300vh track (desktop only)
-  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const mediaY = useTransform(scrollYProgress, [0, 1], ['0%', '-5%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0px', '-24px']);
+  // Scroll-linked subtle scale and vertical parallax (lighter range on mobile)
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, isCompactViewport ? 1.04 : 1.08]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], ['0%', isCompactViewport ? '-3%' : '-5%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0px', isCompactViewport ? '-12px' : '-24px']);
   const scrollLineScaleY = useTransform(scrollYProgress, [0, 1], [0.2, 1]);
 
   return (

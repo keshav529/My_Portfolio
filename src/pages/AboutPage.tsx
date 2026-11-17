@@ -54,22 +54,11 @@ export function AboutPage() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   const prefersReducedMotion = useReducedMotion();
-  const [isMobileTimeline, setIsMobileTimeline] = useState<boolean>(() =>
-    typeof window !== 'undefined' ? window.innerWidth <= 479 : false
-  );
   const [travelPx, setTravelPx] = useState(0);
   const [stageHeightPx, setStageHeightPx] = useState(0);
   const [activeStopIndex, setActiveStopIndex] = useState(0);
 
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 479px)');
-    const update = () => setIsMobileTimeline(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-
-  const disableHorizontalTimeline = Boolean(prefersReducedMotion) || isMobileTimeline;
+  const disableHorizontalTimeline = Boolean(prefersReducedMotion);
 
   const measureTimeline = useCallback(() => {
     if (disableHorizontalTimeline) {
@@ -272,8 +261,15 @@ export function AboutPage() {
                   : { transform: timelineTransform }
               }
             >
-              {ABOUT_TIMELINE.map((stop) => (
-                <article key={stop.id} className="about-timeline-slide">
+              {ABOUT_TIMELINE.map((stop, stopIdx) => (
+                <motion.article
+                  key={stop.id}
+                  className="about-timeline-slide"
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: stopIdx * 0.04, ease: [0.165, 0.84, 0.44, 1] }}
+                >
                   <div className="about-timeline-card">
                     <div className="about-timeline-media">
                       {stop.compositeImages && stop.compositeImages.length > 0 ? (
@@ -330,7 +326,7 @@ export function AboutPage() {
                       <p className="about-timeline-desc">{stop.description}</p>
                     </div>
                   </div>
-                </article>
+                </motion.article>
               ))}
             </motion.div>
           </div>
