@@ -4,6 +4,8 @@
    ========================================================================== */
 
 :root {
+  color-scheme: light;
+
   /* --- Colors (60% Canvas / 30% Surfaces / 10% Accent) --- */
   --color-bg: #fafafa;
   --color-surface: #ffffff;
@@ -15,13 +17,26 @@
   --color-border: rgba(17, 24, 39, 0.1);
   --color-border-strong: rgba(17, 24, 39, 0.22);
 
+  /* Sticky navbar translucent glass */
+  --color-nav-bg: rgba(250, 250, 250, 0.86);
+  --color-nav-bg-scrolled: rgba(255, 255, 255, 0.96);
+
   /* Single Accent Color (Electric Cobalt) */
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
   --color-accent-soft: rgba(37, 99, 235, 0.08);
   --color-accent-ink: #ffffff;
 
-  /* Dark editorial band (used for Footer / high-contrast CTA blocks) */
+  /* Semantic Status Colors */
+  --color-error: #b91c1c;
+  --color-success-bg: rgba(22, 163, 74, 0.1);
+  --color-success-ink: #166534;
+  --color-success-border: rgba(22, 163, 74, 0.25);
+  --color-error-bg: rgba(220, 38, 38, 0.08);
+  --color-error-ink: #991b1b;
+  --color-error-border: rgba(220, 38, 38, 0.22);
+
+  /* Dark editorial band (used for Footer / Mobile Menu / CTA blocks) */
   --color-dark-surface: #0b0f19;
   --color-dark-surface-elevated: #131a2a;
   --color-dark-ink: #f9fafb;
@@ -62,4 +77,43 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 180ms;
   --duration-base: 320ms;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #070b14;
+  --color-surface: #0f172a;
+  --color-surface-alt: #131c31;
+  --color-ink: #f1f5f9;
+  --color-ink-muted: #cbd5e1;
+  --color-ink-subtle: #94a3b8;
+
+  --color-border: rgba(148, 163, 184, 0.16);
+  --color-border-strong: rgba(148, 163, 184, 0.3);
+
+  --color-nav-bg: rgba(7, 11, 20, 0.84);
+  --color-nav-bg-scrolled: rgba(15, 23, 42, 0.95);
+
+  --color-accent: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-accent-soft: rgba(56, 189, 248, 0.14);
+  --color-accent-ink: #04101f;
+
+  --color-error: #fca5a5;
+  --color-success-bg: rgba(34, 197, 94, 0.14);
+  --color-success-ink: #86efac;
+  --color-success-border: rgba(34, 197, 94, 0.28);
+  --color-error-bg: rgba(248, 113, 113, 0.14);
+  --color-error-ink: #fca5a5;
+  --color-error-border: rgba(248, 113, 113, 0.28);
+
+  --color-dark-surface: #04070d;
+  --color-dark-surface-elevated: #0b1120;
+  --color-dark-ink: #f8fafc;
+  --color-dark-ink-muted: #94a3b8;
+  --color-dark-border: rgba(148, 163, 184, 0.16);
+
+  --shadow-soft: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+  --shadow-card: 0 20px 44px -18px rgba(0, 0, 0, 0.7);
 }

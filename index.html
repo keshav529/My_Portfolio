@@ -11,8 +11,30 @@
       content="Portfolio of Keshav Anand, a BCA student and aspiring software developer building fast, responsive web applications with HTML, CSS, JavaScript, and React."
     />
     <meta name="author" content="Keshav Anand" />
-    <meta name="theme-color" content="#0B0F19" />
+    <meta name="theme-color" content="#fafafa" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var stored = localStorage.getItem('portfolio-theme');
+          if (stored === 'light' || stored === 'dark') {
+            theme = stored;
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
+          }
+        } catch (e) {
+          if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
+          }
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute('content', theme === 'dark' ? '#070b14' : '#fafafa');
+        }
+      })();
+    </script>
 
     <!-- Open Graph / Social Share Card -->
     <meta property="og:type" content="website" />

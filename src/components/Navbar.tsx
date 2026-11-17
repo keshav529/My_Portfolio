@@ -1,19 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { NAV_ITEMS, PROFILE } from '../data/portfolioData';
+import { useTheme } from '../hooks/useTheme';
 
 /**
  * Sticky 3-Zone Editorial Navigation Bar
  * - Left: Brand wordmark
  * - Middle: 6 navigation links with animated underline on hover/active
- * - Right: Highlighted CONTACT button + mobile full-screen menu trigger
+ * - Right: Light/Dark theme toggle + Highlighted CONTACT button + <820px mobile menu trigger
  */
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
+
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const wasOpenRef = useRef(false);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
 
   // Add subtle background & shadow once the user scrolls past the top
   useEffect(() => {
@@ -30,25 +41,75 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Lock body scroll and listen for Escape key when full-screen menu is open
+  // Close mobile menu if viewport widens to desktop (>= 820px)
   useEffect(() => {
-    if (!mobileMenuOpen) return;
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return;
+    }
+    const desktopQuery = window.matchMedia('(min-width: 820px)');
+    const handleViewportChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setMobileMenuOpen(false);
+      }
+    };
+    desktopQuery.addEventListener('change', handleViewportChange);
+    return () => desktopQuery.removeEventListener('change', handleViewportChange);
+  }, []);
 
+  // Lock body scroll, manage focus, trap Tab key, and support Escape when full-screen menu is open
+  useEffect(() => {
+    if (!mobileMenuOpen) {
+      if (wasOpenRef.current) {
+        wasOpenRef.current = false;
+        menuToggleRef.current?.focus();
+      }
+      return;
+    }
+
+    wasOpenRef.current = true;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
+    const focusTimer = window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         setMobileMenuOpen(false);
+        return;
+      }
+
+      if (event.key === 'Tab' && mobileMenuRef.current) {
+        const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+
+        const firstEl = focusable[0];
+        const lastEl = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstEl) {
+          event.preventDefault();
+          lastEl.focus();
+        } else if (!event.shiftKey && document.activeElement === lastEl) {
+          event.preventDefault();
+          firstEl.focus();
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
+      window.cancelAnimationFrame(focusTimer);
       document.body.style.overflow = prevOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [mobileMenuOpen]);
+
+  const themeToggleLabel =
+    theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
 
   return (
     <>
@@ -60,7 +121,7 @@ export function Navbar() {
             <span className="navbar-brand-dot" aria-hidden="true" />
           </Link>
 
-          {/* Zone 2: Center Navigation Links (Desktop) */}
+          {/* Zone 2: Center Navigation Links (Desktop >= 820px) */}
           <nav aria-label="Primary navigation">
             <ul className="navbar-links-desktop">
               {NAV_ITEMS.map((item) => (
@@ -79,19 +140,35 @@ export function Navbar() {
             </ul>
           </nav>
 
-          {/* Zone 3: Highlighted CONTACT CTA + Mobile Menu Button */}
+          {/* Zone 3: Theme Toggle + Highlighted CONTACT CTA + Mobile Menu Button (< 820px) */}
           <div className="navbar-actions">
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label={themeToggleLabel}
+              aria-pressed={theme === 'dark'}
+              title={themeToggleLabel}
+            >
+              {theme === 'dark' ? (
+                <Sun size={18} aria-hidden="true" />
+              ) : (
+                <Moon size={18} aria-hidden="true" />
+              )}
+            </button>
+
             <Link to="/contact" className="navbar-contact-cta">
               Contact
             </Link>
 
             <button
+              ref={menuToggleRef}
               type="button"
               className="navbar-menu-toggle"
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-fullscreen-menu"
-              aria-label="Open navigation menu"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             >
               <Menu size={20} aria-hidden="true" />
             </button>
@@ -99,10 +176,11 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Full-Screen Animated Mobile Navigation Menu */}
+      {/* Full-Screen Animated Mobile Navigation Menu (< 820px) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
             id="mobile-fullscreen-menu"
             className="mobile-menu-overlay"
             role="dialog"
@@ -117,18 +195,35 @@ export function Navbar() {
               <Link
                 to="/"
                 className="mobile-menu-brand"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 {PROFILE.name}
               </Link>
-              <button
-                type="button"
-                className="mobile-menu-close"
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="Close navigation menu"
-              >
-                <X size={20} aria-hidden="true" />
-              </button>
+              <div className="mobile-menu-controls">
+                <button
+                  type="button"
+                  className="mobile-menu-theme-btn"
+                  onClick={toggleTheme}
+                  aria-label={themeToggleLabel}
+                  aria-pressed={theme === 'dark'}
+                  title={themeToggleLabel}
+                >
+                  {theme === 'dark' ? (
+                    <Sun size={18} aria-hidden="true" />
+                  ) : (
+                    <Moon size={18} aria-hidden="true" />
+                  )}
+                </button>
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  className="mobile-menu-close"
+                  onClick={closeMobileMenu}
+                  aria-label="Close navigation menu"
+                >
+                  <X size={20} aria-hidden="true" />
+                </button>
+              </div>
             </div>
 
             <nav aria-label="Mobile links">
@@ -147,7 +242,7 @@ export function Navbar() {
                     <NavLink
                       to={item.path}
                       end={item.path === '/'}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={closeMobileMenu}
                       className={({ isActive }) =>
                         `mobile-menu-link ${isActive ? 'is-active' : ''}`
                       }
@@ -161,10 +256,10 @@ export function Navbar() {
             </nav>
 
             <div className="mobile-menu-footer">
-              <a href={`mailto:${PROFILE.email}`}>
+              <a href={`mailto:${PROFILE.email}`} onClick={closeMobileMenu}>
                 {PROFILE.email} <ArrowUpRight size={14} style={{ display: 'inline' }} aria-hidden="true" />
               </a>
-              <a href={`tel:${PROFILE.phone.replace(/[^+\d]/g, '')}`}>
+              <a href={`tel:${PROFILE.phone.replace(/[^+\d]/g, '')}`} onClick={closeMobileMenu}>
                 {PROFILE.phone}
               </a>
             </div>
