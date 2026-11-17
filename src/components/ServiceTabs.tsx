@@ -1,91 +1,155 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-import { ServiceItem } from '../data/portfolioData';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight, Check } from 'lucide-react';
+import { SERVICE_HIGHLIGHTS, ServiceItem } from '../data/portfolioData';
 
 interface ServiceTabsProps {
   services: ServiceItem[];
 }
 
+const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
+
 /**
- * Interactive "How I can help you" section.
- * Clicking or focusing any of the 4 service tabs updates the preview image
- * and description panel on the right with a smooth editorial transition.
+ * Reference "How I can help you" Services Band:
+ * - #e5e5e5 background with 1px #a3a3a3 top border
+ * - 4 tab buttons with sliding orange-tinted selector pill
+ * - 40rem black area with opposite horizontal sliding tracks (images slide left, text panels slide right)
+ * - 2-column bullet list below (6rem gap, 1.5rem #525252 text, orange icon, 1px #a3a3a3 dividers)
  */
 export function ServiceTabs({ services }: ServiceTabsProps) {
-  const [activeId, setActiveId] = useState<string>(services[0]?.id ?? '');
-  const activeService =
-    services.find((service) => service.id === activeId) ?? services[0];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
-  if (!activeService) return null;
+  if (services.length === 0) return null;
+
+  // Text panels arranged in reverse order so shifting to (services.length - 1 - activeIndex)
+  // moves the text track in the opposite horizontal direction to the image track.
+  const reversedServices = [...services].reverse();
+  const imageTranslate = `-${activeIndex * 100}%`;
+  const textTranslate = `-${(services.length - 1 - activeIndex) * 100}%`;
 
   return (
-    <div className="service-tabs-grid">
-      {/* Left Column: 4 Interactive Service Selector Tabs */}
-      <div className="service-tab-list" role="tablist" aria-label="Services">
-        {services.map((service) => {
-          const isActive = service.id === activeService.id;
-          return (
-            <button
-              key={service.id}
-              type="button"
-              role="tab"
-              id={`tab-${service.id}`}
-              aria-selected={isActive}
-              aria-controls={`panel-${service.id}`}
-              className={`service-tab-btn ${isActive ? 'is-active' : ''}`}
-              onClick={() => setActiveId(service.id)}
-            >
-              <span className="service-tab-number">{service.number}</span>
-              <span className="service-tab-content">
-                <span className="service-tab-title">{service.title}</span>
-                <span className="service-tab-summary">{service.summary}</span>
-              </span>
-            </button>
-          );
-        })}
+    <div className="services-ref-wrapper">
+      {/* Tab Buttons + Sliding Selector Pill */}
+      <div className="services-tabs-outer">
+        <div
+          className="services-tabs-bar"
+          role="tablist"
+          aria-label="How I can help you"
+        >
+          {/* Sliding 25%-width selector pill */}
+          <motion.div
+            className="services-selector-pill"
+            aria-hidden="true"
+            animate={{ x: `${activeIndex * 100}%` }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.5, ease: REFERENCE_EASE }
+            }
+          />
+
+          {services.map((service, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={service.id}
+                type="button"
+                role="tab"
+                id={`tab-${service.id}`}
+                aria-selected={isActive}
+                aria-controls={`panel-${service.id}`}
+                className={`services-tab-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => setActiveIndex(idx)}
+              >
+                <span className="services-tab-num">{service.number}</span>
+                <span className="services-tab-name">{service.title}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Right Column: Dynamic Visual & Honest Description Panel */}
-      <div className="service-panel-shell">
-        <AnimatePresence mode="wait">
+      {/* 40rem Black Area: Opposite-Sliding Image Track & #141414 Text Track */}
+      <div className="services-stage-box">
+        {/* Left Image Window */}
+        <div className="services-stage-window">
           <motion.div
-            key={activeService.id}
-            id={`panel-${activeService.id}`}
-            role="tabpanel"
-            aria-labelledby={`tab-${activeService.id}`}
-            className="service-panel-card"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="services-track"
+            animate={{ x: imageTranslate }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.65, ease: REFERENCE_EASE }
+            }
           >
-            <div className="service-panel-image">
-              <img
-                src={activeService.image}
-                alt={activeService.imageAlt}
-                loading="lazy"
-              />
-            </div>
-
-            <div className="service-panel-body">
-              <p className="eyebrow-tagline">
-                {activeService.number} &middot; {activeService.title}
-              </p>
-              <h3 className="service-panel-heading">{activeService.summary}</h3>
-              <p className="service-panel-copy">{activeService.details}</p>
-
-              <ul className="service-deliverables">
-                {activeService.deliverables.map((item) => (
-                  <li key={item}>
-                    <Check size={15} aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {services.map((service) => (
+              <div key={service.id} className="services-image-slide">
+                <img
+                  src={service.image}
+                  alt={service.imageAlt}
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </motion.div>
-        </AnimatePresence>
+        </div>
+
+        {/* Right #141414 Text Window (Slides in Opposite Direction) */}
+        <div className="services-stage-window is-text-window">
+          <motion.div
+            className="services-track"
+            animate={{ x: textTranslate }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.65, ease: REFERENCE_EASE }
+            }
+          >
+            {reversedServices.map((service) => {
+              const isSelected = service.id === services[activeIndex]?.id;
+              return (
+                <div
+                  key={service.id}
+                  id={`panel-${service.id}`}
+                  role="tabpanel"
+                  aria-labelledby={`tab-${service.id}`}
+                  aria-hidden={!isSelected}
+                  className="services-text-slide"
+                >
+                  <p className="services-panel-eyebrow">
+                    {service.number} &middot; {service.title}
+                  </p>
+                  <h3 className="services-panel-title">{service.summary}</h3>
+                  <p className="services-panel-copy">{service.details}</p>
+
+                  <ul className="services-panel-list">
+                    {service.deliverables.map((item) => (
+                      <li key={item}>
+                        <Check size={16} aria-hidden="true" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* 2-Column Bullet List Below Services (6rem gap, 1.5rem #525252 text, 1px #a3a3a3 dividers) */}
+      <div className="container">
+        <ul className="services-bullets-grid">
+          {SERVICE_HIGHLIGHTS.map((point) => (
+            <li key={point} className="services-bullet-row">
+              <span className="services-bullet-icon" aria-hidden="true">
+                <ArrowUpRight size={18} />
+              </span>
+              <span className="services-bullet-text">{point}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

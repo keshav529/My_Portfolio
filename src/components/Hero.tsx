@@ -1,46 +1,89 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, FileDown } from 'lucide-react';
 import { PROFILE } from '../data/portfolioData';
 
+const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
+
+const HEADLINE_LINES = [
+  'Web Developer',
+  'building fast, clean',
+  '& interactive UIs',
+];
+
 /**
- * Editorial Split-Screen Hero with subtle scroll parallax on the portrait frame.
+ * Stage 2 Reference Hero:
+ * - Desktop (> 991px): 300vh outer section with sticky 100vh 1.25fr / 1fr grid
+ * - Left: max-width 40rem, margin-left 5vw; tagline + masked line-by-line headline + dual buttons
+ * - Right: 40vw tall portrait pinned to right edge, cream wipe overlay reveal, scroll-linked scale & parallax
+ * - Bottom: thin 1px scroll-line indicator (hidden <= 991px)
+ * - <= 991px or prefers-reduced-motion: normal stacked layout, square image, height auto, no pinning
  */
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ['start start', 'end start'],
+    offset: ['start start', 'end end'],
   });
 
-  // Gentle vertical parallax on the hero portrait as the visitor scrolls
-  const imageParallaxY = useTransform(scrollYProgress, [0, 1], [0, 36]);
+  // Scroll-linked subtle scale and vertical parallax over the 300vh track (desktop)
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], ['0%', '-5%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0px', '-24px']);
+  const scrollLineScaleY = useTransform(scrollYProgress, [0, 1], [0.2, 1]);
 
   return (
-    <section ref={heroRef} className="home-hero-section" aria-labelledby="home-hero-title">
-      <div className="container">
-        <div className="home-hero-grid">
+    <section
+      ref={heroRef}
+      className={`hero-scroll-section ${prefersReducedMotion ? 'is-reduced-motion' : ''}`}
+      aria-labelledby="home-hero-title"
+    >
+      <div className="hero-sticky-viewport">
+        <div className="hero-split-grid">
+          {/* Left Text Column */}
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="hero-text-col"
+            style={prefersReducedMotion ? undefined : { y: textY }}
           >
-            <p className="eyebrow-tagline">{PROFILE.tagline}</p>
+            <motion.p
+              className="eyebrow-tagline hero-tagline"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: REFERENCE_EASE }}
+            >
+              {PROFILE.tagline}
+            </motion.p>
 
-            <h1 id="home-hero-title" className="home-hero-title">
-              Web Developer building fast, clean and interactive experiences
+            <h1 id="home-hero-title" className="hero-display-headline">
+              {HEADLINE_LINES.map((line, idx) => (
+                <span key={line} className="hero-line-mask">
+                  <motion.span
+                    className="hero-line-inner"
+                    initial={prefersReducedMotion ? false : { y: '108%' }}
+                    animate={{ y: '0%' }}
+                    transition={{
+                      duration: 0.72,
+                      delay: 0.08 + idx * 0.075,
+                      ease: REFERENCE_EASE,
+                    }}
+                  >
+                    {line}
+                  </motion.span>
+                </span>
+              ))}
             </h1>
 
-            <p className="home-hero-lead">
-              I&apos;m {PROFILE.name}, an {PROFILE.role.toLowerCase()} and {PROFILE.degree}. I turn ideas into responsive, accessible websites with HTML, CSS, JavaScript, Bootstrap, and Figma.
-            </p>
-
-            <div className="stage-cta-row">
+            <motion.div
+              className="hero-cta-row"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: REFERENCE_EASE }}
+            >
               <Link to="/work" className="btn-primary-editorial">
                 <span>View my work</span>
-                <ArrowRight size={16} aria-hidden="true" />
               </Link>
 
               <a
@@ -50,33 +93,53 @@ export function Hero() {
               >
                 <FileDown size={16} aria-hidden="true" />
                 <span>Download resume</span>
+                <ArrowRight size={15} aria-hidden="true" />
               </a>
-            </div>
+            </motion.div>
           </motion.div>
 
-          <motion.div
-            className="hero-media-column"
-            style={{ y: imageParallaxY }}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="stage-image-card">
-              <div className="stage-image-frame">
-                <img
-                  src={PROFILE.profilePhoto}
-                  alt="Portrait of Keshav, aspiring software developer"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
+          {/* Right Pinned Tall Portrait with Cream Wipe Overlay + Scroll Parallax */}
+          <div className="hero-media-col">
+            <div className="hero-image-frame">
+              <motion.img
+                src={PROFILE.profilePhoto}
+                alt="Portrait of Keshav Anand, aspiring software developer"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="hero-portrait-img"
+                style={
+                  prefersReducedMotion
+                    ? undefined
+                    : { scale: mediaScale, y: mediaY }
+                }
+              />
+
+              {!prefersReducedMotion && (
+                <motion.div
+                  className="hero-cream-wipe"
+                  aria-hidden="true"
+                  initial={{ scaleY: 1 }}
+                  animate={{ scaleY: 0 }}
+                  transition={{ duration: 0.85, delay: 0.12, ease: REFERENCE_EASE }}
                 />
-              </div>
-              <div className="stage-image-meta">
-                <span>{PROFILE.fullName}</span>
-                <span className="mono-meta">{PROFILE.degree}</span>
-              </div>
+              )}
             </div>
-          </motion.div>
+          </div>
+        </div>
+
+        {/* Thin 1px Bottom Scroll Indicator (Desktop only) */}
+        <div className="hero-scroll-indicator" aria-hidden="true">
+          <div className="hero-scroll-track">
+            <motion.div
+              className="hero-scroll-line"
+              style={
+                prefersReducedMotion
+                  ? { scaleY: 1 }
+                  : { scaleY: scrollLineScaleY }
+              }
+            />
+          </div>
         </div>
       </div>
     </section>

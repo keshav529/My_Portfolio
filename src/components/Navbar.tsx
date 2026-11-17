@@ -35,11 +35,11 @@ const MENU_PREVIEW_IMAGES: Record<string, { src: string; alt: string }> = {
 };
 
 /**
- * Fixed Editorial Navbar + 50/50 Split Full-Screen Menu matching the reference:
+ * Fixed Editorial Navbar + 50/50 Split Full-Screen Menu:
  * - Fixed top bar (height 4.375rem, max 80px, padding 0 5vw, blur(.5rem), cream glass)
  * - Left: Logo wordmark + 1.75px x 2rem orange vertical divider
  * - Right: Filled orange CONTACT CTA + 3rem circular menu button (#d6d6d6, two 1.5px #292929 lines)
- * - Page links live inside the 50/50 split full-screen menu overlay (wipe animation)
+ * - Full-screen menu includes theme toggle inside the right panel so it is accessible on every screen size.
  */
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,13 +56,11 @@ export function Navbar() {
     setMenuOpen(false);
   }, []);
 
-  // Sync hovered preview with current route when opening menu
   useEffect(() => {
     setMenuOpen(false);
     setHoveredPath(location.pathname in MENU_PREVIEW_IMAGES ? location.pathname : '/');
   }, [location.pathname]);
 
-  // Body scroll lock, Escape-to-close, focus placement, and Tab trap inside full-screen menu
   useEffect(() => {
     if (!menuOpen) {
       if (wasOpenRef.current) {
@@ -168,7 +166,7 @@ export function Navbar() {
             exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
             transition={{ duration: 0.55, ease: REFERENCE_EASE }}
           >
-            {/* Left 50% Panel (#b9b9b9): Perspective Image Preview + Optional Theme Switch (Hidden <= 991px) */}
+            {/* Left 50% Panel (#b9b9b9): Perspective Image Preview (Hidden <= 991px) */}
             <div className="menu-left-panel">
               <div className="menu-preview-stage">
                 <AnimatePresence mode="wait">
@@ -187,24 +185,11 @@ export function Navbar() {
 
               <div className="menu-left-meta">
                 <span>{PROFILE.tagline}</span>
-                <button
-                  type="button"
-                  className="menu-theme-btn"
-                  onClick={toggleTheme}
-                  aria-pressed={theme === 'dark'}
-                  aria-label={theme === 'dark' ? 'Switch to cream light mode' : 'Switch to dark mode'}
-                >
-                  {theme === 'dark' ? (
-                    <Sun size={15} aria-hidden="true" />
-                  ) : (
-                    <Moon size={15} aria-hidden="true" />
-                  )}
-                  <span>{theme === 'dark' ? 'Cream Mode' : 'Dark Mode'}</span>
-                </button>
+                <span>{PROFILE.degree}</span>
               </div>
             </div>
 
-            {/* Right 50% Panel (#121212, 100% <= 991px): 6 Equal Rows */}
+            {/* Right 50% Panel (#121212, 100% <= 991px): 6 Equal Rows + Utility Bar with Theme Toggle */}
             <nav className="menu-right-panel" aria-label="Full-screen menu navigation">
               <ul className="menu-rows-list">
                 {NAV_ITEMS.map((item, idx) => (
@@ -238,6 +223,28 @@ export function Navbar() {
                   </motion.li>
                 ))}
               </ul>
+
+              {/* Bottom utility strip inside right panel — accessible on all screen sizes */}
+              <div className="menu-right-footer">
+                <a href={`mailto:${PROFILE.email}`} className="menu-right-email" onClick={closeMenu}>
+                  {PROFILE.email}
+                </a>
+
+                <button
+                  type="button"
+                  className="menu-theme-btn"
+                  onClick={toggleTheme}
+                  aria-pressed={theme === 'dark'}
+                  aria-label={theme === 'dark' ? 'Switch to cream light mode' : 'Switch to dark mode'}
+                >
+                  {theme === 'dark' ? (
+                    <Sun size={15} aria-hidden="true" />
+                  ) : (
+                    <Moon size={15} aria-hidden="true" />
+                  )}
+                  <span>{theme === 'dark' ? 'Cream Mode' : 'Dark Mode'}</span>
+                </button>
+              </div>
             </nav>
           </motion.div>
         )}

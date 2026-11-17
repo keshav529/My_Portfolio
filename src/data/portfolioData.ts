@@ -171,6 +171,17 @@ export const SERVICES: ServiceItem[] = [
   },
 ];
 
+export const SERVICE_HIGHLIGHTS: string[] = [
+  'Semantic HTML5 structure built for accessibility and SEO',
+  'Responsive CSS Grid, Flexbox, and Bootstrap 5 layouts',
+  'Interactive JavaScript DOM state and Fetch API integration',
+  'Figma wireframing, spacing systems, and visual hierarchy',
+  'Clean Git commit history and GitHub project hosting',
+  'Component-based React & Vite workflow practice',
+  'Foundational problem solving with C, Java, and DSA',
+  'Mobile-first testing across phone, tablet, and desktop widths',
+];
+
 export const PROJECTS: ProjectItem[] = [
   {
     slug: 'currency-converter',
