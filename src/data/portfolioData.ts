@@ -14,6 +14,8 @@ export interface ServiceItem {
   summary: string;
   details: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   imageAlt: string;
   deliverables: string[];
 }
@@ -32,6 +34,8 @@ export interface ProjectItem {
   whatILearned: string;
   challenges: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   imageAlt: string;
   featured?: boolean;
   liveUrl: string;
@@ -70,12 +74,16 @@ export interface AboutTimelineStop {
   subtitle: string;
   description: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   imageAlt: string;
 }
 
 export interface SkillItem {
   name: string;
   icon: string;
+  width: number;
+  height: number;
   focus: string;
 }
 
@@ -103,6 +111,8 @@ export interface ResourceItem {
   download?: boolean;
   ctaLabel: string;
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   imageAlt: string;
 }
 
@@ -125,8 +135,15 @@ export const PROFILE = {
   email: 'keshavanand748@gmail.com',
   phone: '+91-9817357072',
   resumeUrl: '/image/keshav_CV.pdf.pdf',
-  resumeCover: '/image/resume.png',
-  profilePhoto: '/image/keshavphotos.jpg',
+  resumeCover: '/image/resume.webp',
+  resumeCoverWidth: 420,
+  resumeCoverHeight: 420,
+  profilePhoto: '/image/keshavphotos.webp',
+  profilePhotoWidth: 720,
+  profilePhotoHeight: 960,
+  workspacePhoto: '/image/contactphoto.webp',
+  workspacePhotoWidth: 720,
+  workspacePhotoHeight: 936,
   socials: {
     linkedin: 'https://www.linkedin.com/in/keshav-anand-8ba87a293',
     leetcode: 'https://leetcode.com/u/keshavanand/',
@@ -136,9 +153,10 @@ export const PROFILE = {
 
 /**
  * Contact Form (Formspree) Configuration
- * TODO: Create a free form at https://formspree.io and replace YOUR_FORMSPREE_ID below.
+ * Set VITE_FORMSPREE_ID in .env (local) or Vercel Project Settings -> Environment Variables.
  */
-export const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
+const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID?.trim() || 'YOUR_FORMSPREE_ID';
+export const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
 
 export const SERVICES: ServiceItem[] = [
   {
@@ -147,7 +165,9 @@ export const SERVICES: ServiceItem[] = [
     summary: 'Clean, semantic HTML, modern CSS, and maintainable JavaScript.',
     details:
       'I build structured, fast-loading web pages from scratch with readable markup and clean styling, and I am actively expanding into React and Node.js.',
-    image: '/image/contactphoto.jpg',
+    image: '/image/contactphoto.webp',
+    imageWidth: 720,
+    imageHeight: 936,
     imageAlt: 'Laptop displaying clean frontend web development code',
     deliverables: ['Semantic HTML5', 'Modular CSS', 'JavaScript DOM logic'],
   },
@@ -157,7 +177,9 @@ export const SERVICES: ServiceItem[] = [
     summary: 'Wireframes, layout hierarchy, and clean visual prototypes in Figma.',
     details:
       'Before writing code, I sketch user flows and layout grids in Figma so spacing, typography, and button hierarchy feel intentional on every screen.',
-    image: '/image/netfliximageportfolio.png',
+    image: '/image/netfliximageportfolio.webp',
+    imageWidth: 1200,
+    imageHeight: 568,
     imageAlt: 'High-contrast UI layout design showcase',
     deliverables: ['Wireframing', 'Component spacing', 'Visual hierarchy'],
   },
@@ -167,7 +189,9 @@ export const SERVICES: ServiceItem[] = [
     summary: 'Layouts that adapt smoothly across phones, tablets, and desktops.',
     details:
       'Using CSS Grid, Flexbox, and Bootstrap, I make sure navigation, cards, and media scale cleanly without horizontal overflow or cramped mobile tap targets.',
-    image: '/image/bootstapimage.png',
+    image: '/image/bootstapimage.webp',
+    imageWidth: 1200,
+    imageHeight: 565,
     imageAlt: 'Responsive multi-column website layout preview',
     deliverables: ['Mobile-first CSS', 'Bootstrap grids', 'Cross-browser checks'],
   },
@@ -177,7 +201,9 @@ export const SERVICES: ServiceItem[] = [
     summary: 'Client-side logic, state handling, and real-time API integrations.',
     details:
       'From game state in Tic-Tac-Toe to timers in Stopwatch and live exchange rates in Currency Converter, I enjoy turning ideas into interactive browser tools.',
-    image: '/image/currencyconvertorimage.png',
+    image: '/image/currencyconvertorimage.webp',
+    imageWidth: 532,
+    imageHeight: 646,
     imageAlt: 'Interactive JavaScript currency converter application',
     deliverables: ['Event handling', 'Fetch API & JSON', 'Interactive UI states'],
   },
@@ -213,7 +239,9 @@ export const PROJECTS: ProjectItem[] = [
       'Working with asynchronous fetch() calls, parsing JSON responses, handling loading/error states, and updating the DOM cleanly.',
     challenges:
       'Handling invalid numeric inputs gracefully and keeping the layout balanced across smaller mobile viewports.',
-    image: '/image/currencyconvertorimage.png',
+    image: '/image/currencyconvertorimage.webp',
+    imageWidth: 532,
+    imageHeight: 646,
     imageAlt: 'Screenshot of Keshav Currency Converter project',
     featured: true,
     liveUrl: '', // TODO: Add live demo URL once deployed
@@ -239,7 +267,9 @@ export const PROJECTS: ProjectItem[] = [
       'Structuring complex hero overlays, managing Flexbox/Grid alignment across sections, and keeping typography legible over background images.',
     challenges:
       'Matching card spacing and keeping the FAQ and feature sections aligned consistently from mobile to wide desktop monitors.',
-    image: '/image/netfliximageportfolio.png',
+    image: '/image/netfliximageportfolio.webp',
+    imageWidth: 1200,
+    imageHeight: 568,
     imageAlt: 'Screenshot of Netflix Homepage Clone project',
     liveUrl: 'https://netflix-clone-keshav529.vercel.app',
     githubUrl: 'https://github.com/keshav529/Netflix-clone',
@@ -264,7 +294,9 @@ export const PROJECTS: ProjectItem[] = [
       'Using Bootstrap’s 12-column responsive grid effectively while overriding default styles cleanly without breaking component spacing.',
     challenges:
       'Balancing Bootstrap utility classes with custom section spacing so the page stays consistent on tablets and small phones.',
-    image: '/image/bootstapimage.png',
+    image: '/image/bootstapimage.webp',
+    imageWidth: 1200,
+    imageHeight: 565,
     imageAlt: 'Screenshot of Bootstrap Website Clone project',
     liveUrl: 'https://bootstrap-projects-mu.vercel.app',
     githubUrl: 'https://github.com/keshav529/Bootstrap-Projects',
@@ -289,7 +321,9 @@ export const PROJECTS: ProjectItem[] = [
       'Managing game state arrays in JavaScript, checking win combinations efficiently, and locking board clicks after a win.',
     challenges:
       'Preventing extra moves after a round ends and distinguishing draw outcomes cleanly from win states.',
-    image: '/image/tictactoeportfolioimg.png',
+    image: '/image/tictactoeportfolioimg.webp',
+    imageWidth: 650,
+    imageHeight: 789,
     imageAlt: 'Screenshot of Tic-Tac-Toe interactive game',
     liveUrl: 'https://tic-tac-toe-project-wheat.vercel.app',
     githubUrl: 'https://github.com/keshav529/Tic-Tac-Toe-project',
@@ -314,7 +348,9 @@ export const PROJECTS: ProjectItem[] = [
       'Working with setInterval/clearInterval safely, formatting padded time units, and avoiding duplicate timer intervals.',
     challenges:
       'Preventing multiple intervals from running simultaneously if the Start button is clicked more than once.',
-    image: '/image/stopwatchimg.png',
+    image: '/image/stopwatchimg.webp',
+    imageWidth: 1015,
+    imageHeight: 439,
     imageAlt: 'Screenshot of Digital Stopwatch project',
     liveUrl: '', // TODO: Add live demo URL once deployed
     githubUrl: 'https://github.com/keshav529?tab=repositories', // TODO: Replace with exact repo URL
@@ -339,7 +375,9 @@ export const PROJECTS: ProjectItem[] = [
       'Handling button event delegation, building balanced CSS Grid button layouts, and validating operator sequences.',
     challenges:
       'Handling consecutive operators and edge cases like division by zero or multiple decimal points.',
-    image: '/image/calculatorimg.png',
+    image: '/image/calculatorimg.webp',
+    imageWidth: 730,
+    imageHeight: 853,
     imageAlt: 'Screenshot of Web Calculator project',
     liveUrl: '', // TODO: Add live demo URL once deployed
     githubUrl: 'https://github.com/keshav529?tab=repositories', // TODO: Replace with exact repo URL
@@ -480,7 +518,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '69.6% • Sati Bhai Sai Dass Public School, Kalanaur',
     description:
       'Completed secondary schooling with my first curiosity in computers, mathematics, and structured problem solving.',
-    image: '/image/keshavphotos.jpg',
+    image: '/image/keshavphotos.webp',
+    imageWidth: 720,
+    imageHeight: 960,
     imageAlt: 'Portrait of Keshav Anand',
   },
   {
@@ -490,7 +530,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '82.2% • Government School, Kalanaur',
     description:
       'Graduated senior secondary school with 82.2%, strengthening my analytical mindset ahead of studying software development.',
-    image: '/image/contactphoto.jpg',
+    image: '/image/contactphoto.webp',
+    imageWidth: 720,
+    imageHeight: 936,
     imageAlt: 'Development laptop and study workspace',
   },
   {
@@ -500,7 +542,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: '72% • Sh. L.N. Hindu College, Rohtak (MDU)',
     description:
       'Entered the Bachelor of Computer Applications program, learning core programming in C and Java alongside web fundamentals.',
-    image: '/image/figmaimage.png',
+    image: '/image/figmaimage.webp',
+    imageWidth: 160,
+    imageHeight: 160,
     imageAlt: 'UI design and foundational software engineering tools',
   },
   {
@@ -510,7 +554,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: 'HTML5, CSS3, Bootstrap & JavaScript',
     description:
       'Turned theory into real browser projects: Netflix Homepage Clone, Bootstrap Website Clone, Currency Converter, Tic-Tac-Toe, Stopwatch, and Calculator.',
-    image: '/image/netfliximageportfolio.png',
+    image: '/image/netfliximageportfolio.webp',
+    imageWidth: 1200,
+    imageHeight: 568,
     imageAlt: 'Screenshot of responsive Netflix homepage clone',
   },
   {
@@ -520,7 +566,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: 'React, Node.js, MongoDB & LeetCode',
     description:
       'Actively practicing Data Structures & Algorithms in Java/C on LeetCode while building component UIs in React and backend APIs with Node.js and MongoDB.',
-    image: '/image/currencyconvertorimage.png',
+    image: '/image/currencyconvertorimage.webp',
+    imageWidth: 532,
+    imageHeight: 646,
     imageAlt: 'Screenshot of interactive JavaScript currency converter app',
   },
   {
@@ -530,7 +578,9 @@ export const ABOUT_TIMELINE: AboutTimelineStop[] = [
     subtitle: 'Open to Internships & Junior Web Roles',
     description:
       'Ready to join a collaborative product team where I can ship reliable front-end code, learn from code reviews, and grow into a full-stack engineer.',
-    image: '/image/bootstapimage.png',
+    image: '/image/bootstapimage.webp',
+    imageWidth: 1200,
+    imageHeight: 565,
     imageAlt: 'Responsive multi-column web layout preview',
   },
 ];
@@ -541,14 +591,14 @@ export const SKILL_GROUPS: SkillGroup[] = [
     title: 'Using Now',
     subtitle: 'Core languages, styling frameworks, and tools I build projects with today.',
     items: [
-      { name: 'HTML5', icon: '/image/html5.png', focus: 'Semantic markup & accessibility' },
-      { name: 'CSS3', icon: '/image/cssimage.png', focus: 'Flexbox, Grid & animations' },
-      { name: 'JavaScript', icon: '/image/javascriptimage.png', focus: 'DOM, events & fetch APIs' },
-      { name: 'Java', icon: '/image/javaimage.png', focus: 'OOP & problem solving' },
-      { name: 'C Programming', icon: '/image/cprogrammingimage.png', focus: 'Core logic & memory basics' },
-      { name: 'Bootstrap', icon: '/image/bootsrap.png', focus: 'Responsive UI layouts' },
-      { name: 'Figma', icon: '/image/figmaimage.png', focus: 'Wireframes & UI design' },
-      { name: 'Git & GitHub', icon: '/image/githubimage.png', focus: 'Version control & collaboration' },
+      { name: 'HTML5', icon: '/image/html5.webp', width: 160, height: 160, focus: 'Semantic markup & accessibility' },
+      { name: 'CSS3', icon: '/image/cssimage.webp', width: 160, height: 160, focus: 'Flexbox, Grid & animations' },
+      { name: 'JavaScript', icon: '/image/javascriptimage.webp', width: 96, height: 96, focus: 'DOM, events & fetch APIs' },
+      { name: 'Java', icon: '/image/javaimage.webp', width: 160, height: 160, focus: 'OOP & problem solving' },
+      { name: 'C Programming', icon: '/image/cprogrammingimage.webp', width: 96, height: 96, focus: 'Core logic & memory basics' },
+      { name: 'Bootstrap', icon: '/image/bootsrap.webp', width: 160, height: 160, focus: 'Responsive UI layouts' },
+      { name: 'Figma', icon: '/image/figmaimage.webp', width: 160, height: 160, focus: 'Wireframes & UI design' },
+      { name: 'Git & GitHub', icon: '/image/githubimage.webp', width: 100, height: 100, focus: 'Version control & collaboration' },
     ],
   },
   {
@@ -556,10 +606,10 @@ export const SKILL_GROUPS: SkillGroup[] = [
     title: 'Learning Next',
     subtitle: 'Full-stack technologies and computer science fundamentals I am actively practicing.',
     items: [
-      { name: 'React', icon: '/image/REACTIMAGE.png', focus: 'Components, hooks & routing' },
-      { name: 'Node.js', icon: '/image/NODEJSIMAGE.png', focus: 'REST APIs & server runtime' },
-      { name: 'MongoDB', icon: '/image/MONGODBIMAGE.png', focus: 'Document schemas & queries' },
-      { name: 'DSA', icon: '/image/deep-learning.png', focus: 'Arrays, strings & LeetCode practice' },
+      { name: 'React', icon: '/image/REACTIMAGE.webp', width: 160, height: 160, focus: 'Components, hooks & routing' },
+      { name: 'Node.js', icon: '/image/NODEJSIMAGE.webp', width: 96, height: 96, focus: 'REST APIs & server runtime' },
+      { name: 'MongoDB', icon: '/image/MONGODBIMAGE.webp', width: 160, height: 160, focus: 'Document schemas & queries' },
+      { name: 'DSA', icon: '/image/deep-learning.webp', width: 160, height: 160, focus: 'Arrays, strings & LeetCode practice' },
     ],
   },
   {
@@ -567,9 +617,9 @@ export const SKILL_GROUPS: SkillGroup[] = [
     title: 'Soft Skills',
     subtitle: 'Collaboration habits I bring to student teams and engineering workflows.',
     items: [
-      { name: 'Communication Skills', icon: '/image/csimage.jpg', focus: 'Clear updates & active listening' },
-      { name: 'Problem Solving', icon: '/image/problemsolvingimage.jpg', focus: 'Debugging step by step' },
-      { name: 'Presentation Skills', icon: '/image/presentationskillimage.jpg', focus: 'Explaining ideas clearly' },
+      { name: 'Communication Skills', icon: '/image/csimage.webp', width: 160, height: 160, focus: 'Clear updates & active listening' },
+      { name: 'Problem Solving', icon: '/image/problemsolvingimage.webp', width: 160, height: 160, focus: 'Debugging step by step' },
+      { name: 'Presentation Skills', icon: '/image/presentationskillimage.webp', width: 160, height: 160, focus: 'Explaining ideas clearly' },
     ],
   },
 ];
@@ -628,7 +678,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     external: false,
     download: true,
     ctaLabel: 'Download PDF',
-    image: '/image/resume.png',
+    image: '/image/resume.webp',
+    imageWidth: 420,
+    imageHeight: 420,
     imageAlt: 'Preview of Keshav Anand CV document',
   },
   {
@@ -640,7 +692,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://github.com/keshav529',
     external: true,
     ctaLabel: 'Open GitHub',
-    image: '/image/githubimage.png',
+    image: '/image/githubimage.webp',
+    imageWidth: 100,
+    imageHeight: 100,
     imageAlt: 'GitHub icon',
   },
   {
@@ -652,7 +706,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://leetcode.com/u/keshavanand/',
     external: true,
     ctaLabel: 'Open LeetCode',
-    image: '/image/leetcodeimage.png',
+    image: '/image/leetcodeimage.webp',
+    imageWidth: 160,
+    imageHeight: 160,
     imageAlt: 'LeetCode icon',
   },
   {
@@ -664,7 +720,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://www.linkedin.com/in/keshav-anand-8ba87a293',
     external: true,
     ctaLabel: 'Connect on LinkedIn',
-    image: '/image/linkedinimage.png',
+    image: '/image/linkedinimage.webp',
+    imageWidth: 96,
+    imageHeight: 96,
     imageAlt: 'LinkedIn icon',
   },
   {
@@ -676,7 +734,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://developer.mozilla.org/',
     external: true,
     ctaLabel: 'Visit MDN',
-    image: '/image/html5.png',
+    image: '/image/html5.webp',
+    imageWidth: 160,
+    imageHeight: 160,
     imageAlt: 'HTML5 documentation reference badge',
   },
   {
@@ -688,7 +748,9 @@ export const RESOURCE_ITEMS: ResourceItem[] = [
     url: 'https://react.dev/',
     external: true,
     ctaLabel: 'Visit React Docs',
-    image: '/image/REACTIMAGE.png',
+    image: '/image/REACTIMAGE.webp',
+    imageWidth: 160,
+    imageHeight: 160,
     imageAlt: 'React logo badge',
   },
 ];

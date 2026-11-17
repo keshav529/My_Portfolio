@@ -4,15 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary SEO Metadata -->
+    <!-- Primary SEO Metadata (updated dynamically per route via RouteMeta) -->
     <title>Keshav Anand — Web Developer &amp; UI Designer</title>
     <meta
       name="description"
-      content="Portfolio of Keshav Anand, a BCA student and aspiring software developer building fast, responsive web applications with HTML, CSS, JavaScript, and React."
+      content="Portfolio of Keshav Anand, a BCA student (2022–2025) and aspiring software developer building fast, responsive web experiences with HTML, CSS, JavaScript, and React."
     />
     <meta name="author" content="Keshav Anand" />
     <meta name="theme-color" content="#e7e2dc" />
+
+    <!-- Icons & Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
     <script>
       (function () {
         var theme = 'light';
@@ -30,7 +35,7 @@
       })();
     </script>
 
-    <!-- Open Graph / Social Share Card -->
+    <!-- Open Graph / Social Share Card (1200x630) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Keshav Anand Portfolio" />
     <meta property="og:title" content="Keshav Anand — Web Developer &amp; UI Designer" />
@@ -38,7 +43,9 @@
       property="og:description"
       content="Explore web development projects, Figma UI designs, education, and resume of Keshav Anand (BCA 2022–2025)."
     />
-    <meta property="og:image" content="/image/keshavphotos.jpg" />
+    <meta property="og:image" content="/og-share.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -47,9 +54,9 @@
       name="twitter:description"
       content="Explore web development projects, Figma UI designs, education, and resume of Keshav Anand (BCA 2022–2025)."
     />
-    <meta name="twitter:image" content="/image/keshavphotos.jpg" />
+    <meta name="twitter:image" content="/og-share.jpg" />
 
-    <!-- Structured Data (JSON-LD) -->
+    <!-- Structured Data (Person JSON-LD, verified real facts only) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -62,6 +69,20 @@
           "@type": "CollegeOrUniversity",
           "name": "Sh. L.N. Hindu College, Rohtak (MDU)"
         },
+        "knowsAbout": [
+          "HTML5",
+          "CSS3",
+          "JavaScript",
+          "Java",
+          "C",
+          "Bootstrap",
+          "Figma",
+          "Git",
+          "React",
+          "Node.js",
+          "MongoDB",
+          "Data Structures and Algorithms"
+        ],
         "sameAs": [
           "https://github.com/keshav529",
           "https://www.linkedin.com/in/keshav-anand-8ba87a293",
@@ -70,9 +91,14 @@
       }
     </script>
 
-    <!-- Typography: Outfit (Weights 300, 400, 500, 700) -->
+    <!-- Typography: Outfit (Weights 300, 400, 500, 700, font-display: swap) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap"
       rel="stylesheet"

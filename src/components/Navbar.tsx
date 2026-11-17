@@ -7,30 +7,45 @@ import { useTheme } from '../hooks/useTheme';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 
-const MENU_PREVIEW_IMAGES: Record<string, { src: string; alt: string }> = {
+const MENU_PREVIEW_IMAGES: Record<
+  string,
+  { src: string; alt: string; width: number; height: number }
+> = {
   '/': {
     src: PROFILE.profilePhoto,
     alt: 'Portrait preview for Home page',
+    width: PROFILE.profilePhotoWidth,
+    height: PROFILE.profilePhotoHeight,
   },
   '/about': {
-    src: '/image/contactphoto.jpg',
+    src: PROFILE.workspacePhoto,
     alt: 'Workspace preview for About page',
+    width: PROFILE.workspacePhotoWidth,
+    height: PROFILE.workspacePhotoHeight,
   },
   '/process': {
-    src: '/image/figmaimage.png',
+    src: '/image/figmaimage.webp',
     alt: 'Design tooling preview for Process page',
+    width: 160,
+    height: 160,
   },
   '/work': {
-    src: '/image/currencyconvertorimage.png',
+    src: '/image/currencyconvertorimage.webp',
     alt: 'Currency Converter preview for Work page',
+    width: 532,
+    height: 646,
   },
   '/contact': {
-    src: '/image/netfliximageportfolio.png',
+    src: '/image/netfliximageportfolio.webp',
     alt: 'Web UI preview for Contact page',
+    width: 1200,
+    height: 568,
   },
   '/resources': {
     src: PROFILE.resumeCover,
     alt: 'Resume cover preview for Resources page',
+    width: PROFILE.resumeCoverWidth,
+    height: PROFILE.resumeCoverHeight,
   },
 };
 
@@ -161,10 +176,10 @@ export function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
-            initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-            exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: 0.55, ease: REFERENCE_EASE }}
+            initial={{ opacity: 0, y: '-3%' }}
+            animate={{ opacity: 1, y: '0%' }}
+            exit={{ opacity: 0, y: '-2%' }}
+            transition={{ duration: 0.45, ease: REFERENCE_EASE }}
           >
             {/* Left 50% Panel (#b9b9b9): Perspective Image Preview (Hidden <= 991px) */}
             <div className="menu-left-panel">
@@ -178,7 +193,13 @@ export function Navbar() {
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.35, ease: REFERENCE_EASE }}
                   >
-                    <img src={activePreview.src} alt={activePreview.alt} />
+                    <img
+                      src={activePreview.src}
+                      alt={activePreview.alt}
+                      width={activePreview.width}
+                      height={activePreview.height}
+                      decoding="async"
+                    />
                   </motion.div>
                 </AnimatePresence>
               </div>

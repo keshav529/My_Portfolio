@@ -50,12 +50,12 @@ export function Accordion({ items }: AccordionProps) {
                   role="region"
                   aria-labelledby={`faq-question-${item.id}`}
                   className="faq-ref-panel-outer"
-                  initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={prefersReducedMotion ? undefined : { height: 0, opacity: 0 }}
-                  transition={{ duration: 0.48, ease: REFERENCE_EASE }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+                  transition={{ duration: 0.35, ease: REFERENCE_EASE }}
                 >
-                  {/* Cream-2 wipe band */}
+                  {/* Cream-2 wipe band (compositor scaleX only) */}
                   <motion.div
                     className="faq-cream-wipe-band"
                     aria-hidden="true"

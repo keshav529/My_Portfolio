@@ -15,6 +15,8 @@
 
   --color-orange: #ff5330;
   --color-orange-hover: #e44120;
+  --color-orange-text-light: #b83214;
+  --color-orange-text: var(--color-orange-text-light);
   --color-orange-soft: rgba(255, 83, 48, 0.15);
   --color-orange-border: rgba(255, 83, 48, 0.47);
 
@@ -182,6 +184,7 @@
   --color-nav-bg: rgba(18, 18, 18, 0.35);
   --color-nav-bg-scrolled: rgba(18, 18, 18, 0.85);
 
+  --color-orange-text: var(--color-orange);
   --color-error: #fca5a5;
   --color-success-bg: rgba(34, 197, 94, 0.16);
   --color-success-ink: #86efac;

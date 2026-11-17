@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { Navbar } from './components/Navbar';
@@ -6,40 +7,55 @@ import { IntroLoader } from './components/IntroLoader';
 import { SmoothScroll } from './components/SmoothScroll';
 import { RouteMeta } from './components/RouteMeta';
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { ProcessPage } from './pages/ProcessPage';
-import { WorkPage } from './pages/WorkPage';
-import { ProjectDetailPage } from './pages/ProjectDetailPage';
-import { ContactPage } from './pages/ContactPage';
-import { ResourcesPage } from './pages/ResourcesPage';
-import { StageRouteShell } from './pages/StageRouteShell';
+
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage }))
+);
+const ProcessPage = lazy(() =>
+  import('./pages/ProcessPage').then((m) => ({ default: m.ProcessPage }))
+);
+const WorkPage = lazy(() =>
+  import('./pages/WorkPage').then((m) => ({ default: m.WorkPage }))
+);
+const ProjectDetailPage = lazy(() =>
+  import('./pages/ProjectDetailPage').then((m) => ({ default: m.ProjectDetailPage }))
+);
+const ContactPage = lazy(() =>
+  import('./pages/ContactPage').then((m) => ({ default: m.ContactPage }))
+);
+const ResourcesPage = lazy(() =>
+  import('./pages/ResourcesPage').then((m) => ({ default: m.ResourcesPage }))
+);
+const NotFoundPage = lazy(() =>
+  import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
+);
+
+function RouteSuspenseFallback() {
+  return (
+    <div className="route-suspense-fallback" role="status" aria-live="polite" aria-busy="true">
+      <span className="sr-only">Loading page</span>
+    </div>
+  );
+}
 
 function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/process" element={<ProcessPage />} />
-        <Route path="/work" element={<WorkPage />} />
-        <Route path="/work/:slug" element={<ProjectDetailPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/resources" element={<ResourcesPage />} />
-        <Route
-          path="*"
-          element={
-            <StageRouteShell
-              eyebrow="404 • PAGE NOT FOUND"
-              title="This page does not exist"
-              description="The link you followed may be broken or moved. Use the menu above or return home."
-              stageLabel="Navigation"
-            />
-          }
-        />
-      </Routes>
-    </AnimatePresence>
+    <Suspense fallback={<RouteSuspenseFallback />}>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/process" element={<ProcessPage />} />
+          <Route path="/work" element={<WorkPage />} />
+          <Route path="/work/:slug" element={<ProjectDetailPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 }
 

@@ -42,7 +42,10 @@ export function ResourcesPage() {
                     <img
                       src={item.image}
                       alt={item.imageAlt}
+                      width={item.imageWidth}
+                      height={item.imageHeight}
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
 

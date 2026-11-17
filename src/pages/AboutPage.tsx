@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, FileDown } from 'lucide-react';
@@ -34,7 +34,7 @@ const MARQUEE_ROW_TWO = [
 /**
  * Stage 3 About Page (/about):
  * - 2-column hero (gap 9rem, collapses <= 991px) with Keshav's photo and honest intro
- * - 1000vh outer / 100vh sticky horizontal scroll timeline moving a 600vw track across 6 real stops
+ * - 1000vh outer / 100svh sticky horizontal scroll timeline moving a 600vw track across 6 real stops
  *   with 7rem white display text over 45vw x 55vh images (vertical fallback on mobile <= 767px & reduced motion)
  * - Two opposite-moving marquee banners (1.325rem)
  * - Real grouped Skills matrix below
@@ -42,6 +42,19 @@ const MARQUEE_ROW_TWO = [
 export function AboutPage() {
   const timelineRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isMobileTimeline, setIsMobileTimeline] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 767 : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const update = () => setIsMobileTimeline(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  const disableHorizontalTimeline = Boolean(prefersReducedMotion) || isMobileTimeline;
 
   const { scrollYProgress } = useScroll({
     target: timelineRef,
@@ -91,6 +104,9 @@ export function AboutPage() {
                 <img
                   src={PROFILE.profilePhoto}
                   alt="Portrait of Keshav Anand"
+                  width={PROFILE.profilePhotoWidth}
+                  height={PROFILE.profilePhotoHeight}
+                  decoding="async"
                 />
               </div>
             </Reveal>
@@ -112,7 +128,7 @@ export function AboutPage() {
           <div className="about-timeline-viewport">
             <motion.div
               className="about-timeline-track"
-              style={prefersReducedMotion ? undefined : { x: timelineX }}
+              style={disableHorizontalTimeline ? undefined : { x: timelineX }}
             >
               {ABOUT_TIMELINE.map((stop) => (
                 <article key={stop.id} className="about-timeline-slide">
@@ -121,7 +137,10 @@ export function AboutPage() {
                       <img
                         src={stop.image}
                         alt={stop.imageAlt}
+                        width={stop.imageWidth}
+                        height={stop.imageHeight}
                         loading="lazy"
+                        decoding="async"
                       />
                       <div className="about-timeline-scrim" aria-hidden="true" />
                       <span className="about-timeline-big-year" aria-hidden="true">
@@ -197,7 +216,10 @@ export function AboutPage() {
                           <img
                             src={skill.icon}
                             alt={`${skill.name} icon`}
+                            width={skill.width}
+                            height={skill.height}
                             loading="lazy"
+                            decoding="async"
                           />
                         </div>
                         <div>

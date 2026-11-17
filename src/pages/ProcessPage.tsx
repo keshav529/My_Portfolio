@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { PageTransition } from '../components/PageTransition';
 import { Reveal } from '../components/Reveal';
-import { PROCESS_STEPS } from '../data/portfolioData';
+import { PROCESS_STEPS, PROFILE } from '../data/portfolioData';
 
 const REFERENCE_EASE: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 
@@ -85,8 +85,8 @@ function StepIllustration({ step }: { step: string }) {
 
 /**
  * Stage 3 Process Page (/process):
- * - 100vh Hero: circular masked image (40rem / 30rem / 19rem) with orbiting black dots +
- *   rotating 3D text cube (9rem, weight 300, #ff5330, contrasting faces)
+ * - 100svh Hero: circular masked image (40rem / 30rem / min(17rem, 78vw)) with orbiting dots +
+ *   rotating 3D text cube (disabled on reduced motion and compact phones <= 479px)
  * - 4 sequential Steps with animated hairline dividers, clean SVG architectural diagrams,
  *   and right-hand stage panels (min-height 22rem)
  * - Two opposite-direction marquee banners at the bottom
@@ -94,32 +94,50 @@ function StepIllustration({ step }: { step: string }) {
 export function ProcessPage() {
   const [activeFaceIndex, setActiveFaceIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
+  const [isSmallPhone, setIsSmallPhone] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 479 : false
+  );
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    const mq = window.matchMedia('(max-width: 479px)');
+    const update = () => setIsSmallPhone(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  const disableCube = Boolean(prefersReducedMotion) || isSmallPhone;
+
+  useEffect(() => {
+    if (disableCube) return;
     const timer = window.setInterval(() => {
       setActiveFaceIndex((prev) => (prev + 1) % CUBE_WORDS.length);
     }, 2400);
     return () => window.clearInterval(timer);
-  }, [prefersReducedMotion]);
+  }, [disableCube]);
 
   return (
     <PageTransition>
-      {/* 100vh Hero: Circular Masked Image + Orbiting Dots + 3D Text Cube */}
+      {/* 100svh Hero: Circular Masked Image + Orbiting Dots + 3D Text Cube */}
       <section className="process-ref-hero" aria-labelledby="process-page-title">
         <div className="container">
           <div className="process-hero-stage">
-            {/* Left: Circular Masked Image (40rem -> 30rem -> 19rem) + Orbiting Dots */}
+            {/* Left: Circular Masked Image + Orbiting Dots */}
             <div className="process-circle-stage">
-              <div className="process-orbit-ring" aria-hidden="true">
-                <span className="process-orbit-dot is-one" />
-                <span className="process-orbit-dot is-two" />
-                <span className="process-orbit-dot is-three" />
-              </div>
+              {!disableCube && (
+                <div className="process-orbit-ring" aria-hidden="true">
+                  <span className="process-orbit-dot is-one" />
+                  <span className="process-orbit-dot is-two" />
+                  <span className="process-orbit-dot is-three" />
+                </div>
+              )}
               <div className="process-circle-mask">
                 <img
-                  src="/image/contactphoto.jpg"
+                  src={PROFILE.workspacePhoto}
                   alt="Workspace setup representing planning and front-end execution"
+                  width={PROFILE.workspacePhotoWidth}
+                  height={PROFILE.workspacePhotoHeight}
+                  decoding="async"
                 />
               </div>
             </div>
@@ -130,7 +148,7 @@ export function ProcessPage() {
                 Process: Understand, Plan, Build, Improve
               </h1>
 
-              {prefersReducedMotion ? (
+              {disableCube ? (
                 <div className="process-static-word-stack">
                   <span className="process-hero-word">{CUBE_WORDS[activeFaceIndex]}</span>
                 </div>
@@ -162,6 +180,7 @@ export function ProcessPage() {
                   <button
                     key={word}
                     type="button"
+                    aria-pressed={activeFaceIndex === idx}
                     className={`process-cube-pill ${activeFaceIndex === idx ? 'is-active' : ''}`}
                     onClick={() => setActiveFaceIndex(idx)}
                   >

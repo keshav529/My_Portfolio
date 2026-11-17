@@ -1,0 +1,26 @@
+{
+  "name": "Keshav Anand — Web Developer & UI Designer",
+  "short_name": "Keshav",
+  "description": "Portfolio of Keshav Anand, BCA student (2022–2025) and aspiring software developer building fast, responsive web experiences.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e7e2dc",
+  "theme_color": "#e7e2dc",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -3,8 +3,9 @@ import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 
 /**
- * Initializes Lenis inertial smooth scrolling across the site,
- * respects `prefers-reduced-motion: reduce`, and resets scroll cleanly on route changes.
+ * Initializes Lenis inertial smooth scrolling on fine-pointer desktop screens,
+ * and disables it automatically for `prefers-reduced-motion: reduce`, coarse/touch
+ * devices, and compact viewports (<= 767px) so native phone momentum scroll runs at 60fps.
  */
 export function SmoothScroll() {
   const { pathname } = useLocation();
@@ -13,39 +14,61 @@ export function SmoothScroll() {
     if (typeof window === 'undefined') return;
 
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (motionQuery.matches) {
-      return;
-    }
+    const coarseQuery = window.matchMedia('(pointer: coarse)');
+    const smallViewportQuery = window.matchMedia('(max-width: 767px)');
 
-    const lenis = new Lenis({
-      lerp: 0.085,
-      smoothWheel: true,
-    });
-
-    (window as Window & { __lenis?: Lenis }).__lenis = lenis;
-
+    let lenis: Lenis | null = null;
     let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
+
+    const stopLenis = () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      if (lenis) {
+        lenis.destroy();
+        lenis = null;
+      }
+      delete (window as Window & { __lenis?: Lenis }).__lenis;
+    };
+
+    const startOrSyncLenis = () => {
+      const shouldDisable =
+        motionQuery.matches || coarseQuery.matches || smallViewportQuery.matches;
+
+      if (shouldDisable) {
+        stopLenis();
+        return;
+      }
+
+      if (lenis) return;
+
+      lenis = new Lenis({
+        lerp: 0.085,
+        smoothWheel: true,
+      });
+
+      (window as Window & { __lenis?: Lenis }).__lenis = lenis;
+
+      const raf = (time: number) => {
+        if (!lenis) return;
+        lenis.raf(time);
+        rafId = window.requestAnimationFrame(raf);
+      };
       rafId = window.requestAnimationFrame(raf);
     };
-    rafId = window.requestAnimationFrame(raf);
 
-    const handleMotionChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        window.cancelAnimationFrame(rafId);
-        lenis.destroy();
-        delete (window as Window & { __lenis?: Lenis }).__lenis;
-      }
-    };
+    startOrSyncLenis();
 
-    motionQuery.addEventListener('change', handleMotionChange);
+    motionQuery.addEventListener('change', startOrSyncLenis);
+    coarseQuery.addEventListener('change', startOrSyncLenis);
+    smallViewportQuery.addEventListener('change', startOrSyncLenis);
 
     return () => {
-      window.cancelAnimationFrame(rafId);
-      motionQuery.removeEventListener('change', handleMotionChange);
-      lenis.destroy();
-      delete (window as Window & { __lenis?: Lenis }).__lenis;
+      motionQuery.removeEventListener('change', startOrSyncLenis);
+      coarseQuery.removeEventListener('change', startOrSyncLenis);
+      smallViewportQuery.removeEventListener('change', startOrSyncLenis);
+      stopLenis();
     };
   }, []);
 

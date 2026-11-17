@@ -21,7 +21,10 @@ export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
           <img
             src={project.image}
             alt={project.imageAlt}
+            width={project.imageWidth}
+            height={project.imageHeight}
             loading="lazy"
+            decoding="async"
             className="work-strip-image"
           />
           <div className="work-strip-overlay" aria-hidden="true" />
@@ -41,7 +44,10 @@ export function WorkCard({ project, variant = 'grid' }: WorkCardProps) {
           <img
             src={project.image}
             alt={project.imageAlt}
+            width={project.imageWidth}
+            height={project.imageHeight}
             loading="lazy"
+            decoding="async"
             className="work-grid-image"
           />
           <div className="work-grid-overlay" aria-hidden="true" />

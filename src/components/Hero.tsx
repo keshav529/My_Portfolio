@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, FileDown } from 'lucide-react';
@@ -14,22 +14,35 @@ const HEADLINE_LINES = [
 
 /**
  * Stage 2 Reference Hero:
- * - Desktop (> 991px): 300vh outer section with sticky 100vh 1.25fr / 1fr grid
+ * - Desktop (> 991px): 300vh outer section with sticky 100svh 1.25fr / 1fr grid
  * - Left: max-width 40rem, margin-left 5vw; tagline + masked line-by-line headline + dual buttons
  * - Right: 40vw tall portrait pinned to right edge, cream wipe overlay reveal, scroll-linked scale & parallax
  * - Bottom: thin 1px scroll-line indicator (hidden <= 991px)
- * - <= 991px or prefers-reduced-motion: normal stacked layout, square image, height auto, no pinning
+ * - <= 991px or prefers-reduced-motion: normal stacked layout, square image, height auto, no parallax/pinning
  */
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isCompactViewport, setIsCompactViewport] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? window.innerWidth <= 991 : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 991px)');
+    const update = () => setIsCompactViewport(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  const disableParallax = Boolean(prefersReducedMotion) || isCompactViewport;
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end end'],
   });
 
-  // Scroll-linked subtle scale and vertical parallax over the 300vh track (desktop)
+  // Scroll-linked subtle scale and vertical parallax over the 300vh track (desktop only)
   const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
   const mediaY = useTransform(scrollYProgress, [0, 1], ['0%', '-5%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0px', '-24px']);
@@ -46,7 +59,7 @@ export function Hero() {
           {/* Left Text Column */}
           <motion.div
             className="hero-text-col"
-            style={prefersReducedMotion ? undefined : { y: textY }}
+            style={disableParallax ? undefined : { y: textY }}
           >
             <motion.p
               className="eyebrow-tagline hero-tagline"
@@ -104,12 +117,14 @@ export function Hero() {
               <motion.img
                 src={PROFILE.profilePhoto}
                 alt="Portrait of Keshav Anand, aspiring software developer"
+                width={PROFILE.profilePhotoWidth}
+                height={PROFILE.profilePhotoHeight}
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
                 className="hero-portrait-img"
                 style={
-                  prefersReducedMotion
+                  disableParallax
                     ? undefined
                     : { scale: mediaScale, y: mediaY }
                 }
@@ -134,7 +149,7 @@ export function Hero() {
             <motion.div
               className="hero-scroll-line"
               style={
-                prefersReducedMotion
+                disableParallax
                   ? { scaleY: 1 }
                   : { scaleY: scrollLineScaleY }
               }

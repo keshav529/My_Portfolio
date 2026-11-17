@@ -95,9 +95,9 @@ export function ContactPage() {
     if (FORMSPREE_ENDPOINT.includes('YOUR_FORMSPREE_ID')) {
       setStatus('demo');
       setStatusMessage(
-        'Form validated! Replace YOUR_FORMSPREE_ID in src/data/portfolioData.ts to receive live submissions, or email me directly.'
+        'Form validated! Set VITE_FORMSPREE_ID in your .env file or Vercel Environment Variables to receive live submissions, or email me directly.'
       );
-      showToast('Validation passed — Formspree ID needed for live delivery');
+      showToast('Validation passed — set VITE_FORMSPREE_ID for live delivery');
       return;
     }
 

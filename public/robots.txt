@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-# Update with your final Vercel production URL once deployed
+# Update with your final custom domain or Vercel production URL once deployed
 Sitemap: https://my-portfolio-keshav529.vercel.app/sitemap.xml

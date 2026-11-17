@@ -185,9 +185,12 @@ export function HomePage() {
             <Reveal delay={0.12} className="why-ref-media-col">
               <div className="why-ref-image-frame">
                 <img
-                  src="/image/contactphoto.jpg"
+                  src={PROFILE.workspacePhoto}
                   alt="Laptop coding workspace showcasing clean front-end craft"
+                  width={PROFILE.workspacePhotoWidth}
+                  height={PROFILE.workspacePhotoHeight}
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             </Reveal>
@@ -239,7 +242,14 @@ export function HomePage() {
                         {isPlaceholder ? (
                           <User size={18} />
                         ) : (
-                          <img src={PROFILE.profilePhoto} alt="" />
+                          <img
+                            src={PROFILE.profilePhoto}
+                            alt=""
+                            width={48}
+                            height={48}
+                            loading="lazy"
+                            decoding="async"
+                          />
                         )}
                       </div>
                       <p className="review-author-note">{card.authorNote}</p>
@@ -284,7 +294,10 @@ export function HomePage() {
                 <img
                   src={PROFILE.resumeCover}
                   alt="Document cover preview of Keshav Anand's CV"
+                  width={PROFILE.resumeCoverWidth}
+                  height={PROFILE.resumeCoverHeight}
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             </div>

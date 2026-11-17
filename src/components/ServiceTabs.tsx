@@ -114,7 +114,10 @@ export function ServiceTabs({ services }: ServiceTabsProps) {
                 <img
                   src={service.image}
                   alt={service.imageAlt}
+                  width={service.imageWidth}
+                  height={service.imageHeight}
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             ))}

@@ -56,11 +56,11 @@ export function ProjectDetailPage() {
   if (!project) {
     return (
       <PageTransition>
-        <section className="stage-section">
+        <section className="not-found-section">
           <div className="container">
-            <div className="stage-shell-card">
-              <h1>We couldn&apos;t find that project</h1>
-              <p>
+            <div className="not-found-card">
+              <h1 className="not-found-title">We couldn&apos;t find that project</h1>
+              <p className="not-found-copy">
                 The case study link may have changed. Return to the work archive to browse all projects.
               </p>
               <Link to="/work" className="btn-primary-editorial">
@@ -202,6 +202,8 @@ export function ProjectDetailPage() {
                   <img
                     src={project.image}
                     alt={project.imageAlt}
+                    width={project.imageWidth}
+                    height={project.imageHeight}
                     decoding="async"
                   />
                   <span className="case-gallery-zoom-badge" aria-hidden="true">
@@ -315,6 +317,8 @@ export function ProjectDetailPage() {
                     <img
                       src={nextProject.image}
                       alt={nextProject.imageAlt}
+                      width={nextProject.imageWidth}
+                      height={nextProject.imageHeight}
                       loading="lazy"
                       decoding="async"
                     />
@@ -363,7 +367,13 @@ export function ProjectDetailPage() {
               >
                 <X size={20} aria-hidden="true" />
               </button>
-              <img src={project.image} alt={project.imageAlt} />
+              <img
+                src={project.image}
+                alt={project.imageAlt}
+                width={project.imageWidth}
+                height={project.imageHeight}
+                decoding="async"
+              />
             </motion.div>
           </motion.div>
         )}
