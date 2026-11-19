@@ -53,7 +53,7 @@ export function SmoothScroll() {
 
     const startOrSyncLenis = () => {
       const shouldDisable =
-        motionQuery.matches || coarseQuery.matches || smallViewportQuery.matches;
+        motionQuery.matches || smallViewportQuery.matches;
 
       if (shouldDisable) {
         stopLenis();
@@ -63,7 +63,7 @@ export function SmoothScroll() {
       if (lenis) return;
 
       lenis = new Lenis({
-        lerp: 0.085,
+        lerp: 0.075,
         smoothWheel: true,
         autoResize: true,
       });
