@@ -117,6 +117,11 @@ export function ContactPage() {
           email: values.email.trim(),
           subject: values.subject.trim() || 'Portfolio inquiry',
           message: values.message.trim(),
+          submitted_at: new Date().toLocaleString(undefined, {
+            dateStyle: 'full',
+            timeStyle: 'long',
+          }),
+          client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }),
       });
 
