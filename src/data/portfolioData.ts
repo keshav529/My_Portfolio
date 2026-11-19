@@ -184,7 +184,7 @@ export const PROFILE = {
  * Contact Form (Formspree) Configuration
  * Set VITE_FORMSPREE_ID in .env (local) or Vercel Project Settings -> Environment Variables.
  */
-const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID?.trim() || 'YOUR_FORMSPREE_ID';
+const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID?.trim() || 'xnpddnez';
 export const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
 
 export const SERVICES: ServiceItem[] = [

@@ -83,6 +83,12 @@ export function ContactPage() {
     return nextErrors;
   };
 
+  const [customFormId, setCustomFormId] = useState<string>(() => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('formspree_custom_id') || '';
+  });
+  const [tempFormId, setTempFormId] = useState(customFormId);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const validationErrors = validate();
@@ -92,20 +98,15 @@ export function ContactPage() {
       return;
     }
 
-    if (FORMSPREE_ENDPOINT.includes('YOUR_FORMSPREE_ID')) {
-      setStatus('demo');
-      setStatusMessage(
-        'Form validated! Set VITE_FORMSPREE_ID in your .env file or Vercel Environment Variables to receive live submissions, or email me directly.'
-      );
-      showToast('Validation passed — set VITE_FORMSPREE_ID for live delivery');
-      return;
-    }
-
     setStatus('submitting');
     setStatusMessage('');
 
+    const envId = import.meta.env.VITE_FORMSPREE_ID?.trim() || 'xnpddnez';
+    const activeId = (customFormId || envId).trim();
+    const endpoint = `https://formspree.io/f/${activeId}`;
+
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,18 +120,20 @@ export function ContactPage() {
         }),
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error('Form submission failed');
+        throw new Error(data.error || 'Form submission failed');
       }
 
       setStatus('success');
-      setStatusMessage('Thank you! Your message has been sent. I will get back to you soon.');
+      setStatusMessage('Thank you! Your message has been sent directly to your Formspree database.');
       setValues({ name: '', email: '', subject: '', message: '', consent: false });
-      showToast('Message sent successfully');
-    } catch {
+      showToast('Message sent to Formspree successfully');
+    } catch (err: any) {
       setStatus('error');
       setStatusMessage(
-        `Unable to send right now. Please email me directly at ${PROFILE.email}.`
+        err?.message || `Unable to send to Formspree right now. Please check your Formspree Form ID or email me at ${PROFILE.email}.`
       );
     }
   };
@@ -175,6 +178,37 @@ export function ContactPage() {
 
               {/* Right Column: Transparent Formspree Form inside Dark Panel */}
               <form className="contact-dark-form" onSubmit={handleSubmit} noValidate>
+                {FORMSPREE_ENDPOINT.includes('YOUR_FORMSPREE_ID') && !customFormId && (
+                  <div className="formspree-config-banner">
+                    <p className="formspree-config-text">
+                      <strong>Connect Formspree Database:</strong> Enter your Formspree Form ID (from formspree.io) below so submissions appear in your dashboard:
+                    </p>
+                    <div className="formspree-config-row">
+                      <input
+                        type="text"
+                        placeholder="e.g. xpwz..."
+                        value={tempFormId}
+                        onChange={(e) => setTempFormId(e.target.value)}
+                        className="formspree-config-input"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const trimmed = tempFormId.trim();
+                          if (trimmed) {
+                            setCustomFormId(trimmed);
+                            localStorage.setItem('formspree_custom_id', trimmed);
+                            showToast('Formspree ID saved successfully');
+                          }
+                        }}
+                        className="btn-primary-editorial"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                      >
+                        Save ID
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div className="contact-dark-row">
                   <div className="contact-dark-field">
                     <label htmlFor="contact-name">Your name *</label>

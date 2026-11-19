@@ -3873,6 +3873,37 @@ p {
   color: var(--color-orange);
 }
 
+.formspree-config-banner {
+  background-color: rgba(255, 83, 48, 0.1);
+  border: 1px solid var(--color-orange);
+  border-radius: var(--radius-btn);
+  padding: 1.25rem;
+  margin-bottom: 0.5rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.formspree-config-text {
+  font-size: 0.9rem;
+  color: var(--color-cream-1);
+  line-height: 1.5;
+}
+
+.formspree-config-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.formspree-config-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: var(--color-white);
+  border: 1px solid var(--grey-400);
+  border-radius: var(--radius-btn);
+}
+
 .contact-dark-form {
   display: grid;
   gap: 1.25rem;
