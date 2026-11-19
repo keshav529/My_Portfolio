@@ -113,15 +113,15 @@ export function ContactPage() {
           Accept: 'application/json',
         },
         body: JSON.stringify({
+          local_time: new Date().toLocaleString('en-IN', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+          }),
+          client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           name: values.name.trim(),
           email: values.email.trim(),
           subject: values.subject.trim() || 'Portfolio inquiry',
           message: values.message.trim(),
-          submitted_at: new Date().toLocaleString(undefined, {
-            dateStyle: 'full',
-            timeStyle: 'long',
-          }),
-          client_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         }),
       });
 
