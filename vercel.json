@@ -1,4 +1,8 @@
 {
+  "framework": "vite",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "redirects": [
     {
       "source": "/image/keshav_CV.pdf.pdf",
@@ -24,21 +28,13 @@
           "value": "public, max-age=2592000, stale-while-revalidate=86400"
         }
       ]
-    },
-    {
-      "source": "/(favicon\\.svg|apple-touch-icon\\.png|icon-192\\.png|icon-512\\.png|og-share\\.jpg|site\\.webmanifest)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=604800"
-        }
-      ]
     }
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/|image/|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
 }
+
