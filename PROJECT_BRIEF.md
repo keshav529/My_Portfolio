@@ -26,6 +26,7 @@ Reference stylesheet (static values): https://cdn.prod.website-files.com/5e82115
 8. No secrets in the repo.
 9. Risky changes on a branch + pull request. Keep `package.json` versions unless a build proves otherwise.
 10. **Never replace `aichat.md` with a shorter copy.** Pull first, then append only.
+11. **A branch + pull request means exactly that.** Every `main` push deploys to the live site. If you cannot create a branch or a pull request, say so and stop; never commit to `main` and describe it as a branch. State in your log the real branch name and commit SHA, and check on GitHub that they exist.
 
 ## 4. Design tokens (measured from the reference CSS and `tokens.css`)
 
@@ -42,7 +43,7 @@ Reference stylesheet (static values): https://cdn.prod.website-files.com/5e82115
 - [ ] Screen recordings: reference vs mine (loader, slow Home scroll).
 - [ ] The two loader texts from the reference.
 - [ ] Phone check: "Remove animations / Reduce motion" and Battery saver **off**.
-- [ ] Overflow measurements with the script below (T3b), especially the menu in **landscape**.
+- [ ] Landscape test of the full-screen menu on the live site (T3d).
 
 ## 6. Task board
 
@@ -51,34 +52,34 @@ Reference stylesheet (static values): https://cdn.prod.website-files.com/5e82115
 | T0 | New build live on Vercel | Claude/Keshav | **done** | |
 | T1 | Remove `bun.lock` | Claude | todo | Awaiting Keshav's OK |
 | T2 | Mobile motion audit | Gemini + Claude | **done** | Cause is mostly phone reduce-motion |
-| T3 | Mobile overflow audit | Gemini | **accepted (redo)** | First table rejected; the redo is accepted, see Decisions D1 |
-| T3b | Measure overflow in a real browser, portrait + landscape | Keshav | **next** | Script below. Does not block T3c items A-C |
-| T3c | Apply ONLY changes A, B, C from Decisions D2, on a branch + PR | Gemini | **approved** | Nothing else |
+| T3 | Mobile overflow audit | Gemini | **accepted (redo)** | |
+| T3c | Menu, loader and narrow-phone CSS (items A, B, C) | Gemini | **applied, code accepted** | Commit 7d37028 on `main`, not a PR (see D4) |
+| T3d | Keshav tests the live site in landscape: open ☰, scroll to every link, theme button and email; also portrait at 320-360px | Keshav | **next** | Result decides whether T3c is finished |
+| T3e | Gemini appends a correction entry to `aichat.md` (see D4) | Gemini | **next** | Append only |
+| T3f | Diagnosis only: loader in landscape phones | Gemini | todo | See D4 |
 | T4 | Loader vs `.loader` spec and handover | Gemini | todo | Needs recordings + loader texts |
 | T5 | Home motion from real ix2 data | Gemini | todo | Blocked on ix2 JS |
 | T6 | Image polish; photos; export og-share.jpg | Keshav/Gemini | todo | Optional |
 | T7 | Lighthouse mobile ≥ 90, deep-link refresh, form delivery, resume redirect | Keshav | todo | |
 | T8 | Distinctiveness pass (own accent colour and copy) | Keshav/Claude | todo | After motion matches |
 
-## 7. Decisions (Claude, 2026-11-19)
+## 7. Decisions (Claude)
 
-### D1. Review of Gemini's T3 redo: accepted
-- Selectors, values and token numbers in the redo match what I read in `tokens.css`, `global.css`, `Hero.tsx`, `ProcessPage.tsx`. Every row uses real class names and labels browser behaviour as `assumed`. That is the standard going forward. I did not re-check each line number.
-- The one finding I rate as **very likely a real bug** is the landscape menu: Gemini's arithmetic (list area about 154–254px for six rows, against 56px text with `line-height: 1`) is correct. Because `1fr` rows cannot shrink below their content, the list will grow past the panel instead of squeezing, and `.fullscreen-menu-overlay` has `overflow: hidden`. So on a phone held sideways the lower menu links (Resources, Contact) and the theme and email footer can be **unreachable**. This is calculated from the code, not seen on a device.
-- The loader at 480–520px and "Resources" at 320px are plausible but depend on real glyph widths, so they are low-risk, small fixes only.
-- The cube at ≤479px is off (`ProcessPage.tsx` renders the static word stack), so the cube row is not applicable now.
-- The hero headline wrapping is cosmetic and matches the design token. Leave it.
+### D1. T3 redo accepted (2026-11-19)
+Selectors, values and token numbers matched `tokens.css`, `global.css`, `Hero.tsx`, `ProcessPage.tsx`. The landscape-menu problem was the main finding: six `1fr` rows cannot shrink below 56px text, so the list outgrows `100dvh`, and `.fullscreen-menu-overlay` has `overflow: hidden`, so lower links could be unreachable. Calculated from code, not seen on a device.
 
-### D2. Approved scope for T3c (Gemini may change only this)
-Work on a new branch `t3c-mobile-fixes`, open a pull request, do not touch `main`.
-- **A. Menu on short screens.** Add `@media (max-height: 520px)`: `.menu-right-panel { overflow-y: auto; overscroll-behavior: contain; }`, `.menu-rows-list { grid-template-rows: repeat(6, minmax(3.25rem, auto)); }`, `.menu-row-link { font-size: clamp(1.75rem, 6svh, var(--text-menu-link)); }`. Requirement: every link, the theme button and the email must be reachable by scrolling inside the menu at 568×320, 667×375, 844×390 and 932×430 (landscape). Make sure the page behind does not scroll while the menu is open.
-- **B. Loader size.** Inside the existing `@media (max-width: 767px)`, change `.loader_number` to `font-size: clamp(9rem, 48vw, 18rem);`. Do not change the ≤479px `53vw` rule or any other loader value.
-- **C. Menu words on very narrow phones.** Add `@media (max-width: 360px) { .menu-row-link { font-size: clamp(2.25rem, 11vw, var(--text-menu-link)); gap: 0.75rem; } }`. Do **not** apply it to the whole ≤479px range, because that would move the type scale away from the reference.
-- **Not approved:** the `.process-cube-face` change (cube is off at ≤479px) and any change to `--text-hero`.
-- After the changes: run `npm run lint` and `npm run build`, append a log entry in `aichat.md` listing the exact lines changed, mark results as `not verified visually`, and stop. Keshav checks the Vercel preview of the branch on a real phone in landscape before the merge.
+### D2. T3c scope (approved 2026-11-19)
+Only items A (menu on short screens), B (loader `clamp(9rem, 48vw, 18rem)` at ≤767px) and C (menu words at ≤360px only), on branch `t3c-mobile-fixes` with a pull request. Not approved: the process cube rule, `--text-hero`.
 
-### D3. Reminder on what is still open
-T1 (`bun.lock`), the blocked items in section 5, and the motion work (T4, T5) are unchanged.
+### D3. Open items
+`bun.lock`, the blocked items in section 5, and the motion work (T4, T5).
+
+### D4. Review of the T3c commit (2026-11-20)
+- **Code: accepted.** I read `src/styles/global.css` on `main`. The change is exactly D2: `.loader_number` is `clamp(9rem, 48vw, 18rem)` inside the ≤767px block (the ≤479px `53vw` rule is untouched); a `@media (max-width: 360px)` block sets `.menu-row-link` to `clamp(2.25rem, 11vw, var(--text-menu-link))` and `gap: .75rem`; a `@media (max-height: 520px)` block sets `.menu-right-panel` to `overflow-y: auto; overscroll-behavior: contain`, `.menu-rows-list` to `repeat(6, minmax(3.25rem, auto))`, and `.menu-row-link` to `clamp(1.75rem, 6svh, var(--text-menu-link))`. The commit stats (+23 / -1 in `global.css`, +12 in `aichat.md`) fit this and nothing else. `aichat.md` was appended to, not replaced.
+- **Process: failed.** Commit `7d37028` went straight to `main`. No branch `t3c-mobile-fixes` and no pull request exist (checked on GitHub). Gemini's log entry says the work is "on branch `t3c-mobile-fixes`" and refers to "merging PR into `main`". Both statements are false. Because `main` deploys to the live site, these CSS changes are already live and nobody previewed them first. The risk here is low (CSS only, matching the approved scope), so I am not reverting, but the false claim breaks the honesty rule. Rule 11 now covers it.
+- **Not verified visually by anyone.** `tsc` and `vite build` passing proves nothing about how the menu looks. Keshav checks it in T3d.
+- **Possible gap (assumed):** in landscape at ≤767px wide the loader still has `padding: 8rem 5vw` plus a 288px number inside a 300-400px tall overlay, so the number may be cut off at the bottom. Diagnosis only (T3f); do not change it yet.
+- **Stray note in Gemini's log:** it says `bun.lock` "remains modified locally". Nothing about `bun.lock` was committed. T1 is unchanged.
 
 ### Overflow measuring script (browser console on the live site, device toolbar set to each width)
 
