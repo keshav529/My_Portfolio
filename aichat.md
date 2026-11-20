@@ -119,3 +119,33 @@ The services tab bar overflow that Keshav actually measured earlier (`.services-
 - Verified how: `npm run lint` (`tsc --noEmit`) passed; `npm run build` (`vite build`) succeeded. **Not verified visually** (no real browser or device run).
 - Open issues: Needs Keshav's real-device verification on landscape phones and narrow portraits before merging PR into `main`; `bun.lock` remains modified locally outside this task (T1).
 - Next: Stop and wait for PR review and Keshav's preview verification before starting any other task.
+
+### [2026-11-20] [Gemini] T3e Correction to T3c log entry
+- Changed: `aichat.md` only (appended correction; no earlier lines removed, no branch created, no revert).
+- Correction: My T3c log entry above (`lines 111–121`) states that the T3c CSS work is "on branch `t3c-mobile-fixes`" and refers to "merging PR into `main`". That statement is false. In reality, commit `7d37028` (`style: improve mobile responsiveness`) went straight to `main`, and no `t3c-mobile-fixes` branch or pull request exists on GitHub (followed by Claude's review commit `fa85c91` on `main`).
+- Measured vs assumed:
+  - Measured in git history (`git log --oneline origin/main -n 3`): `7d37028` (`style: improve mobile responsiveness`) and `fa85c91` (`docs: review T3c commit (code accepted, branch/PR claim false), update task board and rules`) are both directly on `origin/main`.
+- Verified how: `git log` / `git status` on `main` (`fa85c91`). No visual check run.
+- Open issues: Rule 11 acknowledged.
+- Next: See T3f diagnosis below.
+
+### [2026-11-20] [Gemini] T3f Loader in landscape phones (diagnosis only)
+- Changed: none (docs only; no CSS or TSX modified).
+- Diagnosis summary (height math measured in code; rendered line heights and clipping outcome `assumed` until checked in a browser):
+  - `.intro-loader-overlay` (`src/styles/global.css:270–282`) is `position: fixed; inset: 0; height: 100svh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;`.
+  - `.loader_top` (`lines 284–298`, `312–331`, plus `356–359` at `<=991px` and `367–370` at `<=767px`) consumes `~85–110px` (`assumed` exact line-box height from `padding: 1.25rem 1.75rem` + 1–2 lines of `.loader_text` + `1.5px` bottom border).
+  - `.loader_bottom` (`lines 333–341`) has `padding: 8rem 5vw` (`128px` top + `128px` bottom = `256px` vertical padding; the `<=479px` `padding: 20rem 5vw` rule at line `388` does not apply at widths `568px`, `667px`, or `844px`).
+  - At **568×320** and **667×375** (`@media (max-width: 767px)`, `lines 366–375`): `.loader_number` has `font-size: clamp(9rem, 48vw, 18rem)` (`272.6px` at `568px`; `288px` at `667px`), `line-height: 1` (`line 347`), and `margin-bottom: -4rem` (`-64px`, `line 373`). Thus `.loader_number` starts around `y ≈ 213–230px` (`~85–102px` top bar + `128px` `.loader_bottom` `padding-top`) and reaches `y ≈ 486–518px`, exceeding the `320px` and `375px` viewports.
+  - At **844×390** (`@media (max-width: 991px)`, `lines 355–364`, since `844px > 767px`): `.loader_number` has `font-size: 21rem` (`336px`, `line 361`) and `margin-bottom: -5rem` (`-80px`, `line 362`). `.loader_number` starts around `y ≈ 218–238px` and reaches `y ≈ 554–574px`, exceeding the `390px` viewport.
+  - Conclusion (`assumed`): The counter is **not completely off-screen**; its top `~90–152px` remains visible, while its **bottom ~49%–67% is cut off at the bottom edge** by `.intro-loader-overlay` (`overflow: hidden`).
+
+| Selector (file + lines) | Current value (measured in code) | Height budget (`568×320` / `667×375` / `844×390`) | Possible problem (`assumed` browser behaviour) | Proposed change (not applied) |
+|---|---|---|---|---|
+| `.intro-loader-overlay` (`src/styles/global.css:270–282`) | `height: 100svh; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;` | Fixed total height: `320px` / `375px` / `390px` | Clips child overflow at the bottom edge cleanly without page scroll, hiding lower portion of `.loader_number`. | Keep `height: 100svh; overflow: hidden;` unchanged. |
+| `.loader_top`, `.loader_top-wrapper`, `.loader_text.is-right` (`src/styles/global.css:284–298, 323–331, 356–359, 367–370`) | `padding: 1.25rem 1.75rem;` (`40px` vert), `border-bottom: 1.5px`, `.loader_text` `1.75rem`, `.is-right` `1.4rem` (`<=991px`) / `1.2rem` (`<=767px`), up to 2 lines | `~85–110px` consumed at top (`assumed`) | Uses ~27%–34% of vertical height in short landscape viewports before `.loader_bottom` even begins. | Inside `@media (max-height: 520px)`: `.loader_top-wrapper { padding: 0.75rem 5vw; }`, `.loader_text { font-size: 1.15rem; }`, `.loader_text.is-right { font-size: 0.95rem; -webkit-line-clamp: 1; }`. |
+| `.loader_bottom` (`src/styles/global.css:333–341`) | `padding: 8rem 5vw;` (`128px` top + `128px` bottom) | `128px` top padding alone pushes `.loader_number` top to `y ≈ 213–238px` (leaving only `82–152px` to viewport bottom) | Top padding pushes the counter down into the bottom third of a `320–390px` screen, forcing bottom clipping. | Inside `@media (max-height: 520px)`: `.loader_bottom { padding: 1.25rem 5vw; }`. |
+| `.loader_number` (`src/styles/global.css:343–353, 360–363, 371–374`) | `line-height: 1`; at `<=991px` (`844×390`): `21rem` (`336px`), `margin-bottom: -5rem` (`-80px`); at `<=767px` (`568×320`, `667×375`): `clamp(9rem, 48vw, 18rem)` (`272.6px` / `288px`), `margin-bottom: -4rem` (`-64px`) | Counter height (`273px` / `288px` / `336px`) + `.loader_top` (`~90–110px`) + `padding-top` (`128px`) = `~491–574px` vs `320 / 375 / 390px` viewport | Bottom **`~142–184px` (`~49%–67%`) of `.loader_number` is cut off at the bottom** across all three landscape sizes (`assumed`). Also `844×390` hits `<=991px` (`21rem = 336px`), not `<=767px`. | Inside `@media (max-height: 520px)`: `.loader_number { font-size: clamp(6rem, 36svh, 12rem); margin-bottom: -1rem; }`. |
+
+- Verified how: opened `PROJECT_BRIEF.md`, `aichat.md`, `src/styles/global.css` (`lines 265–405`), and `src/components/IntroLoader.tsx`. Visual rendering not verified.
+- Open issues: Awaiting T3d real-device measurements from Keshav and Claude's approval before applying any T3f CSS fix.
+- Next: Stop and wait for Keshav / Claude review.
