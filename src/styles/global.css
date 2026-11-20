@@ -369,7 +369,7 @@ p {
     font-size: 1.2rem;
   }
   .loader_number {
-    font-size: 18rem;
+    font-size: clamp(9rem, 48vw, 18rem);
     margin-bottom: -4rem;
   }
 }
@@ -782,6 +782,28 @@ p {
 
   .menu-right-footer {
     padding: 1rem 5vw;
+  }
+}
+
+@media (max-width: 360px) {
+  .menu-row-link {
+    font-size: clamp(2.25rem, 11vw, var(--text-menu-link));
+    gap: 0.75rem;
+  }
+}
+
+@media (max-height: 520px) {
+  .menu-right-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .menu-rows-list {
+    grid-template-rows: repeat(6, minmax(3.25rem, auto));
+  }
+
+  .menu-row-link {
+    font-size: clamp(1.75rem, 6svh, var(--text-menu-link));
   }
 }
 

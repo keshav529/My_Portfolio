@@ -107,3 +107,15 @@ The services tab bar overflow that Keshav actually measured earlier (`.services-
 - Verified how: read `PROJECT_BRIEF.md`, `aichat.md`, `src/styles/tokens.css`, `src/styles/global.css`, `src/components/Navbar.tsx`, `src/components/Hero.tsx`, `src/components/IntroLoader.tsx`, `src/pages/ProcessPage.tsx`, and `src/data/portfolioData.ts`. State clearly: no rendering, pixel widths, or browser overflow were verified (no browser run).
 - Open issues: All five candidate rows await real browser measurements in T3b (`PROJECT_BRIEF.md` overflow script) to confirm which actually overflow, clip, or crowd on device.
 - Next: Stop here. Wait for Keshav's browser measurements (T3b) and Claude's review before making any code changes (T3c).
+
+### [2026-11-19] [Gemini] T3c Scoped mobile CSS fixes (items A, B, C)
+- Changed: `src/styles/global.css` only (on branch `t3c-mobile-fixes`):
+  - Line 372 (`@media (max-width: 767px)` `.loader_number`): updated `font-size: 18rem;` to `font-size: clamp(9rem, 48vw, 18rem);` (item B; left `<=479px` `53vw` rule at line 392 untouched).
+  - Lines 787–792: added `@media (max-width: 360px)` `.menu-row-link { font-size: clamp(2.25rem, 11vw, var(--text-menu-link)); gap: 0.75rem; }` (item C).
+  - Lines 794–807: added `@media (max-height: 520px)` `.menu-right-panel { overflow-y: auto; overscroll-behavior: contain; }`, `.menu-rows-list { grid-template-rows: repeat(6, minmax(3.25rem, auto)); }`, and `.menu-row-link { font-size: clamp(1.75rem, 6svh, var(--text-menu-link)); }` (item A; `Navbar.tsx` line 109 already sets `document.body.style.overflow = 'hidden'` while menu is open).
+- Measured vs assumed:
+  - Measured in code: `src/styles/global.css` lines 366–375 (`.loader_number` inside `@media (max-width: 767px)`), lines 377–396 (`.loader_number` `53vw` untouched), lines 642–786 (`.menu-right-panel`, `.menu-rows-list`, `.menu-row-link`, `.menu-right-footer`), and `src/components/Navbar.tsx` lines 108–109 (`document.body.style.overflow = 'hidden'`).
+  - Assumed (needs browser check): actual landscape menu scrollability across 568×320, 667×375, 844×390, and 932×430, `"Resources"` word clearance at `<=360px`, and `"100"` loader fit at 480–520px.
+- Verified how: `npm run lint` (`tsc --noEmit`) passed; `npm run build` (`vite build`) succeeded. **Not verified visually** (no real browser or device run).
+- Open issues: Needs Keshav's real-device verification on landscape phones and narrow portraits before merging PR into `main`; `bun.lock` remains modified locally outside this task (T1).
+- Next: Stop and wait for PR review and Keshav's preview verification before starting any other task.
